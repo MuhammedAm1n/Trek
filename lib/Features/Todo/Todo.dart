@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:video_diary/Core/Widgets/TextFormField.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
+import 'package:video_diary/Features/Todo/Widgets_Todo/AddHabit.dart';
 
-class ProgressTodo extends StatelessWidget {
+class ProgressTodo extends StatefulWidget {
   const ProgressTodo({super.key});
 
+  @override
+  State<ProgressTodo> createState() => _ProgressTodoState();
+}
+
+class _ProgressTodoState extends State<ProgressTodo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,29 +21,7 @@ class ProgressTodo extends StatelessWidget {
             backgroundColor: ColorsApp.darkGrey,
             context: context,
             builder: (context) {
-              return Column(
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  AppTextFormField(
-                    hintText: 'Enter Name of Habit',
-                    enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            const BorderSide(color: ColorsApp.mainOrange),
-                        borderRadius: BorderRadius.circular(16)),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  AppTextFormField(
-                      hintText: 'Time',
-                      enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: ColorsApp.mainOrange),
-                          borderRadius: BorderRadius.circular(16)))
-                ],
-              );
+              return AddHabit();
             });
       }),
       body: Text("MYchat"),
