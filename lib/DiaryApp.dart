@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:video_diary/Core/Di/dependency.dart';
 import 'package:video_diary/Core/routing/routes.dart';
 import 'package:video_diary/Core/routing/routingmanger.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
+import 'package:video_diary/Features/Todo/Logic/cubit/habits_cubit.dart';
 
 class DiaryApp extends StatelessWidget {
   final RoutesManager routesManager;
@@ -14,14 +17,17 @@ class DiaryApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
-      child: GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Diary\'s Video',
-        onGenerateRoute: routesManager.generateRoute,
-        initialRoute: Routes.onboarding,
-        theme: ThemeData(
-            primaryColor: ColorsApp.mainOrange,
-            scaffoldBackgroundColor: ColorsApp.darkGrey),
+      child: BlocProvider(
+        create: (context) => getIT<HabitsCubit>(),
+        child: GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Diary\'s Video',
+          onGenerateRoute: routesManager.generateRoute,
+          initialRoute: Routes.onboarding,
+          theme: ThemeData(
+              primaryColor: ColorsApp.mainOrange,
+              scaffoldBackgroundColor: ColorsApp.darkGrey),
+        ),
       ),
     );
   }

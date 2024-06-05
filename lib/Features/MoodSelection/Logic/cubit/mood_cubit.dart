@@ -31,12 +31,12 @@ class MoodCubit extends Cubit<MoodState> {
   }
 
   void emitDeleteMood(int id) {
-    emit(InsertMoodLoading());
+    emit(DeleteMoodLoading());
     try {
       moodRepo.deleteMood(id);
-      emit(InsertMoodSuccess());
+      emit(DeleteMoodSuccess());
     } on Exception catch (e) {
-      emit(InsertMoodFailuer(messge: e.toString()));
+      emit(DeleteMoodFailuer(messge: e.toString()));
     }
   }
 }

@@ -30,7 +30,7 @@ class AppTextFormField extends StatelessWidget {
   final EdgeInsets? scrollPaddingz;
   final InputDecoration? decoration;
   final TextEditingController? controller;
-  void Function()? onTap;
+  final void Function()? onTap;
   final Function(String)? validator;
 
   @override

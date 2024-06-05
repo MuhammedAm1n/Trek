@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:video_diary/Core/Di/dependency.dart';
 import 'package:video_diary/Features/Analysis/barGraph/barGraph.dart';
 import 'package:video_diary/Features/MoodSelection/Data/Model/MoodSelectModel.dart';
+import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
 
 // input List of Moods
 
@@ -21,9 +24,12 @@ class _AnalysisPageState extends State<AnalysisPage> {
       appBar: AppBar(
         title: Text('AnalysisPage'),
       ),
-      body: const Padding(
-        padding: const EdgeInsets.all(30.0),
-        child: MyBarGraph(),
+      body: BlocProvider(
+        create: (context) => getIT<MoodCubit>(),
+        child: const Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: MyBarGraph(),
+        ),
       ),
     );
   }

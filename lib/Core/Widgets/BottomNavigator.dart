@@ -1,13 +1,12 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:video_diary/Core/Di/dependency.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/Analysis/AnalysisPage.dart';
+import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
 import 'package:video_diary/Features/Todo/Todo.dart';
 import 'package:video_diary/Features/HomePage/homeScreen.dart';
-import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
-
-import '../Di/dependency.dart';
 
 class BottomNavigatorHome extends StatefulWidget {
   BottomNavigatorHome({super.key});
@@ -27,7 +26,7 @@ class _BottomNavigatorHomeState extends State<BottomNavigatorHome> {
       create: (context) => getIT<MoodCubit>(),
       child: AnalysisPage(),
     ),
-    ProgressTodo()
+    ProgressTodo(),
   ];
   @override
   Widget build(BuildContext context) {
