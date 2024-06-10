@@ -4,26 +4,31 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_diary/Core/Widgets/TextButton.dart';
 import 'package:video_diary/Core/Widgets/TextFormField.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
+import 'package:video_diary/Features/Todo/Data/Logic/cubit/habit_cubit.dart';
+import 'package:video_diary/Features/Todo/Data/Logic/cubit/habit_state.dart';
 import 'package:video_diary/Features/Todo/Data/Model/HabitModel.dart';
-import 'package:video_diary/Features/Todo/Logic/cubit/habits_cubit.dart';
 
-class AddHabit extends StatefulWidget {
-  AddHabit({super.key});
+class UpdateHabit extends StatefulWidget {
+  final HabitModel habitModel;
+  final int? habitId;
+
+  const UpdateHabit(
+      {super.key, required this.habitId, required this.habitModel});
 
   @override
-  State<AddHabit> createState() => _AddHabitState();
+  State<UpdateHabit> createState() => _UpdateHabitState();
 }
 
-class _AddHabitState extends State<AddHabit> {
-  TextEditingController _date = TextEditingController();
-
-  TextEditingController _Name = TextEditingController();
+class _UpdateHabitState extends State<UpdateHabit> {
+  String? title;
+  int? date;
+  TextEditingController? controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<HabitsCubit, HabitsState>(
       listener: (context, state) {
-        if (state is InsertHabitSucess) {
+        if (state is EditHabitSuccess) {
           context.read<HabitsCubit>().emitreadHabit();
         }
       },
@@ -34,19 +39,24 @@ class _AddHabitState extends State<AddHabit> {
             height: 30,
           ),
           AppTextFormField(
+            onChanged: (p0) {
+              title = p0;
+            },
+            inputTextStyle: const TextStyle(color: Colors.black),
             enabledBorder: const UnderlineInputBorder(
                 borderSide:
                     BorderSide(color: Color.fromARGB(255, 107, 106, 106))),
             FoucusBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorsApp.mainOrange)),
-            hintText: 'Enter Name of Habit',
-            hintStyle: TextStyle(color: ColorsApp.mainOrange),
-            controller: _Name,
+            hintText: 'Update Habit',
+            hintStyle: const TextStyle(color: ColorsApp.mainOrange),
           ),
           const SizedBox(
             height: 20,
           ),
           AppTextFormField(
+            controller: controller,
+            inputTextStyle: const TextStyle(color: Colors.black),
             onTap: () {
               showCupertinoModalPopup(
                   context: context,
@@ -61,11 +71,13 @@ class _AddHabitState extends State<AddHabit> {
                             FixedExtentScrollController(initialItem: 1),
                         onSelectedItemChanged: (int value) {
                           setState(() {
-                            _date.text = value.toString();
+                            controller!.text = value.toString();
+
+                            date = int.parse(controller!.text);
                           });
                         },
                         children: List<Widget>.generate(100, (index) {
-                          return Center(child: Text('${index} minutes'));
+                          return Center(child: Text('$index minutes'));
                         }),
                       ),
                     );
@@ -77,7 +89,6 @@ class _AddHabitState extends State<AddHabit> {
                 icon: Icon(Icons.date_range),
                 labelText: "Select Time",
                 labelStyle: TextStyle(color: ColorsApp.mainOrange)),
-            controller: _date,
             hintText: 'Time',
           ),
           const SizedBox(
@@ -88,13 +99,14 @@ class _AddHabitState extends State<AddHabit> {
             child: GTextButton(
                 text: 'Save',
                 onPressed: () {
-                  final habit = HabitModel(
-                    habitName: _Name.text,
-                    timeGoal: int.parse(_date.text),
-                  );
+                  widget.habitModel.habitName =
+                      title ?? widget.habitModel.habitName;
 
-                  context.read<HabitsCubit>().emitInsertHabit(habit.toMap());
-
+                  widget.habitModel.timeGoal =
+                      date ?? widget.habitModel.timeGoal;
+                  context
+                      .read<HabitsCubit>()
+                      .emitEditHabit(widget.habitModel.toMap());
                   Navigator.pop(context);
                 }),
           )

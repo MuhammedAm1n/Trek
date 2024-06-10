@@ -13,51 +13,48 @@ class SignupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.all(8.sp),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 15.h,
-            ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '  Join VDiary Today!',
-                  style: TextStyle(color: ColorsApp.mainOrange, fontSize: 20),
-                ),
-                Icon(Icons.face, size: 20, color: Colors.white),
-              ],
-            ),
-            SizedBox(
-              height: 9.h,
-            ),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                '  Create your account',
-                style: TextStyle(color: Colors.white, fontSize: 16),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 15.h,
+          ),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '  Join VDiary Today!',
+                style: TextStyle(color: ColorsApp.mainOrange, fontSize: 20),
               ),
+              Icon(Icons.face, size: 20, color: Colors.white),
+            ],
+          ),
+          SizedBox(
+            height: 9.h,
+          ),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              '  Create your account',
+              style: TextStyle(color: Colors.white, fontSize: 16),
             ),
-            SizedBox(
-              height: 50.h,
-            ),
-            EmailAndPasswordReg(),
-            SizedBox(
-              height: 35.h,
-            ),
-            GTextButton(
-                text: 'Sign up',
-                onPressed: () {
-                  validateThenDoSignup(context);
-                }),
-            SizedBox(
-              height: 160.h,
-            ),
-            RegisterBlocListener()
-          ],
-        ),
+          ),
+          SizedBox(
+            height: 40.h,
+          ),
+          const EmailAndPasswordReg(),
+          SizedBox(
+            height: 35.h,
+          ),
+          GTextButton(
+              text: 'Sign up',
+              onPressed: () {
+                validateThenDoSignup(context);
+              }),
+          SizedBox(
+            height: 10.h,
+          ),
+          RegisterBlocListener()
+        ],
       ),
     );
   }

@@ -1,7 +1,7 @@
 class HabitModel {
   final int? id;
-  final String habitName;
-  final int timeGoal; // Time now - Time selected
+  String habitName;
+  int timeGoal; // Time now - Time selected
   int timeSpent;
   bool paused;
 

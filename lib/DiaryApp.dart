@@ -6,7 +6,7 @@ import 'package:video_diary/Core/Di/dependency.dart';
 import 'package:video_diary/Core/routing/routes.dart';
 import 'package:video_diary/Core/routing/routingmanger.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
-import 'package:video_diary/Features/Todo/Logic/cubit/habits_cubit.dart';
+import 'package:video_diary/Features/Todo/Data/Logic/cubit/habit_cubit.dart';
 
 class DiaryApp extends StatelessWidget {
   final RoutesManager routesManager;

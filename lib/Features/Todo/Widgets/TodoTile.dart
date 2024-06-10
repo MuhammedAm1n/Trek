@@ -4,17 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:video_diary/Core/theming/Coloring.dart';
 
 // ignore: must_be_immutable
 class ToDoTile extends StatefulWidget {
   final String habitName;
   final VoidCallback onTap;
   final VoidCallback settingsTapped;
+  final Color Pallete;
   int timeSpent;
   final int timeGoal;
   bool habitStarted;
+  bool Finished;
   final void Function(BuildContext)? deletTap;
+  final void Function(BuildContext)? updateTap;
   ToDoTile(
       {super.key,
       required this.habitName,
@@ -23,7 +25,10 @@ class ToDoTile extends StatefulWidget {
       required this.timeSpent,
       required this.timeGoal,
       required this.habitStarted,
-      this.deletTap});
+      required this.Finished,
+      this.deletTap,
+      required this.Pallete,
+      this.updateTap});
 
   @override
   State<ToDoTile> createState() => _ToDoTileState();
@@ -31,7 +36,7 @@ class ToDoTile extends StatefulWidget {
 
 class _ToDoTileState extends State<ToDoTile> {
 //convert seconds into min 61 > 1:02
-  String convertingMintoSec(int totalSeconds) {
+  convertingMintoSec(int totalSeconds) {
     String sec = (totalSeconds % 60).toString();
     String min = (totalSeconds / 60).toStringAsFixed(5);
 
@@ -66,12 +71,17 @@ class _ToDoTileState extends State<ToDoTile> {
               backgroundColor: Colors.red,
               borderRadius: BorderRadius.circular(4),
             ),
+            SlidableAction(
+              onPressed: widget.updateTap,
+              icon: Icons.edit,
+              backgroundColor: Colors.grey,
+              borderRadius: BorderRadius.circular(4),
+            ),
           ],
         ),
         child: Container(
           decoration: BoxDecoration(
-              color: ColorsApp.mainOrange,
-              borderRadius: BorderRadius.circular(12)),
+              color: widget.Pallete, borderRadius: BorderRadius.circular(12)),
           padding: EdgeInsets.all(20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -115,6 +125,10 @@ class _ToDoTileState extends State<ToDoTile> {
                         Text(
                           widget.habitName,
                           style: TextStyle(
+                              decorationThickness: 3,
+                              decoration: widget.Finished
+                                  ? TextDecoration.lineThrough
+                                  : null,
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 18),

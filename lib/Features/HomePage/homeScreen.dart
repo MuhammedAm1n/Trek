@@ -1,8 +1,7 @@
 // ignore_for_file: prefer_const_constructors
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 import 'package:video_diary/Core/routing/routes.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/HomePage/Widgets/TimeBar.dart';
@@ -11,7 +10,7 @@ import 'package:video_diary/Features/HomePage/Widgets/VideoCard.dart';
 import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -73,26 +72,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 20,
                       ),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Datetime(),
-                          Expanded(
-                            child: Container(),
-                          ),
-                          Icon(
-                            Icons.emoji_events_sharp,
-                            color: Colors.white,
-                          ),
-                          SizedBox(
-                            width: 30,
-                          )
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: SizedBox(
+                          child: Datetime(),
+                        ),
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 25,
                       ),
                       listVeiw()
                     ],
@@ -109,23 +96,47 @@ class _HomeScreenState extends State<HomeScreen> {
     int hour = now.hour;
 
     if (hour >= 6 && hour < 12) {
-      return Text("Good Morning 🌞",
-          style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: ColorsApp.mainOrange));
+      return Row(
+        children: [
+          Text("Good Morning",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: ColorsApp.mainOrange)),
+          SizedBox(
+            width: 5,
+          ),
+          Lottie.asset('assets/emotions/Morning.json', height: 30, width: 30)
+        ],
+      );
     } else if (hour >= 12 && hour < 17) {
-      return Text("Good Afternoon 🌞",
-          style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: ColorsApp.mainOrange));
+      return Row(
+        children: [
+          Text("Good Afternoon",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: ColorsApp.mainOrange)),
+          SizedBox(
+            width: 5,
+          ),
+          Lottie.asset('assets/emotions/Afternon.json', height: 30, width: 30)
+        ],
+      );
     } else {
-      return Text("Good Evening 🌚",
-          style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: ColorsApp.mainOrange));
+      return Row(
+        children: [
+          Text("Good Evening",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: ColorsApp.mainOrange)),
+          SizedBox(
+            width: 5,
+          ),
+          Lottie.asset('assets/emotions/night.json', height: 30, width: 30)
+        ],
+      );
     }
   }
 

@@ -10,8 +10,8 @@ import 'package:video_diary/Features/MoodSelection/Data/Repo/MoodRepo.dart';
 import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
 import 'package:video_diary/Features/SignUp/Data/Repositry/RegisterRepo.dart';
 import 'package:video_diary/Features/SignUp/Logic/cubit/register_cubit.dart';
-import 'package:video_diary/Features/Todo/Data/Repository/HabitRepo.dart';
-import 'package:video_diary/Features/Todo/Logic/cubit/habits_cubit.dart';
+import 'package:video_diary/Features/Todo/Data/Logic/cubit/habit_cubit.dart';
+import 'package:video_diary/Features/Todo/Data/Repo/Habitrepo.dart';
 
 final getIT = GetIt.instance;
 Future<void> SetUpGit() async {

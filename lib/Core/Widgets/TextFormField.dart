@@ -18,7 +18,8 @@ class AppTextFormField extends StatelessWidget {
       this.validator,
       this.scrollPaddingz,
       this.decoration,
-      this.onTap});
+      this.onTap,
+      this.onChanged});
   final EdgeInsets? edgeInsets;
   final String hintText;
   final TextStyle? hintStyle;
@@ -31,11 +32,13 @@ class AppTextFormField extends StatelessWidget {
   final InputDecoration? decoration;
   final TextEditingController? controller;
   final void Function()? onTap;
+  final void Function(String)? onChanged;
   final Function(String)? validator;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onChanged: onChanged,
       onTap: onTap,
       decoration: decoration ??
           InputDecoration(
@@ -72,7 +75,7 @@ class AppTextFormField extends StatelessWidget {
             ),
           ),
       obscureText: IsObscureText ?? false,
-      style: TextStyle(color: Colors.white),
+      style: inputTextStyle ?? const TextStyle(color: Colors.white),
       validator: (value) {
         return validator!(value!);
       },

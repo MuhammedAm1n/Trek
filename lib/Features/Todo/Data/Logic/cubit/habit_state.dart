@@ -1,4 +1,4 @@
-part of 'habits_cubit.dart';
+import 'package:video_diary/Features/Todo/Data/Model/HabitModel.dart';
 
 abstract class HabitsState {}
 
@@ -24,3 +24,5 @@ final class InsertHabitFaliuer extends HabitsState {
   final String messge;
   InsertHabitFaliuer({required this.messge});
 }
+
+final class EditHabitSuccess extends HabitsState {}

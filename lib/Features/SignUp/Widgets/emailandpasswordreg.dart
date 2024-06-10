@@ -11,7 +11,7 @@ class EmailAndPasswordReg extends StatelessWidget {
   Widget build(BuildContext context) {
     return Form(
       key: context.read<RegisterCubit>().formKey,
-      child: Container(
+      child: SizedBox(
         height: 350,
         child: SingleChildScrollView(
           child: Column(
@@ -64,7 +64,8 @@ class EmailAndPasswordReg extends StatelessWidget {
                 hintText: 'Confirm Password',
                 controller: context.read<RegisterCubit>().passwordconf,
                 validator: (value) {
-                  if (value != context.read<RegisterCubit>().password.text) {
+                  if (value != context.read<RegisterCubit>().password.text ||
+                      value.isEmpty) {
                     return 'Confirm Password dosen\'t match. Try again!';
                   }
                 },

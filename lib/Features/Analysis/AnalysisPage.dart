@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_diary/Core/Di/dependency.dart';
+import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/Analysis/barGraph/barGraph.dart';
 import 'package:video_diary/Features/MoodSelection/Data/Model/MoodSelectModel.dart';
 import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
@@ -9,7 +10,7 @@ import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
 
 // outPut display Nice bie chart
 class AnalysisPage extends StatefulWidget {
-  AnalysisPage({super.key});
+  const AnalysisPage({super.key});
 
   @override
   State<AnalysisPage> createState() => _AnalysisPageState();
@@ -22,6 +23,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: ColorsApp.mainOrange,
         title: Text('AnalysisPage'),
       ),
       body: BlocProvider(

@@ -20,93 +20,90 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(8.0.sp),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 20.h,
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          SizedBox(
+            height: 20.h,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Welcome Back!',
+                  style: TextStyle(color: ColorsApp.mainOrange, fontSize: 20),
+                ),
+                Icon(Icons.face, size: 20, color: Colors.white)
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Welcome Back!',
-                    style: TextStyle(color: ColorsApp.mainOrange, fontSize: 20),
-                  ),
-                  Icon(Icons.face, size: 20, color: Colors.white)
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 80.h,
-            ),
-            AppTextFormField(
-              hintText: 'Email',
-              controller: context.read<LoginCubit>().email,
+          ),
+          SizedBox(
+            height: 80.h,
+          ),
+          AppTextFormField(
+            hintText: 'Email',
+            controller: context.read<LoginCubit>().email,
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter username';
+              }
+            },
+          ),
+          SizedBox(
+            height: 15.h,
+          ),
+          AppTextFormField(
+              controller: context.read<LoginCubit>().password,
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Please enter username';
                 }
               },
-            ),
-            SizedBox(
-              height: 15.h,
-            ),
-            AppTextFormField(
-                controller: context.read<LoginCubit>().password,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter username';
-                  }
+              hintText: 'Password',
+              IsObscureText: isObscure,
+              suffixIcon: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    isObscure = !isObscure;
+                  });
                 },
-                hintText: 'Password',
-                IsObscureText: isObscure,
-                suffixIcon: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isObscure = !isObscure;
-                    });
-                  },
-                  child: Icon(
-                    !isObscure ? Icons.visibility : Icons.visibility_off,
-                  ),
-                )),
-            SizedBox(
-              height: 20.h,
+                child: Icon(
+                  !isObscure ? Icons.visibility : Icons.visibility_off,
+                ),
+              )),
+          SizedBox(
+            height: 20.h,
+          ),
+          const Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              'Forgot Password?',
+              style: TextStyle(
+                  fontSize: 13,
+                  color: ColorsApp.mainOrange,
+                  fontWeight: FontWeight.normal),
             ),
-            const Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                'Forgot Password?',
-                style: TextStyle(
-                    fontSize: 13,
-                    color: ColorsApp.mainOrange,
-                    fontWeight: FontWeight.normal),
-              ),
-            ),
-            SizedBox(
-              height: 20.h,
-            ),
-            GTextButton(
-              text: 'Log in',
-              onPressed: () {
-                context.read<LoginCubit>().emitLogin();
-              },
-            ),
-            SizedBox(
-              height: 20.h,
-            ),
-            TermsandConditions(),
-            SizedBox(
-              height: 150.h,
-            ),
-            LoginBlockListener()
-          ],
-        ),
+          ),
+          SizedBox(
+            height: 20.h,
+          ),
+          GTextButton(
+            text: 'Log in',
+            onPressed: () {
+              context.read<LoginCubit>().emitLogin();
+            },
+          ),
+          SizedBox(
+            height: 30.h,
+          ),
+          const TermsandConditions(),
+          SizedBox(
+            height: 50.h,
+          ),
+          const LoginBlockListener()
+        ],
       ),
     );
   }

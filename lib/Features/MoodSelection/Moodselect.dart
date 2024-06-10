@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:folder_file_saver/folder_file_saver.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:video_diary/Core/routing/routes.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
@@ -28,7 +29,7 @@ class _MoodSelectState extends State<MoodSelect> {
   Widget reasonSelect(
       BuildContext context, String name, IconData icon, int whyIndex) {
     return InkWell(
-        splashColor: ColorsApp.mainOrange,
+        splashColor: Colors.white,
         onTap: () {
           setState(() {
             _whyList[whyIndex] = _whyList[whyIndex] == 0 ? 1 : 0;
@@ -144,11 +145,12 @@ class _MoodSelectState extends State<MoodSelect> {
                       color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 12),
                 if (moodVal >= 3)
                   Column(
                     children: <Widget>[
-                      Image.asset('assets/emotions/emotion4.png', height: 75),
+                      Lottie.asset('assets/emotions/SuperGreat.json',
+                          height: 100),
                       const SizedBox(height: 10),
                       const Text("Super Great",
                           style: TextStyle(color: Colors.white))
@@ -157,7 +159,7 @@ class _MoodSelectState extends State<MoodSelect> {
                 if (moodVal >= 1 && moodVal < 3)
                   Column(
                     children: <Widget>[
-                      Image.asset('assets/emotions/emotion3.png', height: 75),
+                      Lottie.asset('assets/emotions/Great.json', height: 100),
                       const SizedBox(height: 10),
                       const Text("Pretty well",
                           style: TextStyle(color: Colors.white))
@@ -166,7 +168,7 @@ class _MoodSelectState extends State<MoodSelect> {
                 if (moodVal >= -1 && moodVal < 1)
                   Column(
                     children: <Widget>[
-                      Image.asset('assets/emotions/emotion2.png', height: 75),
+                      Lottie.asset('assets/emotions/Fine.json', height: 100),
                       const SizedBox(height: 10),
                       const Text("Completely Fine",
                           style: TextStyle(color: Colors.white))
@@ -175,7 +177,8 @@ class _MoodSelectState extends State<MoodSelect> {
                 if (moodVal >= -3 && moodVal < -1)
                   Column(
                     children: <Widget>[
-                      Image.asset('assets/emotions/emotion1.png', height: 75),
+                      Lottie.asset('assets/emotions/SomeThingBad.json',
+                          height: 100),
                       const SizedBox(height: 10),
                       const Text("Somewhat Bad",
                           style: TextStyle(color: Colors.white))
@@ -184,7 +187,8 @@ class _MoodSelectState extends State<MoodSelect> {
                 if (moodVal < -3)
                   Column(
                     children: <Widget>[
-                      Image.asset('assets/emotions/emotion0.png', height: 75),
+                      Lottie.asset('assets/emotions/TotalyTerrible.json',
+                          height: 100),
                       const SizedBox(height: 10),
                       const Text("Totally Terrible",
                           style: TextStyle(color: Colors.white))
@@ -267,7 +271,8 @@ class _MoodSelectState extends State<MoodSelect> {
   }
 
   _RecordVideo(ImageSource img, BuildContext context) async {
-    final XFile? videoFile = await ImagePicker().pickVideo(source: img);
+    final XFile? videoFile = await ImagePicker()
+        .pickVideo(source: img, maxDuration: const Duration(seconds: 20));
 
     if (videoFile != null) {
       var path = await FolderFileSaver.saveFileIntoCustomDir(

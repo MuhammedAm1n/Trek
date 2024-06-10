@@ -38,6 +38,7 @@ class RoutesManager {
         return MaterialPageRoute(builder: (x) => BottomNavigatorHome());
       case Routes.ProgressTodo:
         return MaterialPageRoute(builder: (x) => ProgressTodo());
+
       default:
         return MaterialPageRoute(
             builder: (_) => const Scaffold(

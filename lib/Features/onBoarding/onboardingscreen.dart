@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_diary/Core/Di/dependency.dart';
@@ -65,7 +66,14 @@ class OnboardingScreen extends StatelessWidget {
                       context: context,
                       builder: (context) => BlocProvider(
                             create: (context) => getIT<LoginCubit>(),
-                            child: const LoginScreen(),
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: 10,
+                                  right: 10,
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom),
+                              child: LoginScreen(),
+                            ),
                           ));
                 },
               ),
@@ -82,10 +90,12 @@ class OnboardingScreen extends StatelessWidget {
                 },
               ),
               const GoogleBlockListener(),
-              // Sign Up  or Register
+
               SizedBox(
                 height: 8.h,
               ),
+
+              // Sign Up  or Register
               onboardingButton(
                 text: 'Sign up for free',
                 onPressed: () {
@@ -98,7 +108,14 @@ class OnboardingScreen extends StatelessWidget {
                       context: context,
                       builder: (context) => BlocProvider(
                             create: (context) => getIT<RegisterCubit>(),
-                            child: const SignupScreen(),
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: 10,
+                                  right: 10,
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom),
+                              child: const SignupScreen(),
+                            ),
                           ));
                 },
               ),
