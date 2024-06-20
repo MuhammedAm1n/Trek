@@ -7,6 +7,7 @@ import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/Todo/Data/Logic/cubit/habit_cubit.dart';
 import 'package:video_diary/Features/Todo/Data/Logic/cubit/habit_state.dart';
 import 'package:video_diary/Features/Todo/Data/Model/HabitModel.dart';
+import 'package:video_diary/Features/Todo/Widgets/WidgetsOfAddHabit/VeiwColorsITem.dart';
 
 class UpdateHabit extends StatefulWidget {
   final HabitModel habitModel;
@@ -94,6 +95,7 @@ class _UpdateHabitState extends State<UpdateHabit> {
           const SizedBox(
             height: 20,
           ),
+          const ListVeiwColorsItem(),
           Padding(
             padding: const EdgeInsets.only(top: 20),
             child: GTextButton(
@@ -101,6 +103,9 @@ class _UpdateHabitState extends State<UpdateHabit> {
                 onPressed: () {
                   widget.habitModel.habitName =
                       title ?? widget.habitModel.habitName;
+
+                  widget.habitModel.color =
+                      context.read<HabitsCubit>().color.value;
 
                   widget.habitModel.timeGoal =
                       date ?? widget.habitModel.timeGoal;

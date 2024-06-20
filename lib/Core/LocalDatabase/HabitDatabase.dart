@@ -26,6 +26,7 @@ class HabitDatabase {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       habitName TEXT,
       timeSpent INTEGER,
+      color INTEGER,
       timeGoal INTEGER,
       paused INTEGER DEFAULT 1
     )

@@ -10,7 +10,7 @@ class ToDoTile extends StatefulWidget {
   final String habitName;
   final VoidCallback onTap;
   final VoidCallback settingsTapped;
-  final Color Pallete;
+  final int? Pallete;
   int timeSpent;
   final int timeGoal;
   bool habitStarted;
@@ -81,7 +81,8 @@ class _ToDoTileState extends State<ToDoTile> {
         ),
         child: Container(
           decoration: BoxDecoration(
-              color: widget.Pallete, borderRadius: BorderRadius.circular(12)),
+              color: Color(widget.Pallete!),
+              borderRadius: BorderRadius.circular(12)),
           padding: EdgeInsets.all(20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

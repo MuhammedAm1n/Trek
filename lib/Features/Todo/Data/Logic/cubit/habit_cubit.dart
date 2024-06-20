@@ -7,6 +7,7 @@ import 'package:video_diary/Features/Todo/Data/Repo/Habitrepo.dart';
 class HabitsCubit extends Cubit<HabitsState> {
   final HabitRepo habitRepo;
   List<HabitModel> habits = [];
+  Color color = const Color(0xff264653);
   final formKey = GlobalKey<FormState>();
   HabitsCubit(this.habitRepo) : super(HabitsInitial());
 
@@ -26,11 +27,11 @@ class HabitsCubit extends Cubit<HabitsState> {
     return habits;
   }
 
-  void emitInsertHabit(Map<String, dynamic> habit) {
+  void emitInsertHabit(HabitModel habit) {
+    habit.color = color.value;
     emit(InsertHabitLoading());
-
     try {
-      habitRepo.insertHabit(habit);
+      habitRepo.insertHabit(habit.toMap());
       emit(InsertHabitSucess());
     } on Exception catch (e) {
       emit(InsertHabitFaliuer(messge: e.toString()));

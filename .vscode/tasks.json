@@ -1,0 +1,16 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Filtered Logcat",
+            "type": "shell",
+            "command": "flutter run 2>&1 | Select-String -Pattern 'EGL_emulation' -NotMatch",
+            "problemMatcher": [],
+            "isBackground": true,
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }
+    ]
+}

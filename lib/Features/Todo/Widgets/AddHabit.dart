@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_diary/Core/Widgets/TextButton.dart';
 import 'package:video_diary/Core/Widgets/TextFormField.dart';
@@ -8,6 +7,8 @@ import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/Todo/Data/Logic/cubit/habit_cubit.dart';
 import 'package:video_diary/Features/Todo/Data/Logic/cubit/habit_state.dart';
 import 'package:video_diary/Features/Todo/Data/Model/HabitModel.dart';
+import 'package:video_diary/Features/Todo/Widgets/WidgetsOfAddHabit/ColorItem.dart';
+import 'package:video_diary/Features/Todo/Widgets/WidgetsOfAddHabit/VeiwColorsITem.dart';
 
 class AddHabit extends StatefulWidget {
   const AddHabit({super.key});
@@ -100,26 +101,7 @@ class _AddHabitState extends State<AddHabit> {
             const SizedBox(
               height: 20,
             ),
-            SizedBox(
-              width: 38 * 7,
-              height: 38 * 2,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: CircleAvatar(
-                      radius: 20,
-                      child: CircleAvatar(
-                        radius: 14,
-                        backgroundColor: Colors.blue,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
+            const ListVeiwColorsItem(),
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: GTextButton(
@@ -134,9 +116,7 @@ class _AddHabitState extends State<AddHabit> {
                         habitName: _name.text,
                         timeGoal: int.parse(_time.text),
                       );
-                      context
-                          .read<HabitsCubit>()
-                          .emitInsertHabit(habit.toMap());
+                      context.read<HabitsCubit>().emitInsertHabit(habit);
                       Navigator.pop(context);
                     }
                   }),
