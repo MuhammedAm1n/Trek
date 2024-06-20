@@ -34,10 +34,8 @@ r6 INTEGER, r7 INTEGER, r8 INTEGER, r9 INTEGER, r10 INTEGER, r11 INTEGER )
   readMood() async {
     try {
       Database? myDatabase = await db;
-      List<Map> response =
-          await myDatabase!.rawQuery("SELECT *FROM 'emotions' ");
-      print(response);
-      return response;
+      final response = await myDatabase!.query("emotions");
+      return response.map((e) => MoodModel.map(e)).toList();
     } on Exception catch (e) {
       throw (e.toString());
     }

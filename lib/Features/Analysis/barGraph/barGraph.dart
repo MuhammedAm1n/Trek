@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:video_diary/Features/MoodSelection/Data/Model/MoodSelectModel.dart';
 import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
 
 class MyBarGraph extends StatefulWidget {
@@ -13,7 +13,7 @@ class MyBarGraph extends StatefulWidget {
 
 class _MyBarGraphState extends State<MyBarGraph> {
   List moodEntries = [];
-  Future<List<Map<dynamic, dynamic>>>? x;
+  List<MoodModel>? x;
   @override
   void initState() {
     super.initState();
@@ -22,13 +22,33 @@ class _MyBarGraphState extends State<MyBarGraph> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: x,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final reversedList = snapshot.data!.reversed.toList();
-          moodEntries = List.generate(
-              reversedList.length, (i) => reversedList[i]["mood"]);
+    return BlocBuilder<MoodCubit, MoodState>(
+      builder: (context, state) {
+        if (state is GetMoodSuccess) {
+          final reversedList = state.moods.reversed.toList();
+          moodEntries =
+              List.generate(reversedList.length, (i) => reversedList[i].mood);
+
+          if (moodEntries.isEmpty) {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'No Analysis Calculated Yet!',
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.2,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            );
+          }
+
           return Center(
             child: PieChart(PieChartData(
               sectionsSpace: 5,

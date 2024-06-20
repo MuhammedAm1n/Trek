@@ -9,7 +9,7 @@ class MoodRepo {
     db.initDb();
   }
 
-  Future<List<Map>> GetMood() async {
+  Future<List<MoodModel>> GetMood() async {
     return await db.readMood();
   }
 

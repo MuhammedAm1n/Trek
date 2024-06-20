@@ -6,7 +6,11 @@ final class MoodInitial extends MoodState {}
 
 final class GetMoodLoading extends MoodState {}
 
-final class GetMoodSuccess extends MoodState {}
+final class GetMoodSuccess extends MoodState {
+  final List<MoodModel> moods;
+
+  GetMoodSuccess({required this.moods});
+}
 
 final class GetMoodFalier extends MoodState {
   final String messge;

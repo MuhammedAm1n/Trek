@@ -38,7 +38,7 @@ class _ToDoTileState extends State<ToDoTile> {
 //convert seconds into min 61 > 1:02
   convertingMintoSec(int totalSeconds) {
     String sec = (totalSeconds % 60).toString();
-    String min = (totalSeconds / 60).toStringAsFixed(5);
+    String min = (totalSeconds / 60).toStringAsFixed(2);
 
     // if sec is a 1 digit number , place a 0 infornt of it
     if (sec.length == 1) {

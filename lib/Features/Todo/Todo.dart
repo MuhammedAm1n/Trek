@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
@@ -18,7 +19,7 @@ class ProgressTodo extends StatefulWidget {
 }
 
 class _ProgressTodoState extends State<ProgressTodo> {
-  // final AudioPlayer _audioPlayer = AudioPlayer();
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -38,13 +39,19 @@ class _ProgressTodoState extends State<ProgressTodo> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
+          heroTag: "AddHabit",
           onPressed: () {
             showDialog(
                 context: context,
                 builder: (context) {
-                  return const AlertDialog(
-                    title: Center(child: Text("Add Habit")),
-                    content: AddHabit(),
+                  return AlertDialog(
+                    backgroundColor: ColorsApp.darkGrey,
+                    title: const Center(
+                        child: Text(
+                      "Add Habit",
+                      style: TextStyle(color: Colors.white),
+                    )),
+                    content: const AddHabit(),
                   );
                 });
           },
@@ -55,72 +62,92 @@ class _ProgressTodoState extends State<ProgressTodo> {
         ),
         body: Padding(
           padding: const EdgeInsets.only(top: 15, bottom: 15.0),
-          child: ListView(
-            children: [
-              BlocBuilder<HabitsCubit, HabitsState>(
-                  builder: (BuildContext context, state) {
-                if (state is HabitLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+          child: BlocBuilder<HabitsCubit, HabitsState>(
+              builder: (BuildContext context, state) {
+            if (state is HabitLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-                if (state is HabitSucess) {
-                  habitItem = state.habit;
-                  return ListView.builder(
-                    itemCount: habitItem.length,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (context, i) {
-                      final habit = habitItem[i];
+            if (state is HabitSucess) {
+              habitItem = state.habit;
+              if (habitItem.isEmpty) {
+                return const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'No Habits Added Yet!',
+                        style: TextStyle(
+                          fontSize: 28,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1.2,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                );
+              }
 
-                      return ToDoTile(
-                        // on Update tile
-                        updateTap: (_) {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title:
-                                      const Center(child: Text("Update Habit")),
-                                  content: UpdateHabit(
-                                    habitId: habit.id,
-                                    habitModel: habit,
-                                  ),
-                                );
-                              });
-                        },
-                        // on delete tile
-                        deletTap: (p) {
-                          setState(() {
-                            return context
-                                .read<HabitsCubit>()
-                                .emitdeletHabit(habit.id!);
-                          });
-                          context.read<HabitsCubit>().emitreadHabit();
-                        },
+              return ListView(children: [
+                ListView.builder(
+                  itemCount: habitItem.length,
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, i) {
+                    final habit = habitItem[i];
+                    return ToDoTile(
+                      // on Update tile
+                      updateTap: (_) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                backgroundColor: ColorsApp.darkGrey,
+                                title: const Center(
+                                    child: Text(
+                                  "Update Habit",
+                                  style: TextStyle(color: Colors.white),
+                                )),
+                                content: UpdateHabit(
+                                  habitId: habit.id,
+                                  habitModel: habit,
+                                ),
+                              );
+                            });
+                      },
+                      // on delete tile
+                      deletTap: (p) {
+                        setState(() {
+                          return context
+                              .read<HabitsCubit>()
+                              .emitdeletHabit(habit.id!);
+                        });
+                        context.read<HabitsCubit>().emitreadHabit();
+                      },
 
-                        onTap: () {
-                          startPausemethod(habit);
-                        },
-                        habitName: habit.habitName,
-                        settingsTapped: () {},
-                        timeSpent: habit.timeSpent,
-                        timeGoal: habit.timeGoal,
-                        habitStarted: habit.timeSpent / 60 == habit.timeGoal
-                            ? !habit.paused
-                            : habit.paused,
-                        Finished: habit.timeSpent / 60 == habit.timeGoal
-                            ? !habit.paused
-                            : false,
-                        Pallete: Colors.red,
-                      );
-                    },
-                  );
-                } else {
-                  return const Text('Some thing happend');
-                }
-              }),
-            ],
-          ),
+                      onTap: () {
+                        startPausemethod(habit);
+                      },
+                      habitName: habit.habitName,
+                      settingsTapped: () {},
+                      timeSpent: habit.timeSpent,
+                      timeGoal: habit.timeGoal,
+                      habitStarted: habit.timeSpent / 60 == habit.timeGoal
+                          ? !habit.paused
+                          : habit.paused,
+                      Finished: habit.timeSpent / 60 == habit.timeGoal
+                          ? !habit.paused
+                          : false,
+                      Pallete: habit.color,
+                    );
+                  },
+                ),
+              ]);
+            }
+            return const Text('Some thing happend');
+          }),
         ));
   }
 
@@ -154,8 +181,8 @@ class _ProgressTodoState extends State<ProgressTodo> {
           if (habit.timeSpent / 60 == habit.timeGoal) {
             timer.cancel();
             habit.paused == !habit.paused;
-
             _saveHabit(habit);
+            _playFinishSound();
           } else if (habit.timeSpent / 60 > habit.timeGoal) {
             habit.timeSpent = 0;
           }
@@ -167,8 +194,9 @@ class _ProgressTodoState extends State<ProgressTodo> {
   _saveHabit(HabitModel habit) {
     context.read<HabitsCubit>().emitUpdateHabit(habit.toMap());
   }
+
 // this for sound after finish habit
-  // _playFinishSound() async {
-  //   await _audioPlayer.play(AssetSource("path"));
-  // }
+  _playFinishSound() async {
+    await _audioPlayer.play(AssetSource("sound/Shatoor.mp3"));
+  }
 }

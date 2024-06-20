@@ -24,12 +24,12 @@ class _AnalysisPageState extends State<AnalysisPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorsApp.mainOrange,
-        title: Text('AnalysisPage'),
+        title: const Text('AnalysisPage'),
       ),
       body: BlocProvider(
         create: (context) => getIT<MoodCubit>(),
         child: const Padding(
-          padding: const EdgeInsets.all(30.0),
+          padding: EdgeInsets.all(30.0),
           child: MyBarGraph(),
         ),
       ),

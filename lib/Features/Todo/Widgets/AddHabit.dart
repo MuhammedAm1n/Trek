@@ -7,7 +7,6 @@ import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/Todo/Data/Logic/cubit/habit_cubit.dart';
 import 'package:video_diary/Features/Todo/Data/Logic/cubit/habit_state.dart';
 import 'package:video_diary/Features/Todo/Data/Model/HabitModel.dart';
-import 'package:video_diary/Features/Todo/Widgets/WidgetsOfAddHabit/ColorItem.dart';
 import 'package:video_diary/Features/Todo/Widgets/WidgetsOfAddHabit/VeiwColorsITem.dart';
 
 class AddHabit extends StatefulWidget {

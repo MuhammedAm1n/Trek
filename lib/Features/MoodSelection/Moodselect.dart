@@ -62,209 +62,219 @@ class _MoodSelectState extends State<MoodSelect> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(color: Colors.black),
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-              expandedHeight: 100.h,
-              automaticallyImplyLeading: false, // Appbar return to back
-              pinned: true,
-              backgroundColor: ColorsApp.darkGrey,
+    return BlocListener<MoodCubit, MoodState>(
+      listener: (context, state) {
+        if (state is InsertMoodSuccess) {
+          context.read<MoodCubit>().emitGetMood();
+        }
+      },
+      child: Scaffold(
+        body: Container(
+          decoration: const BoxDecoration(color: Colors.black),
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverAppBar(
+                expandedHeight: 100.h,
+                automaticallyImplyLeading: false, // Appbar return to back
+                pinned: true,
+                backgroundColor: ColorsApp.darkGrey,
 
-              actions: [
-                const Text(
-                  'Skip Diary Today',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w300, color: Colors.white),
-                ),
-                IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, Routes.BottomNavigatorHome);
-                    },
-                    icon: const Icon(
-                      Icons.skip_next_rounded,
-                      color: Colors.white,
-                    ))
-              ],
-
-              excludeHeaderSemantics: false,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Container(
-                  //height: 279,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    fit: StackFit.expand,
-                    children: <Widget>[
-                      const DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.center,
-                            colors: <Color>[
-                              Color(0xFF202020),
-                              Color(0xFF383838),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.center,
-                            colors: <Color>[
-                              Color(0xB2000000),
-                              Color(0x00000000),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Image.asset(
-                        'assets/emotions/ssz.png',
-                        height: 2,
-                        fit: BoxFit.cover,
-                        color: ColorsApp.mainOrange,
-                        colorBlendMode: BlendMode.multiply,
-                      ),
-                    ],
+                actions: [
+                  const Text(
+                    'Skip Diary Today',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w300, color: Colors.white),
                   ),
-                ),
-              ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(30, 20, 30, 30),
-              sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                const Text(
-                  'How are you feeling?',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 24,
-                      color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 12),
-                if (moodVal >= 3)
-                  Column(
-                    children: <Widget>[
-                      Lottie.asset('assets/emotions/SuperGreat.json',
-                          height: 100),
-                      const SizedBox(height: 10),
-                      const Text("Super Great",
-                          style: TextStyle(color: Colors.white))
-                    ],
-                  ),
-                if (moodVal >= 1 && moodVal < 3)
-                  Column(
-                    children: <Widget>[
-                      Lottie.asset('assets/emotions/Great.json', height: 100),
-                      const SizedBox(height: 10),
-                      const Text("Pretty well",
-                          style: TextStyle(color: Colors.white))
-                    ],
-                  ),
-                if (moodVal >= -1 && moodVal < 1)
-                  Column(
-                    children: <Widget>[
-                      Lottie.asset('assets/emotions/Fine.json', height: 100),
-                      const SizedBox(height: 10),
-                      const Text("Completely Fine",
-                          style: TextStyle(color: Colors.white))
-                    ],
-                  ),
-                if (moodVal >= -3 && moodVal < -1)
-                  Column(
-                    children: <Widget>[
-                      Lottie.asset('assets/emotions/SomeThingBad.json',
-                          height: 100),
-                      const SizedBox(height: 10),
-                      const Text("Somewhat Bad",
-                          style: TextStyle(color: Colors.white))
-                    ],
-                  ),
-                if (moodVal < -3)
-                  Column(
-                    children: <Widget>[
-                      Lottie.asset('assets/emotions/TotalyTerrible.json',
-                          height: 100),
-                      const SizedBox(height: 10),
-                      const Text("Totally Terrible",
-                          style: TextStyle(color: Colors.white))
-                    ],
-                  ),
-                Slider(
-                  activeColor: Colors.white,
-                  inactiveColor: ColorsApp.mainOrange,
-                  min: -5.0,
-                  max: 5.0,
-                  value: moodVal,
-                  onChanged: (value) {
-                    setState(() {
-                      moodVal = value;
-                    });
-                  },
-                ),
-                const Divider(
-                  color: Colors.black,
-                ),
-                const SizedBox(height: 15),
-                const Text(
-                  'Why do you feel this way?',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 24,
-                      color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
-              ])),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
-              sliver: SliverGrid.count(
-                crossAxisCount: 4,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                children: <Widget>[
-                  reasonSelect(context, "family", OMIcons.home, 0),
-                  reasonSelect(context, "friends", OMIcons.peopleOutline, 1),
-                  reasonSelect(context, "work", Icons.business, 2),
-                  reasonSelect(context, "hobbies", Icons.gesture, 3),
-                  reasonSelect(context, "school", OMIcons.school, 4),
-                  reasonSelect(context, "love", Icons.favorite_border, 5),
-                  reasonSelect(context, "health", Icons.healing, 6),
-                  reasonSelect(context, "music", OMIcons.headset, 7),
-                  reasonSelect(context, "food", OMIcons.kitchen, 8),
-                  reasonSelect(context, "news", OMIcons.announcement, 9),
-                  reasonSelect(context, "weather", OMIcons.wbSunny, 10),
-                  reasonSelect(context, "money", OMIcons.localAtm, 11),
+                  IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(
+                            context, Routes.BottomNavigatorHome);
+                      },
+                      icon: const Icon(
+                        Icons.skip_next_rounded,
+                        color: Colors.white,
+                      ))
                 ],
-              ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
-              sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                Container(
-                  alignment: Alignment.center,
-                  width: 200,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      context.read<MoodCubit>().emitInsertMood(MoodModel(
-                          mood: moodVal,
-                          path: await _RecordVideo(ImageSource.camera, context),
-                          date: dateTime,
-                          why: _whyList));
 
-                      Navigator.pushNamed(context, Routes.BottomNavigatorHome);
-                    },
-                    child: const Text("Record Video"),
+                excludeHeaderSemantics: false,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Container(
+                    //height: 279,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      fit: StackFit.expand,
+                      children: <Widget>[
+                        const DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.center,
+                              colors: <Color>[
+                                Color(0xFF202020),
+                                Color(0xFF383838),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const DecoratedBox(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.center,
+                              colors: <Color>[
+                                Color(0xB2000000),
+                                Color(0x00000000),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Image.asset(
+                          'assets/emotions/ssz.png',
+                          height: 2,
+                          fit: BoxFit.cover,
+                          color: ColorsApp.mainOrange,
+                          colorBlendMode: BlendMode.multiply,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ])),
-            )
-          ],
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(30, 20, 30, 30),
+                sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                  const Text(
+                    'How are you feeling?',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 24,
+                        color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  if (moodVal >= 3)
+                    Column(
+                      children: <Widget>[
+                        Lottie.asset('assets/emotions/SuperGreat.json',
+                            height: 100),
+                        const SizedBox(height: 10),
+                        const Text("Super Great",
+                            style: TextStyle(color: Colors.white))
+                      ],
+                    ),
+                  if (moodVal >= 1 && moodVal < 3)
+                    Column(
+                      children: <Widget>[
+                        Lottie.asset('assets/emotions/Great.json', height: 100),
+                        const SizedBox(height: 10),
+                        const Text("Pretty well",
+                            style: TextStyle(color: Colors.white))
+                      ],
+                    ),
+                  if (moodVal >= -1 && moodVal < 1)
+                    Column(
+                      children: <Widget>[
+                        Lottie.asset('assets/emotions/Fine.json', height: 100),
+                        const SizedBox(height: 10),
+                        const Text("Completely Fine",
+                            style: TextStyle(color: Colors.white))
+                      ],
+                    ),
+                  if (moodVal >= -3 && moodVal < -1)
+                    Column(
+                      children: <Widget>[
+                        Lottie.asset('assets/emotions/SomeThingBad.json',
+                            height: 100),
+                        const SizedBox(height: 10),
+                        const Text("Somewhat Bad",
+                            style: TextStyle(color: Colors.white))
+                      ],
+                    ),
+                  if (moodVal < -3)
+                    Column(
+                      children: <Widget>[
+                        Lottie.asset('assets/emotions/TotalyTerrible.json',
+                            height: 100),
+                        const SizedBox(height: 10),
+                        const Text("Totally Terrible",
+                            style: TextStyle(color: Colors.white))
+                      ],
+                    ),
+                  Slider(
+                    activeColor: Colors.white,
+                    inactiveColor: ColorsApp.mainOrange,
+                    min: -5.0,
+                    max: 5.0,
+                    value: moodVal,
+                    onChanged: (value) {
+                      setState(() {
+                        moodVal = value;
+                      });
+                    },
+                  ),
+                  const Divider(
+                    color: Colors.black,
+                  ),
+                  const SizedBox(height: 15),
+                  const Text(
+                    'Why do you feel this way?',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 24,
+                        color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                ])),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
+                sliver: SliverGrid.count(
+                  crossAxisCount: 4,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  children: <Widget>[
+                    reasonSelect(context, "family", OMIcons.home, 0),
+                    reasonSelect(context, "friends", OMIcons.peopleOutline, 1),
+                    reasonSelect(context, "work", Icons.business, 2),
+                    reasonSelect(context, "hobbies", Icons.gesture, 3),
+                    reasonSelect(context, "school", OMIcons.school, 4),
+                    reasonSelect(context, "love", Icons.favorite_border, 5),
+                    reasonSelect(context, "health", Icons.healing, 6),
+                    reasonSelect(context, "music", OMIcons.headset, 7),
+                    reasonSelect(context, "food", OMIcons.kitchen, 8),
+                    reasonSelect(context, "news", OMIcons.announcement, 9),
+                    reasonSelect(context, "weather", OMIcons.wbSunny, 10),
+                    reasonSelect(context, "money", OMIcons.localAtm, 11),
+                  ],
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
+                sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                  Container(
+                    alignment: Alignment.center,
+                    width: 200,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        context.read<MoodCubit>().emitInsertMood(MoodModel(
+                            mood: moodVal,
+                            path:
+                                await _RecordVideo(ImageSource.camera, context),
+                            date: dateTime,
+                            why: _whyList));
+
+                        Navigator.pushNamed(
+                            context, Routes.BottomNavigatorHome);
+                      },
+                      child: const Text("Record Video"),
+                    ),
+                  ),
+                ])),
+              )
+            ],
+          ),
         ),
       ),
     );

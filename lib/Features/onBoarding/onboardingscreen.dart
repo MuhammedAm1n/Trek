@@ -11,6 +11,7 @@ import 'package:video_diary/Features/LoginWithGoogle/Logic/cubit/login_with_goog
 import 'package:video_diary/Features/SignUp/Logic/cubit/register_cubit.dart';
 import 'package:video_diary/Features/SignUp/sinUp_screen.dart';
 import 'package:video_diary/Features/onBoarding/onboardingButton.dart';
+import 'package:video_diary/Features/onBoarding/onboardingGoogleButton.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -44,6 +45,7 @@ class OnboardingScreen extends StatelessWidget {
                 height: 40.h,
               ),
               const Text(
+                textAlign: TextAlign.center,
                 "Capture life's moments, share your stories, and relive memories like never before.",
                 style: TextStyle(
                     fontSize: 20,
@@ -81,9 +83,10 @@ class OnboardingScreen extends StatelessWidget {
                 height: 8.h,
               ),
               // Login With Google
-              onboardingButton(
+              onboardingGoogleButton(
+                iconData: 'assets/images/Google__G__logo.svg.png',
                 text: 'Log in with Google',
-                textStyle: TextStyle(color: Colors.black),
+                textStyle: const TextStyle(color: Colors.black),
                 Coloring: Colors.white,
                 onPressed: () {
                   context.read<LoginWithGoogleCubit>().emitloginWithGooglel();

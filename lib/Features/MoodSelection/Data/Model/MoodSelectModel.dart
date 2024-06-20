@@ -3,17 +3,22 @@ class MoodModel {
   String path;
   DateTime date;
   List<int> why;
-
+  int? id;
 // List  that givin it to database to store
   List dbEntry() {
     return [mood, date.toIso8601String(), path] + why;
   }
 
   MoodModel(
-      {required this.mood,
+      {this.id,
+      required this.mood,
       required this.path,
       required this.date,
       required this.why});
+
+  Map<String, dynamic> toMap() {
+    return {'path': path, 'mood': mood, 'date': date, 'why': why, 'id': id};
+  }
 
   factory MoodModel.map(Map<String, dynamic> parsed) {
     // to Dont give any number expect 1 , 0 to moods
@@ -33,6 +38,7 @@ class MoodModel {
     }
 
     return MoodModel(
+        id: parsed['id'],
         mood: parsed['mood'],
         path: parsed['path'],
         date: DateTime.parse(parsed['date']),

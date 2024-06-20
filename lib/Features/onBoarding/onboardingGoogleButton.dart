@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
 
-class onboardingButton extends StatelessWidget {
+class onboardingGoogleButton extends StatelessWidget {
   final String text;
   final TextStyle? textStyle;
   final Color? Coloring;
   final void Function()? onPressed;
-  final String? iconData;
-  const onboardingButton(
+  final String iconData;
+  const onboardingGoogleButton(
       {super.key,
       required this.text,
       this.textStyle,
       this.Coloring,
       this.onPressed,
-      this.iconData});
+      required this.iconData});
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +27,23 @@ class onboardingButton extends StatelessWidget {
                 const MaterialStatePropertyAll(Size(double.infinity, 52)),
             shape: MaterialStatePropertyAll(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(25)))),
-        child: Text(
-          text,
-          style: textStyle ??
-              const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const SizedBox(),
+            Text(
+              text,
+              style: textStyle ??
+                  const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white),
+            ),
+            Image.asset(
+              iconData,
+              scale: 50,
+            )
+          ],
         ));
   }
 }

@@ -9,12 +9,13 @@ import 'package:intl/intl.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/HomePage/Widgets/VideoPlayer.dart';
+import 'package:video_diary/Features/MoodSelection/Data/Model/MoodSelectModel.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class VideoCard extends StatefulWidget {
   VideoCard({super.key, required this.moodMap, this.deletTap});
 
-  final Map moodMap;
+  final MoodModel moodMap;
   final void Function(BuildContext)? deletTap;
 
   @override
@@ -55,7 +56,7 @@ class _VideoCardState extends State<VideoCard> {
 
   Future<void> genThumbnail() async {
     thumbnail = await VideoThumbnail.thumbnailData(
-        video: await widget.moodMap['path'],
+        video: await widget.moodMap.path,
         imageFormat: ImageFormat.JPEG,
         maxWidth: 128,
         quality: 50);
@@ -65,24 +66,24 @@ class _VideoCardState extends State<VideoCard> {
 
   @override
   Widget build(BuildContext context) {
-    double moodVal = widget.moodMap['mood'];
+    double moodVal = widget.moodMap.mood;
     String phrase = "";
-    String Videopath = widget.moodMap['path'];
+    String Videopath = widget.moodMap.path;
     // String delete;
 
     List<int> reasonList = [
-      widget.moodMap['r0'],
-      widget.moodMap['r1'],
-      widget.moodMap['r2'],
-      widget.moodMap['r3'],
-      widget.moodMap['r4'],
-      widget.moodMap['r5'],
-      widget.moodMap['r6'],
-      widget.moodMap['r7'],
-      widget.moodMap['r8'],
-      widget.moodMap['r9'],
-      widget.moodMap['r10'],
-      widget.moodMap['r11'],
+      widget.moodMap.why[0],
+      widget.moodMap.why[1],
+      widget.moodMap.why[2],
+      widget.moodMap.why[3],
+      widget.moodMap.why[4],
+      widget.moodMap.why[5],
+      widget.moodMap.why[6],
+      widget.moodMap.why[7],
+      widget.moodMap.why[8],
+      widget.moodMap.why[9],
+      widget.moodMap.why[10],
+      widget.moodMap.why[10],
     ];
     var list = [for (var i = 0; i < 12; i += 1) i];
 
@@ -194,9 +195,7 @@ class _VideoCardState extends State<VideoCard> {
                           borderRadius: BorderRadius.circular(10)),
                       child: Center(
                         child: Text(
-                            DateFormat.yMMMMd().format(
-                                    DateTime.parse(widget.moodMap['date'])) +
-                                " ",
+                            "${DateFormat.yMMMMd().format(DateTime.parse(widget.moodMap.date.toString()))} ",
                             style: TextStyle(color: Colors.white)),
                       ),
                     ),

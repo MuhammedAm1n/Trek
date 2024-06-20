@@ -5,6 +5,7 @@ part 'mood_state.dart';
 
 class MoodCubit extends Cubit<MoodState> {
   final MoodRepo moodRepo;
+  List<MoodModel> moods = [];
   MoodCubit(this.moodRepo) : super(MoodInitial());
 
   initDb() {
@@ -12,9 +13,13 @@ class MoodCubit extends Cubit<MoodState> {
     emit(MoodInitial());
   }
 
-  Future<List<Map>> emitGetMood() async {
+  List<MoodModel> emitGetMood() {
     emit(GetMoodLoading());
-    return await moodRepo.GetMood();
+    moodRepo.GetMood().then((moods) {
+      emit(GetMoodSuccess(moods: moods));
+      this.moods = moods;
+    });
+    return moods;
   }
 
   void emitInsertMood(MoodModel moodModel) {

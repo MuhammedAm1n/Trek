@@ -6,7 +6,7 @@ import 'package:video_diary/Core/routing/routes.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/HomePage/Widgets/TimeBar.dart';
 import 'package:video_diary/Features/HomePage/Widgets/VideoCard.dart';
-
+import 'package:video_diary/Features/MoodSelection/Data/Model/MoodSelectModel.dart';
 import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,7 +18,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
+  void initState() {
+    context.read<MoodCubit>().emitGetMood();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    List<MoodModel> moods = context.read<MoodCubit>().moods;
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -81,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 25,
                       ),
-                      listVeiw()
+                      listVeiw(moods)
                     ],
                   )),
             )
@@ -140,36 +148,54 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Widget listVeiw() {
-    return Expanded(
-        child: ListView(
-      children: [
-        FutureBuilder(
-            future: context.read<MoodCubit>().emitGetMood(),
-            builder: (BuildContext context, AsyncSnapshot<List<Map>> snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (context, i) {
-                    final reversedList = snapshot.data!.reversed.toList();
-                    return VideoCard(
-                        moodMap: reversedList[i],
-                        deletTap: (p0) {
-                          setState(() {
-                            return context
-                                .read<MoodCubit>()
-                                .emitDeleteMood(reversedList[i]["id"]);
-                          });
-                        });
-                  },
-                );
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            })
-      ],
-    ));
+  listVeiw(List<MoodModel> listVeiwmood) {
+    return Expanded(child: BlocBuilder<MoodCubit, MoodState>(
+        builder: (BuildContext context, state) {
+      if (state is GetMoodSuccess) {
+        listVeiwmood = state.moods;
+        if (listVeiwmood.isEmpty) {
+          return const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'No Diaries Added Yet!',
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.2,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          );
+        } else {
+          return ListView(children: [
+            ListView.builder(
+              itemCount: listVeiwmood.length,
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemBuilder: (context, i) {
+                final reversedList = state.moods[i];
+                return VideoCard(
+                    moodMap: reversedList,
+                    deletTap: (p0) {
+                      setState(() {
+                        return context
+                            .read<MoodCubit>()
+                            .emitDeleteMood(reversedList.id!);
+                      });
+                      context.read<MoodCubit>().emitGetMood();
+                    });
+              },
+            ),
+          ]);
+        }
+      } else {
+        return Text('Shit');
+      }
+    }));
   }
 }
