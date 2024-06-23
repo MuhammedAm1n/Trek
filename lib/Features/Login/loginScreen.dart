@@ -43,6 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
             height: 80.h,
           ),
           AppTextFormField(
+            keyboardType: TextInputType.emailAddress,
             hintText: 'Email',
             controller: context.read<LoginCubit>().email,
             validator: (value) {
@@ -58,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
               controller: context.read<LoginCubit>().password,
               validator: (value) {
                 if (value.isEmpty) {
-                  return 'Please enter username';
+                  return 'Please enter password';
                 }
               },
               hintText: 'Password',

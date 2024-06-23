@@ -31,96 +31,96 @@ class _AddHabitState extends State<AddHabit> {
       },
       child: Form(
         key: context.read<HabitsCubit>().formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(
-              height: 30,
-            ),
-            AppTextFormField(
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Please enter a habit name';
-                }
-                return null; // Validation passed
-              },
-              inputTextStyle: const TextStyle(color: Colors.black),
-              enabledBorder: const UnderlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Color.fromARGB(255, 107, 106, 106))),
-              FoucusBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: ColorsApp.mainOrange)),
-              hintText: 'Enter Name of Habit',
-              hintStyle: const TextStyle(color: ColorsApp.mainOrange),
-              controller: _name,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            AppTextFormField(
-              inputTextStyle: const TextStyle(color: Colors.black),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Please enter Time';
-                }
-              },
-              onTap: () {
-                showCupertinoModalPopup(
-                    context: context,
-                    builder: (_) {
-                      return SizedBox(
-                        height: 250,
-                        width: double.infinity,
-                        child: CupertinoPicker(
-                          backgroundColor: Colors.white,
-                          itemExtent: 60,
-                          scrollController:
-                              FixedExtentScrollController(initialItem: 1),
-                          onSelectedItemChanged: (int value) {
-                            setState(() {
-                              _time.text = value.toString();
-                            });
-                          },
-                          children: List<Widget>.generate(100, (index) {
-                            return Center(child: Text('${index} minutes'));
-                          }),
-                        ),
-                      );
-                    });
-              },
-              decoration: const InputDecoration(
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: ColorsApp.mainOrange)),
-                  icon: Icon(Icons.date_range),
-                  labelText: "Select Time",
-                  labelStyle: TextStyle(color: ColorsApp.mainOrange)),
-              controller: _time,
-              hintText: 'Time',
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const ListVeiwColorsItem(),
-            Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: GTextButton(
-                  text: 'Save',
-                  onPressed: () {
-                    if (context
-                        .read<HabitsCubit>()
-                        .formKey
-                        .currentState!
-                        .validate()) {
-                      final habit = HabitModel(
-                        habitName: _name.text,
-                        timeGoal: int.parse(_time.text),
-                      );
-                      context.read<HabitsCubit>().emitInsertHabit(habit);
-                      Navigator.pop(context);
-                    }
-                  }),
-            )
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AppTextFormField(
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter a habit name';
+                  }
+                  return null; // Validation passed
+                },
+                inputTextStyle: const TextStyle(color: Colors.white),
+                enabledBorder: const UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Color.fromARGB(255, 107, 106, 106))),
+                FoucusBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(color: ColorsApp.mainOrange)),
+                hintText: 'Enter Name of Habit',
+                hintStyle: const TextStyle(color: ColorsApp.mainOrange),
+                controller: _name,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              AppTextFormField(
+                keyboardType: TextInputType.none,
+                inputTextStyle: const TextStyle(color: Colors.white),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter Time';
+                  }
+                },
+                onTap: () {
+                  showCupertinoModalPopup(
+                      context: context,
+                      builder: (_) {
+                        return SizedBox(
+                          height: 250,
+                          width: double.infinity,
+                          child: CupertinoPicker(
+                            backgroundColor: Colors.white,
+                            itemExtent: 60,
+                            scrollController:
+                                FixedExtentScrollController(initialItem: 1),
+                            onSelectedItemChanged: (int value) {
+                              setState(() {
+                                _time.text = value.toString();
+                              });
+                            },
+                            children: List<Widget>.generate(100, (index) {
+                              return Center(child: Text('${index} minutes'));
+                            }),
+                          ),
+                        );
+                      });
+                },
+                decoration: const InputDecoration(
+                    focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: ColorsApp.mainOrange)),
+                    icon: Icon(Icons.date_range),
+                    labelText: "Select Time",
+                    labelStyle: TextStyle(color: ColorsApp.mainOrange)),
+                controller: _time,
+                hintText: 'Time',
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const ListVeiwColorsItem(),
+              Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: GTextButton(
+                    text: 'Save',
+                    onPressed: () {
+                      if (context
+                          .read<HabitsCubit>()
+                          .formKey
+                          .currentState!
+                          .validate()) {
+                        final habit = HabitModel(
+                          habitName: _name.text,
+                          timeGoal: int.parse(_time.text),
+                        );
+                        context.read<HabitsCubit>().emitInsertHabit(habit);
+                        Navigator.pop(context);
+                      }
+                    }),
+              )
+            ],
+          ),
         ),
       ),
     );

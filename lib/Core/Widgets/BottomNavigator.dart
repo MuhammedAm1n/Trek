@@ -44,7 +44,7 @@ class _BottomNavigatorHomeState extends State<BottomNavigatorHome> {
           },
           backgroundColor: ColorsApp.darkGrey,
           color: ColorsApp.Navigationbar,
-          animationDuration: Duration(milliseconds: 300),
+          animationDuration: const Duration(milliseconds: 300),
           items: const [
             Icon(
               Icons.home,

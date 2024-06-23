@@ -40,26 +40,16 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text(
           'DiaryV',
           style: TextStyle(color: Colors.black, fontSize: 26),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.search_rounded),
-            color: Colors.black,
-            iconSize: 26,
-          ),
-          SizedBox(
-            width: 8,
-          )
-        ],
         backgroundColor: ColorsApp.Navigationbar,
       ),
       body: Container(
-        color: Colors.grey.shade800,
+        color: Colors.white12,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -193,8 +183,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ]);
         }
+      } else if (state is GetMoodLoading) {
+        return Center(child: CircularProgressIndicator());
       } else {
-        return Text('Shit');
+        return Text("");
       }
     }));
   }

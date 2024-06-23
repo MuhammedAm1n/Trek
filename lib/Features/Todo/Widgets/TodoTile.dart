@@ -9,19 +9,18 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 class ToDoTile extends StatefulWidget {
   final String habitName;
   final VoidCallback onTap;
-  final VoidCallback settingsTapped;
+
   final int? Pallete;
   int timeSpent;
   final int timeGoal;
   bool habitStarted;
   bool Finished;
   final void Function(BuildContext)? deletTap;
-  final void Function(BuildContext)? updateTap;
+  void Function()? updateTap;
   ToDoTile(
       {super.key,
       required this.habitName,
       required this.onTap,
-      required this.settingsTapped,
       required this.timeSpent,
       required this.timeGoal,
       required this.habitStarted,
@@ -69,12 +68,6 @@ class _ToDoTileState extends State<ToDoTile> {
               onPressed: widget.deletTap,
               icon: Icons.delete,
               backgroundColor: Colors.red,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            SlidableAction(
-              onPressed: widget.updateTap,
-              icon: Icons.edit,
-              backgroundColor: Colors.grey,
               borderRadius: BorderRadius.circular(4),
             ),
           ],
@@ -148,7 +141,7 @@ class _ToDoTileState extends State<ToDoTile> {
                 ],
               ),
               GestureDetector(
-                  onTap: widget.settingsTapped, child: Icon(Icons.settings))
+                  onTap: widget.updateTap, child: Icon(Icons.settings))
             ],
           ),
         ),

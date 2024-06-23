@@ -23,8 +23,9 @@ class _AnalysisPageState extends State<AnalysisPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: ColorsApp.mainOrange,
-        title: const Text('AnalysisPage'),
+        title: const Center(child: Text('AnalysisPage')),
       ),
       body: BlocProvider(
         create: (context) => getIT<MoodCubit>(),

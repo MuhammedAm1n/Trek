@@ -48,13 +48,13 @@ class _MoodSelectState extends State<MoodSelect> {
                     icon,
                     size: (MediaQuery.of(context).size.width - 60) / 5 - 30,
                     color: _whyList[whyIndex] == 0
-                        ? Theme.of(context).cardTheme.color
+                        ? ColorsApp.darkGrey
                         : Colors.white,
                   ),
                   Text(name,
                       style: TextStyle(
                         color: _whyList[whyIndex] == 0
-                            ? Theme.of(context).cardTheme.color
+                            ? ColorsApp.darkGrey
                             : Colors.white,
                       ))
                 ])));
@@ -70,20 +70,20 @@ class _MoodSelectState extends State<MoodSelect> {
       },
       child: Scaffold(
         body: Container(
-          decoration: const BoxDecoration(color: Colors.black),
+          decoration: BoxDecoration(color: ColorsApp.darkGrey),
           child: CustomScrollView(
             slivers: <Widget>[
               SliverAppBar(
-                expandedHeight: 100.h,
+                expandedHeight: 60.h,
                 automaticallyImplyLeading: false, // Appbar return to back
                 pinned: true,
-                backgroundColor: ColorsApp.darkGrey,
+                backgroundColor: ColorsApp.Navigationbar,
 
                 actions: [
                   const Text(
                     'Skip Diary Today',
                     style: TextStyle(
-                        fontWeight: FontWeight.w300, color: Colors.white),
+                        fontWeight: FontWeight.w600, color: Colors.white),
                   ),
                   IconButton(
                       onPressed: () {
@@ -93,6 +93,7 @@ class _MoodSelectState extends State<MoodSelect> {
                       icon: const Icon(
                         Icons.skip_next_rounded,
                         color: Colors.white,
+                        weight: 20,
                       ))
                 ],
 
@@ -104,36 +105,19 @@ class _MoodSelectState extends State<MoodSelect> {
                       alignment: Alignment.center,
                       fit: StackFit.expand,
                       children: <Widget>[
-                        const DecoratedBox(
+                        DecoratedBox(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.center,
+                              begin: Alignment.bottomRight,
+                              end: Alignment.topRight,
                               colors: <Color>[
-                                Color(0xFF202020),
-                                Color(0xFF383838),
+                                ColorsApp.darkGrey,
+                                ColorsApp.mainOrange,
+                                ColorsApp.darkGrey,
+                                ColorsApp.darkGrey,
                               ],
                             ),
                           ),
-                        ),
-                        const DecoratedBox(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.center,
-                              colors: <Color>[
-                                Color(0xB2000000),
-                                Color(0x00000000),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Image.asset(
-                          'assets/emotions/ssz.png',
-                          height: 2,
-                          fit: BoxFit.cover,
-                          color: ColorsApp.mainOrange,
-                          colorBlendMode: BlendMode.multiply,
                         ),
                       ],
                     ),
@@ -213,9 +197,6 @@ class _MoodSelectState extends State<MoodSelect> {
                       });
                     },
                   ),
-                  const Divider(
-                    color: Colors.black,
-                  ),
                   const SizedBox(height: 15),
                   const Text(
                     'Why do you feel this way?',
@@ -268,7 +249,12 @@ class _MoodSelectState extends State<MoodSelect> {
                         Navigator.pushNamed(
                             context, Routes.BottomNavigatorHome);
                       },
-                      child: const Text("Record Video"),
+                      child: Text(
+                        "Record Video",
+                        style: TextStyle(
+                            color: ColorsApp.darkGrey,
+                            fontWeight: FontWeight.w600),
+                      ),
                     ),
                   ),
                 ])),

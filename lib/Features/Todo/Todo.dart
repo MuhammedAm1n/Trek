@@ -33,9 +33,13 @@ class _ProgressTodoState extends State<ProgressTodo> {
 
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: ColorsApp.mainOrange,
-          title: const Text(
-            'Track Habits',
+          automaticallyImplyLeading: false,
+          elevation: 60,
+          backgroundColor: Colors.white70,
+          title: const Center(
+            child: Text(
+              'Track Habits',
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton(
@@ -99,7 +103,7 @@ class _ProgressTodoState extends State<ProgressTodo> {
                     final habit = habitItem[i];
                     return ToDoTile(
                       // on Update tile
-                      updateTap: (_) {
+                      updateTap: () {
                         showDialog(
                             context: context,
                             builder: (context) {
@@ -131,7 +135,7 @@ class _ProgressTodoState extends State<ProgressTodo> {
                         startPausemethod(habit);
                       },
                       habitName: habit.habitName,
-                      settingsTapped: () {},
+
                       timeSpent: habit.timeSpent,
                       timeGoal: habit.timeGoal,
                       habitStarted: habit.timeSpent / 60 == habit.timeGoal

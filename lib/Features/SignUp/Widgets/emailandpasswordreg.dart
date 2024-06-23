@@ -17,6 +17,7 @@ class EmailAndPasswordReg extends StatelessWidget {
           child: Column(
             children: [
               AppTextFormField(
+                keyboardType: TextInputType.name,
                 hintText: 'Username',
                 controller: context.read<RegisterCubit>().userName,
                 validator: (value) {
@@ -29,6 +30,7 @@ class EmailAndPasswordReg extends StatelessWidget {
                 height: 15.h,
               ),
               AppTextFormField(
+                keyboardType: TextInputType.emailAddress,
                 hintText: 'Email',
                 controller: context.read<RegisterCubit>().email,
                 validator: (value) {

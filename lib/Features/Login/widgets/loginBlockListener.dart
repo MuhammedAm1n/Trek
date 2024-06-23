@@ -22,7 +22,7 @@ class LoginBlockListener extends StatelessWidget {
             );
           } else if (state is LoginSuccess) {
             Navigator.pop(context);
-            Navigator.pushNamed(context, Routes.homeScreen);
+            Navigator.pushNamed(context, Routes.MoodSelect);
           } else if (state is LoginError) {
             setupErrorState(context, state.messge);
           }

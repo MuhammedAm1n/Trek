@@ -19,7 +19,9 @@ class AppTextFormField extends StatelessWidget {
       this.scrollPaddingz,
       this.decoration,
       this.onTap,
-      this.onChanged});
+      this.onChanged,
+      this.keyboardType});
+  final TextInputType? keyboardType;
   final EdgeInsets? edgeInsets;
   final String hintText;
   final TextStyle? hintStyle;
@@ -38,6 +40,7 @@ class AppTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      keyboardType: keyboardType ?? TextInputType.text,
       onChanged: onChanged,
       onTap: onTap,
       decoration: decoration ??

@@ -33,89 +33,89 @@ class _UpdateHabitState extends State<UpdateHabit> {
           context.read<HabitsCubit>().emitreadHabit();
         }
       },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(
-            height: 30,
-          ),
-          AppTextFormField(
-            onChanged: (p0) {
-              title = p0;
-            },
-            inputTextStyle: const TextStyle(color: Colors.black),
-            enabledBorder: const UnderlineInputBorder(
-                borderSide:
-                    BorderSide(color: Color.fromARGB(255, 107, 106, 106))),
-            FoucusBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(color: ColorsApp.mainOrange)),
-            hintText: 'Update Habit',
-            hintStyle: const TextStyle(color: ColorsApp.mainOrange),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          AppTextFormField(
-            controller: controller,
-            inputTextStyle: const TextStyle(color: Colors.black),
-            onTap: () {
-              showCupertinoModalPopup(
-                  context: context,
-                  builder: (_) {
-                    return SizedBox(
-                      height: 250,
-                      width: double.infinity,
-                      child: CupertinoPicker(
-                        backgroundColor: Colors.white,
-                        itemExtent: 60,
-                        scrollController:
-                            FixedExtentScrollController(initialItem: 1),
-                        onSelectedItemChanged: (int value) {
-                          setState(() {
-                            controller!.text = value.toString();
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AppTextFormField(
+              onChanged: (p0) {
+                title = p0;
+              },
+              inputTextStyle: const TextStyle(color: Colors.white),
+              enabledBorder: const UnderlineInputBorder(
+                  borderSide:
+                      BorderSide(color: Color.fromARGB(255, 107, 106, 106))),
+              FoucusBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: ColorsApp.mainOrange)),
+              hintText: 'Update Habit',
+              hintStyle: const TextStyle(color: ColorsApp.mainOrange),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            AppTextFormField(
+              keyboardType: TextInputType.none,
+              controller: controller,
+              inputTextStyle: const TextStyle(color: Colors.white),
+              onTap: () {
+                showCupertinoModalPopup(
+                    context: context,
+                    builder: (_) {
+                      return SizedBox(
+                        height: 250,
+                        width: double.infinity,
+                        child: CupertinoPicker(
+                          backgroundColor: Colors.white,
+                          itemExtent: 60,
+                          scrollController:
+                              FixedExtentScrollController(initialItem: 1),
+                          onSelectedItemChanged: (int value) {
+                            setState(() {
+                              controller!.text = value.toString();
 
-                            date = int.parse(controller!.text);
-                          });
-                        },
-                        children: List<Widget>.generate(100, (index) {
-                          return Center(child: Text('$index minutes'));
-                        }),
-                      ),
-                    );
-                  });
-            },
-            decoration: const InputDecoration(
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: ColorsApp.mainOrange)),
-                icon: Icon(Icons.date_range),
-                labelText: "Select Time",
-                labelStyle: TextStyle(color: ColorsApp.mainOrange)),
-            hintText: 'Time',
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          const ListVeiwColorsItem(),
-          Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: GTextButton(
-                text: 'Save',
-                onPressed: () {
-                  widget.habitModel.habitName =
-                      title ?? widget.habitModel.habitName;
+                              date = int.parse(controller!.text);
+                            });
+                          },
+                          children: List<Widget>.generate(100, (index) {
+                            return Center(child: Text('$index minutes'));
+                          }),
+                        ),
+                      );
+                    });
+              },
+              decoration: const InputDecoration(
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: ColorsApp.mainOrange)),
+                  icon: Icon(Icons.date_range),
+                  labelText: "Select Time",
+                  labelStyle: TextStyle(color: ColorsApp.mainOrange)),
+              hintText: 'Time',
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const ListVeiwColorsItem(),
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: GTextButton(
+                  text: 'Save',
+                  onPressed: () {
+                    widget.habitModel.habitName =
+                        title ?? widget.habitModel.habitName;
 
-                  widget.habitModel.color =
-                      context.read<HabitsCubit>().color.value;
+                    widget.habitModel.color =
+                        context.read<HabitsCubit>().color.value;
 
-                  widget.habitModel.timeGoal =
-                      date ?? widget.habitModel.timeGoal;
-                  context
-                      .read<HabitsCubit>()
-                      .emitEditHabit(widget.habitModel.toMap());
-                  Navigator.pop(context);
-                }),
-          )
-        ],
+                    widget.habitModel.timeGoal =
+                        date ?? widget.habitModel.timeGoal;
+                    context
+                        .read<HabitsCubit>()
+                        .emitEditHabit(widget.habitModel.toMap());
+                    Navigator.pop(context);
+                  }),
+            )
+          ],
+        ),
       ),
     );
   }
