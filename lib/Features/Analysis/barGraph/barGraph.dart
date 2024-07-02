@@ -24,7 +24,7 @@ class _MyBarGraphState extends State<MyBarGraph> {
   Widget build(BuildContext context) {
     return BlocBuilder<MoodCubit, MoodState>(
       builder: (context, state) {
-        if (state is GetMoodSuccess) {
+        if (state is GetMoodSuccess ) {
           final reversedList = state.moods.reversed.toList();
           moodEntries =
               List.generate(reversedList.length, (i) => reversedList[i].mood);
@@ -57,7 +57,7 @@ class _MyBarGraphState extends State<MyBarGraph> {
             )),
           );
         } else {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );

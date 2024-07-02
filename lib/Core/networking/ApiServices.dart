@@ -22,23 +22,89 @@ class ApiServices {
     }
   }
 
-// Login with google
-  Future loginWithGoogle() async {
-    // Open the page of Google Signin
+//Get User Details
+  Future<DocumentSnapshot<Map<String, dynamic>>> GetUserDetails() async {
     try {
-      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
-      // obtain auth details from request
-      final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+      // Get the current user from FirebaseAuth
+      User? currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) {
+        throw Exception("User not authenticated");
+      }
 
-      // create a new credential for user
-      final credential = GoogleAuthProvider.credential(
-        accessToken: gAuth.accessToken,
-        idToken: gAuth.idToken,
-      );
-      // lets Sign in
-      return await FirebaseAuth.instance.signInWithCredential(credential);
-    } on Exception catch (e) {
-      throw e.toString();
+      // Fetch the latest user details from Firestore
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+          .instance
+          .collection("Users")
+          .doc(currentUser.email)
+          .get();
+
+      // Return the document snapshot containing user details
+      return snapshot;
+    } catch (e) {
+      // Handle any errors here
+      print("Error fetching user details: $e");
+      throw e; // Optionally rethrow the error for upstream handling
+    }
+  }
+
+// Login with google
+  Future<void> loginWithGoogle() async {
+    // Sign in with Google
+    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+
+    if (gUser == null) {
+      throw Exception("Google Sign-In aborted by user");
+    }
+
+    // Obtain auth details from the request
+    final GoogleSignInAuthentication gAuth = await gUser.authentication;
+
+    // Create a new credential
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: gAuth.accessToken,
+      idToken: gAuth.idToken,
+    );
+
+    // Sign in to Firebase with the Google credential
+    userCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+    // Create or update user in Firestore
+  }
+
+  Future<void> _createOrUpdateUser(
+      UserCredential userCredential, String userName,
+      {String photoUrl = ""}) async {
+    if (userCredential.user == null) {
+      throw Exception("User is not signed in");
+    }
+
+    final User user = userCredential.user!;
+    final DocumentReference userDoc =
+        FirebaseFirestore.instance.collection("Users").doc(user.email);
+
+    final Map<String, dynamic> userData = {
+      "email": user.email,
+      "username": userName,
+      "uid": user.uid,
+      "photo": photoUrl.isEmpty ? "s" : photoUrl,
+    };
+
+    await userDoc.set(userData);
+  }
+
+  Future createUser(String userName, {String photoUrl = " "}) async {
+    if (userCredential != null && userCredential!.user != null) {
+      await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(userCredential!.user!.email)
+          .set({
+        "email": userCredential!.user!.email,
+        "username": userName,
+        "uid": userCredential!.user!.uid,
+        "photo": "s"
+      });
+    } else {
+      throw ("Error Return creation");
     }
   }
 
@@ -54,22 +120,6 @@ class ApiServices {
       } else {
         throw e.code;
       }
-    }
-  }
-
-  Future createUser(String userName, {String photoUrl = " "}) async {
-    if (userCredential != null && userCredential!.user != null) {
-      await FirebaseFirestore.instance
-          .collection("Users")
-          .doc(userCredential!.user!.email)
-          .set({
-        "email": userCredential!.user!.email,
-        "username": userName,
-        "uid": userCredential!.user!.uid,
-        "photo": photoUrl
-      });
-    } else {
-      throw ("Error Return creation");
     }
   }
 }

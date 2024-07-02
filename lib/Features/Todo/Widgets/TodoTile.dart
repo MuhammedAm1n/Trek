@@ -1,7 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
@@ -41,14 +38,14 @@ class _ToDoTileState extends State<ToDoTile> {
 
     // if sec is a 1 digit number , place a 0 infornt of it
     if (sec.length == 1) {
-      sec = '0' + sec;
+      sec = '0$sec';
     }
 
     // if min is a 1 digit number
     if (min[1] == ".") {
       min = min.substring(0, 1);
     }
-    return min + ' : ' + sec;
+    return '$min : $sec';
   }
 
 // Calculate proggress percentage
@@ -62,7 +59,7 @@ class _ToDoTileState extends State<ToDoTile> {
       padding: const EdgeInsets.only(left: 20.0, right: 20, top: 20),
       child: Slidable(
         endActionPane: ActionPane(
-          motion: StretchMotion(),
+          motion: const StretchMotion(),
           children: [
             SlidableAction(
               onPressed: widget.deletTap,
@@ -76,7 +73,7 @@ class _ToDoTileState extends State<ToDoTile> {
           decoration: BoxDecoration(
               color: Color(widget.Pallete!),
               borderRadius: BorderRadius.circular(12)),
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -109,7 +106,7 @@ class _ToDoTileState extends State<ToDoTile> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                   ),
                   Column(
@@ -127,7 +124,7 @@ class _ToDoTileState extends State<ToDoTile> {
                               fontWeight: FontWeight.bold,
                               fontSize: 18),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 4,
                         ), // progress
                         Text(
@@ -135,13 +132,13 @@ class _ToDoTileState extends State<ToDoTile> {
                               ' / ' +
                               widget.timeGoal.toString() +
                               ": 00",
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ]),
                 ],
               ),
               GestureDetector(
-                  onTap: widget.updateTap, child: Icon(Icons.settings))
+                  onTap: widget.updateTap, child: const Icon(Icons.settings))
             ],
           ),
         ),

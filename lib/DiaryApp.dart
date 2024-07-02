@@ -8,6 +8,8 @@ import 'package:video_diary/Core/routing/routingmanger.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/Todo/Data/Logic/cubit/habit_cubit.dart';
 
+final navigatorKey = GlobalKey<NavigatorState>();
+
 class DiaryApp extends StatelessWidget {
   final RoutesManager routesManager;
   const DiaryApp({super.key, required this.routesManager});
@@ -23,7 +25,8 @@ class DiaryApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Diary\'s Video',
           onGenerateRoute: routesManager.generateRoute,
-          initialRoute: Routes.onboarding,
+          initialRoute: Routes.AuthCheck,
+          navigatorKey: navigatorKey,
           theme: ThemeData(
               primaryColor: ColorsApp.mainOrange,
               scaffoldBackgroundColor: ColorsApp.darkGrey),

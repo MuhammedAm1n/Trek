@@ -12,12 +12,18 @@ import 'package:video_diary/Features/SignUp/Data/Repositry/RegisterRepo.dart';
 import 'package:video_diary/Features/SignUp/Logic/cubit/register_cubit.dart';
 import 'package:video_diary/Features/Todo/Data/Logic/cubit/habit_cubit.dart';
 import 'package:video_diary/Features/Todo/Data/Repo/Habitrepo.dart';
+import 'package:video_diary/Features/UserPage/Data/Repo/GetUser.dart';
+import 'package:video_diary/Features/UserPage/Logic/cubit/user_details_cubit.dart';
 
 final getIT = GetIt.instance;
 Future<void> SetUpGit() async {
   getIT.registerLazySingleton<ApiServices>(() => ApiServices());
   getIT.registerLazySingleton<LocalDb>(() => LocalDb());
   getIT.registerLazySingleton<HabitDatabase>(() => HabitDatabase());
+// User Details
+  getIT.registerLazySingleton<GetUserRepo>(
+      () => GetUserRepo(apiServices: getIT()));
+  getIT.registerFactory<UserDetailsCubit>(() => UserDetailsCubit(getIT()));
 
   //Login
   getIT.registerLazySingleton<LoginRepo>(() => LoginRepo(apiServices: getIT()));

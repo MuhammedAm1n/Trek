@@ -25,7 +25,14 @@ class _AnalysisPageState extends State<AnalysisPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: ColorsApp.mainOrange,
-        title: const Center(child: Text('AnalysisPage')),
+        title: const Center(
+            child: Text(
+          'Stats',
+          style: TextStyle(
+              color: ColorsApp.Navigationbar,
+              fontSize: 26,
+              fontWeight: FontWeight.w400),
+        )),
       ),
       body: BlocProvider(
         create: (context) => getIT<MoodCubit>(),

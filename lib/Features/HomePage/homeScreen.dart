@@ -2,12 +2,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
+import 'package:video_diary/Core/Di/dependency.dart';
 import 'package:video_diary/Core/routing/routes.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
+import 'package:video_diary/Features/HomePage/Widgets/DropDownButton.dart';
 import 'package:video_diary/Features/HomePage/Widgets/TimeBar.dart';
 import 'package:video_diary/Features/HomePage/Widgets/VideoCard.dart';
 import 'package:video_diary/Features/MoodSelection/Data/Model/MoodSelectModel.dart';
 import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
+import 'package:video_diary/Features/UserPage/Logic/cubit/user_details_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -43,10 +46,19 @@ class _HomeScreenState extends State<HomeScreen> {
         automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text(
-          'DiaryV',
-          style: TextStyle(color: Colors.black, fontSize: 26),
+          'Entries',
+          style: TextStyle(
+              color: ColorsApp.mainOrange,
+              fontSize: 26,
+              fontWeight: FontWeight.w400),
         ),
         backgroundColor: ColorsApp.Navigationbar,
+        actions: [
+          BlocProvider(
+            create: (context) => getIT<UserDetailsCubit>(),
+            child: DropDown(),
+          ),
+        ],
       ),
       body: Container(
         color: Colors.white12,
@@ -177,6 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             .read<MoodCubit>()
                             .emitDeleteMood(reversedList.id!);
                       });
+
                       context.read<MoodCubit>().emitGetMood();
                     });
               },

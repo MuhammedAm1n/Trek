@@ -38,7 +38,11 @@ class _ProgressTodoState extends State<ProgressTodo> {
           backgroundColor: Colors.white70,
           title: const Center(
             child: Text(
-              'Track Habits',
+              'Tasks',
+              style: TextStyle(
+                  color: ColorsApp.darkGrey,
+                  fontSize: 26,
+                  fontWeight: FontWeight.w400),
             ),
           ),
         ),
@@ -48,18 +52,19 @@ class _ProgressTodoState extends State<ProgressTodo> {
             showDialog(
                 context: context,
                 builder: (context) {
-                  return AlertDialog(
+                  return const AlertDialog(
                     backgroundColor: ColorsApp.darkGrey,
-                    title: const Center(
+                    title: Center(
                         child: Text(
                       "Add Habit",
                       style: TextStyle(color: Colors.white),
                     )),
-                    content: const AddHabit(),
+                    content: AddHabit(),
                   );
                 });
           },
           backgroundColor: ColorsApp.mainOrange,
+          foregroundColor: Colors.white,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           child: const Icon(Icons.add),

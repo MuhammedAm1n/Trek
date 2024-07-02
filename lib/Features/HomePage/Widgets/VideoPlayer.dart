@@ -2,10 +2,11 @@ import 'dart:io';
 
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_player/video_player.dart';
 
 class Videoplayerz extends StatefulWidget {
-  Videoplayerz({Key? key, required this.Path}) : super(key: key);
+  const Videoplayerz({super.key, required this.Path});
   static String id = 'videoplayz';
   final String Path;
 
@@ -44,9 +45,11 @@ class _VideoplayerzState extends State<Videoplayerz> {
 
   Widget _chewieVideoplyaer() {
     return _chewieController != null && _videoPlayerController != null
-        ? Container(
-            child: Chewie(controller: _chewieController!),
-          )
-        : const Text('Pleas WAIT');
+        ? Chewie(controller: _chewieController!)
+        : const Center(
+            child: CircularProgressIndicator(
+              color: ColorsApp.Navigationbar,
+            ),
+          );
   }
 }

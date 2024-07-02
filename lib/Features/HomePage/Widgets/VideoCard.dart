@@ -1,7 +1,4 @@
-// ignore: must_be_immutable
-// ignore_for_file: non_constant_identifier_names
-
-import 'dart:typed_data';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -10,10 +7,9 @@ import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/HomePage/Widgets/VideoPlayer.dart';
 import 'package:video_diary/Features/MoodSelection/Data/Model/MoodSelectModel.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 class VideoCard extends StatefulWidget {
-  VideoCard({super.key, required this.moodMap, this.deletTap});
+  const VideoCard({super.key, required this.moodMap, this.deletTap});
 
   final MoodModel moodMap;
   final void Function(BuildContext)? deletTap;
@@ -28,11 +24,11 @@ class _VideoCardState extends State<VideoCard> {
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(width: 2.0, color: ColorsApp.mainOrange),
-          borderRadius: BorderRadius.all(Radius.circular(5)),
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
         ),
         width: 42.0,
         height: 42.0,
-        margin: EdgeInsets.all(2.0),
+        margin: const EdgeInsets.all(2.0),
         //padding: const EdgeInsets.all(8.0),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -46,27 +42,28 @@ class _VideoCardState extends State<VideoCard> {
             ]));
   }
 
-  Uint8List? thumbnail;
+  // Uint8List? thumbnail;
 
-  @override
-  initState() {
-    super.initState();
-    genThumbnail();
-  }
+  // @override
+  // initState() {
+  //   super.initState();
+  //   genThumbnail();
+  // }
 
-  Future<void> genThumbnail() async {
-    thumbnail = await VideoThumbnail.thumbnailData(
-        video: await widget.moodMap.path,
-        imageFormat: ImageFormat.JPEG,
-        maxWidth: 128,
-        quality: 50);
+  // Future<void> genThumbnail() async {
+  //   thumbnail = await VideoThumbnail.thumbnailData(
+  //       video: widget.moodMap.path,
+  //       imageFormat: ImageFormat.JPEG,
+  //       maxWidth: 128,
+  //       quality: 50);
 
-    setState(() {});
-  }
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {
     double moodVal = widget.moodMap.mood;
+    String thumB = widget.moodMap.thumb;
     String phrase = "";
     String Videopath = widget.moodMap.path;
     // String delete;
@@ -83,7 +80,7 @@ class _VideoCardState extends State<VideoCard> {
       widget.moodMap.why[8],
       widget.moodMap.why[9],
       widget.moodMap.why[10],
-      widget.moodMap.why[10],
+      widget.moodMap.why[11],
     ];
     var list = [for (var i = 0; i < 12; i += 1) i];
 
@@ -123,7 +120,7 @@ class _VideoCardState extends State<VideoCard> {
       },
       child: Slidable(
         endActionPane: ActionPane(
-          motion: StretchMotion(),
+          motion: const StretchMotion(),
           children: [
             SlidableAction(
               onPressed: widget.deletTap,
@@ -144,22 +141,11 @@ class _VideoCardState extends State<VideoCard> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                        child: thumbnail == null
-                            ? const SizedBox(
-                                width: 40,
-                                height: 60,
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              )
-                            : Image.memory(
-                                thumbnail!,
-                                scale: 1.9,
-                              )),
-                    SizedBox(
+                    Image.file(
+                      File(thumB),
+                      scale: 1.2,
+                    ),
+                    const SizedBox(
                       width: 10,
                     ),
                     // ignore: prefer_const_literals_to_create_immutables
@@ -168,11 +154,11 @@ class _VideoCardState extends State<VideoCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(phrase,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold)),
-                            SizedBox(height: 15),
+                            const SizedBox(height: 15),
                             Wrap(children: [
                               for (int i in list)
                                 if (reasonList[i] == 1) reasonTiles[i]
@@ -182,7 +168,7 @@ class _VideoCardState extends State<VideoCard> {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Padding(
@@ -196,7 +182,7 @@ class _VideoCardState extends State<VideoCard> {
                       child: Center(
                         child: Text(
                             "${DateFormat.yMMMMd().format(DateTime.parse(widget.moodMap.date.toString()))} ",
-                            style: TextStyle(color: Colors.white)),
+                            style: const TextStyle(color: Colors.white)),
                       ),
                     ),
                     Row(

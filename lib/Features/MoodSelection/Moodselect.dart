@@ -1,14 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:folder_file_saver/folder_file_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:video_diary/Core/routing/routes.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/MoodSelection/Data/Model/MoodSelectModel.dart';
 import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 // ignore: must_be_immutable
 class MoodSelect extends StatefulWidget {
@@ -36,7 +39,7 @@ class _MoodSelectState extends State<MoodSelect> {
           });
         },
         child: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: ColorsApp.mainOrange,
             ),
             margin: const EdgeInsets.all(3.0),
@@ -70,7 +73,7 @@ class _MoodSelectState extends State<MoodSelect> {
       },
       child: Scaffold(
         body: Container(
-          decoration: BoxDecoration(color: ColorsApp.darkGrey),
+          decoration: const BoxDecoration(color: ColorsApp.darkGrey),
           child: CustomScrollView(
             slivers: <Widget>[
               SliverAppBar(
@@ -98,29 +101,26 @@ class _MoodSelectState extends State<MoodSelect> {
                 ],
 
                 excludeHeaderSemantics: false,
-                flexibleSpace: FlexibleSpaceBar(
-                  background: Container(
-                    //height: 279,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      fit: StackFit.expand,
-                      children: <Widget>[
-                        DecoratedBox(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.bottomRight,
-                              end: Alignment.topRight,
-                              colors: <Color>[
-                                ColorsApp.darkGrey,
-                                ColorsApp.mainOrange,
-                                ColorsApp.darkGrey,
-                                ColorsApp.darkGrey,
-                              ],
-                            ),
+                flexibleSpace: const FlexibleSpaceBar(
+                  background: Stack(
+                    alignment: Alignment.center,
+                    fit: StackFit.expand,
+                    children: <Widget>[
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomRight,
+                            end: Alignment.topRight,
+                            colors: <Color>[
+                              ColorsApp.darkGrey,
+                              ColorsApp.mainOrange,
+                              ColorsApp.darkGrey,
+                              ColorsApp.darkGrey,
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -239,17 +239,22 @@ class _MoodSelectState extends State<MoodSelect> {
                     width: 200,
                     child: ElevatedButton(
                       onPressed: () async {
+                        String videopath =
+                            await _RecordVideo(ImageSource.camera, context);
+                        String thumbnail =
+                            await generateAndSaveThumbnail(videopath);
+
                         context.read<MoodCubit>().emitInsertMood(MoodModel(
                             mood: moodVal,
-                            path:
-                                await _RecordVideo(ImageSource.camera, context),
+                            path: videopath,
                             date: dateTime,
-                            why: _whyList));
+                            why: _whyList,
+                            thumb: thumbnail));
 
                         Navigator.pushNamed(
                             context, Routes.BottomNavigatorHome);
                       },
-                      child: Text(
+                      child: const Text(
                         "Record Video",
                         style: TextStyle(
                             color: ColorsApp.darkGrey,
@@ -269,13 +274,58 @@ class _MoodSelectState extends State<MoodSelect> {
   _RecordVideo(ImageSource img, BuildContext context) async {
     final XFile? videoFile = await ImagePicker()
         .pickVideo(source: img, maxDuration: const Duration(seconds: 20));
-
     if (videoFile != null) {
-      var path = await FolderFileSaver.saveFileIntoCustomDir(
-          filePath: videoFile.path, dirNamed: 'DiaryV');
-      return path;
+      try {
+        // Save video to an app-specific directory
+        final appDir = await getApplicationDocumentsDirectory();
+        final hiddenDir = Directory('${appDir.path}/.myAppVideos');
+        if (!(await hiddenDir.exists())) {
+          await hiddenDir.create(recursive: true);
+          // Create a .nomedia file to prevent media scanning
+          File('${hiddenDir.path}/.nomedia').createSync();
+        }
+
+        // Move the video file to the hidden directory
+        final File newFile = await File(videoFile.path)
+            .copy('${hiddenDir.path}/${videoFile.name}');
+
+        await generateAndSaveThumbnail(newFile.path);
+        return newFile.path;
+      } catch (e) {
+        print('Error saving video: $e');
+        return null;
+      }
     } else {
-      print('dontsaved');
+      print('Video not saved');
+      return null;
+    }
+  }
+
+  generateAndSaveThumbnail(String videoPath) async {
+    final thumbnailPath = await VideoThumbnail.thumbnailFile(
+      video: videoPath,
+      thumbnailPath: (await getTemporaryDirectory()).path,
+      imageFormat: ImageFormat.JPEG,
+      maxHeight: 128,
+      maxWidth: 80,
+      quality: 100,
+    );
+
+    if (thumbnailPath != null) {
+      // Move the thumbnail to the app-specific directory
+      final appDir = await getApplicationDocumentsDirectory();
+      final hiddenDir = Directory('${appDir.path}/.myAppThumbnails');
+      if (!(await hiddenDir.exists())) {
+        await hiddenDir.create(recursive: true);
+        // Create a .nomedia file to prevent media scanning
+        File('${hiddenDir.path}/.nomedia').createSync();
+      }
+
+      final File thumbnailFile = await File(thumbnailPath).copy(
+          '${hiddenDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      return thumbnailFile.path;
+    } else if (thumbnailPath == null) {
+      return print(thumbnailPath);
     }
   }
 }

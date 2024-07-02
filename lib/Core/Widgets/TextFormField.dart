@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
 
 class AppTextFormField extends StatelessWidget {
-  AppTextFormField(
+  const AppTextFormField(
       {super.key,
       required this.hintText,
       this.hintStyle,
@@ -54,26 +53,26 @@ class AppTextFormField extends StatelessWidget {
 
             // hint style of hintText
             hintStyle:
-                hintStyle ?? TextStyle(fontSize: 14, color: Colors.white),
+                hintStyle ?? const TextStyle(fontSize: 14, color: Colors.white),
             // IIcon in TextFormFIeld
             suffixIcon: suffixIcon,
 
             //Border's of TextFormField
             enabledBorder: enabledBorder ??
                 OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blueGrey),
+                    borderSide: const BorderSide(color: Colors.blueGrey),
                     borderRadius: BorderRadius.circular(16)),
             focusedBorder: FoucusBorder ??
                 OutlineInputBorder(
-                  borderSide: BorderSide(color: ColorsApp.mainOrange),
+                  borderSide: const BorderSide(color: ColorsApp.mainOrange),
                   borderRadius: BorderRadius.circular(16),
                 ),
             errorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
+              borderSide: const BorderSide(color: Colors.red),
               borderRadius: BorderRadius.circular(16),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
+              borderSide: const BorderSide(color: Colors.red),
               borderRadius: BorderRadius.circular(16),
             ),
           ),
@@ -83,7 +82,7 @@ class AppTextFormField extends StatelessWidget {
         return validator!(value!);
       },
       controller: controller,
-      scrollPadding: scrollPaddingz ?? EdgeInsets.only(bottom: 30),
+      scrollPadding: scrollPaddingz ?? const EdgeInsets.only(bottom: 30),
     );
   }
 }

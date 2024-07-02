@@ -1,23 +1,32 @@
 class MoodModel {
   double mood;
   String path;
+  String thumb;
   DateTime date;
   List<int> why;
   int? id;
 // List  that givin it to database to store
   List dbEntry() {
-    return [mood, date.toIso8601String(), path] + why;
+    return [mood, date.toIso8601String(), path, thumb] + why;
   }
 
   MoodModel(
       {this.id,
+      required this.thumb,
       required this.mood,
       required this.path,
       required this.date,
       required this.why});
 
   Map<String, dynamic> toMap() {
-    return {'path': path, 'mood': mood, 'date': date, 'why': why, 'id': id};
+    return {
+      'path': path,
+      'mood': mood,
+      'date': date,
+      'why': why,
+      'id': id,
+      'thumb': thumb
+    };
   }
 
   factory MoodModel.map(Map<String, dynamic> parsed) {
@@ -38,23 +47,25 @@ class MoodModel {
     }
 
     return MoodModel(
-        id: parsed['id'],
-        mood: parsed['mood'],
-        path: parsed['path'],
-        date: DateTime.parse(parsed['date']),
-        why: [
-          parsed['r0'],
-          parsed['r1'],
-          parsed['r2'],
-          parsed['r3'],
-          parsed['r4'],
-          parsed['r5'],
-          parsed['r6'],
-          parsed['r7'],
-          parsed['r8'],
-          parsed['r9'],
-          parsed['r10'],
-          parsed['r11'],
-        ]);
+      thumb: parsed['thumb'],
+      id: parsed['id'],
+      mood: parsed['mood'],
+      path: parsed['path'],
+      date: DateTime.parse(parsed['date']),
+      why: [
+        parsed['r0'],
+        parsed['r1'],
+        parsed['r2'],
+        parsed['r3'],
+        parsed['r4'],
+        parsed['r5'],
+        parsed['r6'],
+        parsed['r7'],
+        parsed['r8'],
+        parsed['r9'],
+        parsed['r10'],
+        parsed['r11'],
+      ],
+    );
   }
 }

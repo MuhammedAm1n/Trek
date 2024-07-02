@@ -47,7 +47,6 @@ void showSuccessDialog(BuildContext context) {
         ),
         actions: <Widget>[
           TextButton(
-            child: const Text('Continue'),
             style: TextButton.styleFrom(
               foregroundColor: Colors.white,
               backgroundColor: Colors.blue,
@@ -56,6 +55,7 @@ void showSuccessDialog(BuildContext context) {
             onPressed: () {
               Navigator.pushNamed(context, Routes.onboarding);
             },
+            child: const Text('Continue'),
           ),
         ],
       );
@@ -75,14 +75,14 @@ void setupErrorState(BuildContext context, String error) {
       ),
       content: Text(
         error,
-        style: TextStyle(color: Colors.blue),
+        style: const TextStyle(color: Colors.blue),
       ),
       actions: [
         TextButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text(
+          child: const Text(
             'Got it',
             style: TextStyle(color: Colors.black),
           ),

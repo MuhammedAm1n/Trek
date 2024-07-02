@@ -81,7 +81,7 @@ class _AddHabitState extends State<AddHabit> {
                               });
                             },
                             children: List<Widget>.generate(100, (index) {
-                              return Center(child: Text('${index} minutes'));
+                              return Center(child: Text('$index minutes'));
                             }),
                           ),
                         );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_diary/Core/Di/dependency.dart';
@@ -28,32 +27,23 @@ class OnboardingScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/Loogoo.png',
-                scale: 7,
+                'assets/images/Log.png',
+                scale: 8,
               ),
-              SizedBox(
-                height: 30.h,
-              ),
-              const Text(
-                'VDiary',
-                style: TextStyle(
-                    fontSize: 40,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
-              ),
+
               SizedBox(
                 height: 40.h,
               ),
               const Text(
                 textAlign: TextAlign.center,
-                "Capture life's moments, share your stories, and relive memories like never before.",
+                "Capture life's moments, \n relive memories like never before,\n track your goals!",
                 style: TextStyle(
                     fontSize: 20,
                     color: Colors.white,
                     fontWeight: FontWeight.normal),
               ),
               SizedBox(
-                height: 185.h,
+                height: 110.h,
               ),
               // Normal Login
               onboardingButton(
@@ -74,7 +64,7 @@ class OnboardingScreen extends StatelessWidget {
                                   right: 10,
                                   bottom:
                                       MediaQuery.of(context).viewInsets.bottom),
-                              child: LoginScreen(),
+                              child: const LoginScreen(),
                             ),
                           ));
                 },

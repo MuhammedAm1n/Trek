@@ -7,4 +7,7 @@ class Routes {
   static const String BottomNavigatorHome = 'BottomNavigatorHome';
   static const String ProgressTodo = 'ProgressTodo';
   static const String UpdateHabit = 'UpdateHabit';
+  static const String SplashScreen = 'SplashScreen';
+  static const String AuthCheck = 'AuthCheck';
+  static const String ProfilePage = 'ProfilePage';
 }

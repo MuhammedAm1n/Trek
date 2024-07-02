@@ -9,7 +9,7 @@ import 'package:video_diary/Features/Todo/Todo.dart';
 import 'package:video_diary/Features/HomePage/homeScreen.dart';
 
 class BottomNavigatorHome extends StatefulWidget {
-  BottomNavigatorHome({super.key});
+  const BottomNavigatorHome({super.key});
 
   @override
   State<BottomNavigatorHome> createState() => _BottomNavigatorHomeState();
@@ -17,31 +17,46 @@ class BottomNavigatorHome extends StatefulWidget {
 
 class _BottomNavigatorHomeState extends State<BottomNavigatorHome> {
   int index = 0;
+  late PageController _pageController;
+
   final page = [
     BlocProvider(
       create: (context) => getIT<MoodCubit>(),
-      child: HomeScreen(),
+      child: const HomeScreen(),
     ),
     BlocProvider(
       create: (context) => getIT<MoodCubit>(),
-      child: AnalysisPage(),
+      child: const AnalysisPage(),
     ),
-    ProgressTodo(),
+    const ProgressTodo(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  void _onItemTapped(int index) {
+    this.index = index;
+    _pageController.jumpToPage(
+      index,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: index,
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          this.index = index;
+        },
         children: page,
       ),
       bottomNavigationBar: CurvedNavigationBar(
           index: index,
-          onTap: (index) {
-            setState(() {
-              this.index = index;
-            });
-          },
+          onTap: _onItemTapped,
           backgroundColor: ColorsApp.darkGrey,
           color: ColorsApp.Navigationbar,
           animationDuration: const Duration(milliseconds: 300),
