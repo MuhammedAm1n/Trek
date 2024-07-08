@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_diary/Core/Widgets/BottomNavigator.dart';
-import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/LoginWithGoogle/Logic/cubit/login_with_google_cubit.dart';
 import 'package:video_diary/Features/onBoarding/onboardingscreen.dart';
 
@@ -21,18 +20,15 @@ class AuthCheck extends StatelessWidget {
             body: Center(child: CircularProgressIndicator()),
           );
         } else if (snapshot.hasData) {
-          Future.delayed(const Duration(milliseconds: 300), () {
+          Future.delayed(const Duration(milliseconds: 0), () {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: (context) => const BottomNavigatorHome()),
             );
           });
-          return Scaffold(
-            body: Center(
-                child: CircularProgressIndicator(
-              color: ColorsApp.Navigationbar,
-            )),
+          return const Scaffold(
+            body: Center(child: Text("")),
           );
         } else {
           return BlocProvider(
