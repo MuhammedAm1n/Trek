@@ -21,11 +21,11 @@ class onboardingButton extends StatelessWidget {
         onPressed: onPressed,
         style: ButtonStyle(
             backgroundColor:
-                MaterialStatePropertyAll(Coloring ?? ColorsApp.mainOrange),
+                WidgetStatePropertyAll(Coloring ?? ColorsApp.mainOrange),
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             minimumSize:
-                const MaterialStatePropertyAll(Size(double.infinity, 52)),
-            shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                const WidgetStatePropertyAll(Size(double.infinity, 52)),
+            shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(25)))),
         child: Text(
           text,

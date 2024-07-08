@@ -27,15 +27,13 @@ id INTEGER PRIMARY KEY, mood REAL, date TEXT, path TEXT,thumb TEXT,label TEXT,
 r0 INTEGER, r1 INTEGER, r2 INTEGER, r3 INTEGER, r4 INTEGER, r5 INTEGER, 
 r6 INTEGER, r7 INTEGER, r8 INTEGER, r9 INTEGER, r10 INTEGER, r11 INTEGER ) 
   ''');
-
-    print('Database Created');
   }
 
   readMood() async {
     try {
       Database? myDatabase = await db;
       final response = await myDatabase!.query("emotions");
-      print(response);
+
       return response.map((e) => MoodModel.map(e)).toList();
     } on Exception catch (e) {
       throw (e.toString());
@@ -49,7 +47,7 @@ r6 INTEGER, r7 INTEGER, r8 INTEGER, r9 INTEGER, r10 INTEGER, r11 INTEGER )
           mood, date, path, thumb,label, r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11
         ) VALUES (? , ? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?,?)
       ''', newMood.dbEntry());
-    print('Done');
+
     return response;
   }
 

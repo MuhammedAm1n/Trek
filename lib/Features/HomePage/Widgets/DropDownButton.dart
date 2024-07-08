@@ -116,7 +116,7 @@ abstract class MenuItems {
       Navigator.pushNamedAndRemoveUntil(context, Routes.AuthCheck,
           (route) => false); // Replace '/login' with your desired route
     } catch (e) {
-      print('Error logging out: $e');
+      rethrow;
       // Handle error if logout fails
     }
   }

@@ -42,7 +42,7 @@ class ApiServices {
       return snapshot;
     } catch (e) {
       // Handle any errors here
-      print("Error fetching user details: $e");
+
       throw e; // Optionally rethrow the error for upstream handling
     }
   }

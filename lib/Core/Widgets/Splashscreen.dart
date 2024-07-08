@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:video_diary/Core/routing/routes.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_player/video_player.dart';
 
@@ -23,14 +22,6 @@ class _SplashScreenState extends State<SplashScreen> {
         setState(() {});
       })
       ..setVolume(0.0);
-  }
-
-  void _playvideo() async {
-    _controller.play();
-
-    await Future.delayed(const Duration(seconds: 4));
-
-    Navigator.pushNamed(context, Routes.onboarding);
   }
 
   @override

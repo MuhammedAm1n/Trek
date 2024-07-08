@@ -293,11 +293,9 @@ class _MoodSelectState extends State<MoodSelect> {
         await generateAndSaveThumbnail(newFile.path);
         return newFile.path;
       } catch (e) {
-        print('Error saving video: $e');
         return null;
       }
     } else {
-      print('Video not saved');
       return null;
     }
   }

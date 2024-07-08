@@ -26,7 +26,6 @@ class MoodCubit extends Cubit<MoodState> {
     emit(InsertMoodLoading());
     try {
       dynamic response = moodRepo.insertMood(moodModel);
-      print('Sucess');
       if (response != null) {
         emit(InsertMoodSuccess());
       }

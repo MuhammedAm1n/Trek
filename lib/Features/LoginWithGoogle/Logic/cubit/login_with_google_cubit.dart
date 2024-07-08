@@ -20,8 +20,9 @@ class LoginWithGoogleCubit extends Cubit<LoginWithGoogleState> {
 
       if (!isClosed && e is FirebaseException) {
         emit(LoginWithGoogleError(error: e.code.toString()));
-      } else
+      } else {
         rethrow;
+      }
     }
   }
 }

@@ -31,8 +31,6 @@ class HabitDatabase {
       paused INTEGER DEFAULT 1
     )
   ''');
-
-    print('Database Created');
   }
 
   Future<int> insertHabit(Map<String, dynamic> habit) async {
