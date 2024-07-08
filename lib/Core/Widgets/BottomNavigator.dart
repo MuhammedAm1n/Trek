@@ -38,10 +38,12 @@ class _BottomNavigatorHomeState extends State<BottomNavigatorHome> {
   }
 
   void _onItemTapped(int index) {
-    this.index = index;
-    _pageController.jumpToPage(
-      index,
-    );
+    setState(() {
+      this.index = index;
+      _pageController.jumpToPage(
+        index,
+      );
+    });
   }
 
   @override
@@ -50,7 +52,9 @@ class _BottomNavigatorHomeState extends State<BottomNavigatorHome> {
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) {
-          this.index = index;
+          setState(() {
+            this.index = index;
+          });
         },
         children: page,
       ),

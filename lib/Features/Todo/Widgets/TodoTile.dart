@@ -3,7 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 // ignore: must_be_immutable
-class ToDoTile extends StatefulWidget {
+class ToDoTile extends StatelessWidget {
   final String habitName;
   final VoidCallback onTap;
 
@@ -26,11 +26,6 @@ class ToDoTile extends StatefulWidget {
       required this.Pallete,
       this.updateTap});
 
-  @override
-  State<ToDoTile> createState() => _ToDoTileState();
-}
-
-class _ToDoTileState extends State<ToDoTile> {
 //convert seconds into min 61 > 1:02
   convertingMintoSec(int totalSeconds) {
     String sec = (totalSeconds % 60).toString();
@@ -50,7 +45,7 @@ class _ToDoTileState extends State<ToDoTile> {
 
 // Calculate proggress percentage
   double percentegeDone() {
-    return widget.timeSpent / (widget.timeGoal * 60);
+    return timeSpent / (timeGoal * 60);
   }
 
   @override
@@ -62,7 +57,7 @@ class _ToDoTileState extends State<ToDoTile> {
           motion: const StretchMotion(),
           children: [
             SlidableAction(
-              onPressed: widget.deletTap,
+              onPressed: deletTap,
               icon: Icons.delete,
               backgroundColor: Colors.red,
               borderRadius: BorderRadius.circular(4),
@@ -71,8 +66,7 @@ class _ToDoTileState extends State<ToDoTile> {
         ),
         child: Container(
           decoration: BoxDecoration(
-              color: Color(widget.Pallete!),
-              borderRadius: BorderRadius.circular(12)),
+              color: Color(Pallete!), borderRadius: BorderRadius.circular(12)),
           padding: const EdgeInsets.all(20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -81,7 +75,7 @@ class _ToDoTileState extends State<ToDoTile> {
               Row(
                 children: [
                   GestureDetector(
-                    onTap: widget.onTap,
+                    onTap: onTap,
                     child: SizedBox(
                       height: 60,
                       width: 60,
@@ -99,7 +93,7 @@ class _ToDoTileState extends State<ToDoTile> {
                                 percentegeDone() < 1 ? percentegeDone() : 1,
                           ),
                           Center(
-                              child: Icon(widget.habitStarted
+                              child: Icon(habitStarted
                                   ? Icons.play_arrow
                                   : Icons.pause))
                         ],
@@ -114,12 +108,11 @@ class _ToDoTileState extends State<ToDoTile> {
                       children: [
                         //TodoName
                         Text(
-                          widget.habitName,
+                          habitName,
                           style: TextStyle(
                               decorationThickness: 3,
-                              decoration: widget.Finished
-                                  ? TextDecoration.lineThrough
-                                  : null,
+                              decoration:
+                                  Finished ? TextDecoration.lineThrough : null,
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 18),
@@ -128,9 +121,9 @@ class _ToDoTileState extends State<ToDoTile> {
                           height: 4,
                         ), // progress
                         Text(
-                          convertingMintoSec(widget.timeSpent) +
+                          convertingMintoSec(timeSpent) +
                               ' / ' +
-                              widget.timeGoal.toString() +
+                              timeGoal.toString() +
                               ": 00",
                           style: const TextStyle(color: Colors.white),
                         ),
@@ -138,7 +131,7 @@ class _ToDoTileState extends State<ToDoTile> {
                 ],
               ),
               GestureDetector(
-                  onTap: widget.updateTap, child: const Icon(Icons.settings))
+                  onTap: updateTap, child: const Icon(Icons.settings))
             ],
           ),
         ),

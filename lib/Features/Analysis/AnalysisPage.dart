@@ -25,7 +25,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: ColorsApp.mainOrange,
-        title: const Center(
+        title: Center(
             child: Text(
           'Stats',
           style: TextStyle(

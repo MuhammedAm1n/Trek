@@ -7,7 +7,7 @@ import 'package:video_diary/DiaryApp.dart';
 import 'package:video_diary/firebase_options.dart';
 
 void main() async {
-  SetUpGit();
+  setUpGit();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await ApiNotification().initNotification();

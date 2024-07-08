@@ -1,4 +1,5 @@
 class MoodModel {
+  String label;
   double mood;
   String path;
   String thumb;
@@ -7,7 +8,7 @@ class MoodModel {
   int? id;
 // List  that givin it to database to store
   List dbEntry() {
-    return [mood, date.toIso8601String(), path, thumb] + why;
+    return [mood, date.toIso8601String(), path, thumb, label] + why;
   }
 
   MoodModel(
@@ -16,10 +17,12 @@ class MoodModel {
       required this.mood,
       required this.path,
       required this.date,
-      required this.why});
+      required this.why,
+      required this.label});
 
   Map<String, dynamic> toMap() {
     return {
+      'label': label,
       'path': path,
       'mood': mood,
       'date': date,
@@ -47,6 +50,7 @@ class MoodModel {
     }
 
     return MoodModel(
+      label: parsed['label'],
       thumb: parsed['thumb'],
       id: parsed['id'],
       mood: parsed['mood'],

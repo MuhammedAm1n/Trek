@@ -46,7 +46,7 @@ class _VideoplayerzState extends State<Videoplayerz> {
   Widget _chewieVideoplyaer() {
     return _chewieController != null && _videoPlayerController != null
         ? Chewie(controller: _chewieController!)
-        : const Center(
+        : Center(
             child: CircularProgressIndicator(
               color: ColorsApp.Navigationbar,
             ),

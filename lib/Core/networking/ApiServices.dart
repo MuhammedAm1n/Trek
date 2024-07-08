@@ -49,26 +49,33 @@ class ApiServices {
 
 // Login with google
   Future<void> loginWithGoogle() async {
-    // Sign in with Google
-    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+    try {
+      // Sign in with Google
+      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
-    if (gUser == null) {
-      throw Exception("Google Sign-In aborted by user");
+      if (gUser == null) {
+        throw Exception("Google Sign-In aborted by user");
+      }
+
+      // Obtain auth details from the request
+      final GoogleSignInAuthentication gAuth = await gUser.authentication;
+
+      // Create a new credential
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: gAuth.accessToken,
+        idToken: gAuth.idToken,
+      );
+
+      // Sign in to Firebase with the Google credential
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      // Create or update user in Firestore
+      await _createOrUpdateUser(userCredential, gUser.displayName ?? "");
+    } catch (e) {
+      print("Error during Google Sign-In: $e");
+      rethrow; // Optionally rethrow the error to handle it further up the call stack
     }
-
-    // Obtain auth details from the request
-    final GoogleSignInAuthentication gAuth = await gUser.authentication;
-
-    // Create a new credential
-    final AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: gAuth.accessToken,
-      idToken: gAuth.idToken,
-    );
-
-    // Sign in to Firebase with the Google credential
-    userCredential =
-        await FirebaseAuth.instance.signInWithCredential(credential);
-    // Create or update user in Firestore
   }
 
   Future<void> _createOrUpdateUser(

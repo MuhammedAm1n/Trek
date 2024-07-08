@@ -12,12 +12,7 @@ class LoginWithGoogleCubit extends Cubit<LoginWithGoogleState> {
   Future<void> emitloginWithGooglel() async {
     try {
       emit(LoginWithGoogleLoading());
-
       await loginWithGmailRepo.loginWithGoogleRep();
-
-      if (!isClosed) {
-        emit(LoginWithGoogleSuccess());
-      }
     } catch (e) {
       if (!isClosed && e is PlatformException) {
         emit(LoginWithGoogleError(error: e.code.toString()));
@@ -25,7 +20,8 @@ class LoginWithGoogleCubit extends Cubit<LoginWithGoogleState> {
 
       if (!isClosed && e is FirebaseException) {
         emit(LoginWithGoogleError(error: e.code.toString()));
-      }
+      } else
+        rethrow;
     }
   }
 }

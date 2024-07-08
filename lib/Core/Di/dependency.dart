@@ -16,7 +16,7 @@ import 'package:video_diary/Features/UserPage/Data/Repo/GetUser.dart';
 import 'package:video_diary/Features/UserPage/Logic/cubit/user_details_cubit.dart';
 
 final getIT = GetIt.instance;
-Future<void> SetUpGit() async {
+Future<void> setUpGit() async {
   getIT.registerLazySingleton<ApiServices>(() => ApiServices());
   getIT.registerLazySingleton<LocalDb>(() => LocalDb());
   getIT.registerLazySingleton<HabitDatabase>(() => HabitDatabase());

@@ -6,14 +6,9 @@ import 'package:video_diary/Core/routing/routes.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/UserPage/Logic/cubit/user_details_cubit.dart';
 
-class DropDown extends StatefulWidget {
+class DropDown extends StatelessWidget {
   const DropDown({super.key});
 
-  @override
-  State<DropDown> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<DropDown> {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
@@ -41,13 +36,13 @@ class _MyHomePageState extends State<DropDown> {
           MenuItems.onChanged(context, value! as MenuItem);
         },
         dropdownStyleData: DropdownStyleData(
-          width: 160,
-          padding: const EdgeInsets.symmetric(vertical: 6),
+          width: 130,
+          padding: const EdgeInsets.symmetric(vertical: 4),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
             color: ColorsApp.Navigationbar,
           ),
-          offset: const Offset(0, 8),
+          offset: const Offset(0, 6),
         ),
         menuItemStyleData: MenuItemStyleData(
           customHeights: [

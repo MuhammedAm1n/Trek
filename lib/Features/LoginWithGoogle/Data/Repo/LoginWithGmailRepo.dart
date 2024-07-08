@@ -5,7 +5,7 @@ class LoginWithGmailRepo {
 
   LoginWithGmailRepo({required this.apiServices});
 
-  Future loginWithGoogleRep() async {
+  Future<void> loginWithGoogleRep() async {
     await apiServices.loginWithGoogle();
   }
 }

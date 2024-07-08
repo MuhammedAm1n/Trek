@@ -8,7 +8,6 @@ import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/HomePage/Widgets/DropDownButton.dart';
 import 'package:video_diary/Features/HomePage/Widgets/TimeBar.dart';
 import 'package:video_diary/Features/HomePage/Widgets/VideoCard.dart';
-import 'package:video_diary/Features/MoodSelection/Data/Model/MoodSelectModel.dart';
 import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
 import 'package:video_diary/Features/UserPage/Logic/cubit/user_details_cubit.dart';
 
@@ -20,6 +19,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final List<String> moodFilter = ["Great", "Well", "Fine", "Bad", "Terrible"];
+  List<String> selectedMood = [];
+  bool isFilterVisible = false;
   @override
   void initState() {
     context.read<MoodCubit>().emitGetMood();
@@ -28,8 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<MoodModel> moods = context.read<MoodCubit>().moods;
-
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -69,6 +69,48 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 50,
             ),
+            AnimatedSize(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Visibility(
+                  visible: isFilterVisible,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: moodFilter
+                          .map((mood) => Padding(
+                                padding: const EdgeInsets.only(right: 10.0),
+                                child: FilterChip(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                  selectedColor: Colors.white12,
+                                  labelStyle: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500),
+                                  backgroundColor: ColorsApp.mainOrange,
+                                  selected: selectedMood.contains(mood),
+                                  label: Text(mood),
+                                  onSelected: (selected) {
+                                    setState(() {
+                                      if (selected) {
+                                        selectedMood.add(mood);
+                                      } else {
+                                        selectedMood.remove(mood);
+                                      }
+                                    });
+                                  },
+                                ),
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                ),
+              ),
+            ),
             Expanded(
               child: Container(
                   decoration: BoxDecoration(
@@ -83,15 +125,30 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 20,
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        child: SizedBox(
-                          child: Datetime(),
+                        padding: const EdgeInsets.only(left: 14, right: 40),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Datetime(),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isFilterVisible = !isFilterVisible;
+                                });
+                              },
+                              child: Icon(
+                                Icons.filter_list_rounded,
+                                color: Colors.white,
+                                size: 25,
+                              ),
+                            )
+                          ],
                         ),
                       ),
                       SizedBox(
                         height: 25,
                       ),
-                      listVeiw(moods)
+                      listVeiw()
                     ],
                   )),
             )
@@ -107,6 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (hour >= 6 && hour < 12) {
       return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text("Good Morning",
               style: TextStyle(
@@ -116,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(
             width: 5,
           ),
-          Lottie.asset('assets/emotions/Morning.json', height: 30, width: 30)
+          Lottie.asset('assets/emotions/Morning.json', height: 30, width: 30),
         ],
       );
     } else if (hour >= 12 && hour < 17) {
@@ -150,11 +208,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  listVeiw(List<MoodModel> listVeiwmood) {
+  listVeiw() {
     return Expanded(child: BlocBuilder<MoodCubit, MoodState>(
         builder: (BuildContext context, state) {
       if (state is GetMoodSuccess) {
-        listVeiwmood = state.moods;
+        final listVeiwmood = state.moods.where((mood) {
+          return selectedMood.isEmpty || selectedMood.contains(mood.label);
+        }).toList();
         if (listVeiwmood.isEmpty) {
           return const Center(
             child: Column(
@@ -180,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemBuilder: (context, i) {
-                final reversedList = state.moods[i];
+                final reversedList = listVeiwmood.reversed.toList()[i];
                 return VideoCard(
                     moodMap: reversedList,
                     deletTap: (p0) {

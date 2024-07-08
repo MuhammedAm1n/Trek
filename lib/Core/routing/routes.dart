@@ -10,4 +10,5 @@ class Routes {
   static const String SplashScreen = 'SplashScreen';
   static const String AuthCheck = 'AuthCheck';
   static const String ProfilePage = 'ProfilePage';
+  static const String SearchPage = 'Searchpage';
 }

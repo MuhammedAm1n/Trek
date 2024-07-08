@@ -5,6 +5,7 @@ import 'package:video_diary/Core/Widgets/BottomNavigator.dart';
 import 'package:video_diary/Core/Widgets/Splashscreen.dart';
 import 'package:video_diary/Core/networking/Authcheck.dart';
 import 'package:video_diary/Core/routing/routes.dart';
+import 'package:video_diary/Features/Search/SearchPage.dart';
 import 'package:video_diary/Features/Todo/Todo.dart';
 import 'package:video_diary/Features/HomePage/homeScreen.dart';
 import 'package:video_diary/Features/Login/loginScreen.dart';
@@ -42,6 +43,8 @@ class RoutesManager {
 
       case Routes.AuthCheck:
         return MaterialPageRoute(builder: (x) => const AuthCheck());
+      case Routes.SearchPage:
+        return MaterialPageRoute(builder: (x) => const SearchPage());
 
       case Routes.ProfilePage:
         return MaterialPageRoute(

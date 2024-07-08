@@ -243,13 +243,14 @@ class _MoodSelectState extends State<MoodSelect> {
                             await _RecordVideo(ImageSource.camera, context);
                         String thumbnail =
                             await generateAndSaveThumbnail(videopath);
-
+                        String moodLabel = getMoodLabel(moodVal);
                         context.read<MoodCubit>().emitInsertMood(MoodModel(
                             mood: moodVal,
                             path: videopath,
                             date: dateTime,
                             why: _whyList,
-                            thumb: thumbnail));
+                            thumb: thumbnail,
+                            label: moodLabel));
 
                         Navigator.pushNamed(
                             context, Routes.BottomNavigatorHome);
@@ -326,6 +327,22 @@ class _MoodSelectState extends State<MoodSelect> {
       return thumbnailFile.path;
     } else if (thumbnailPath == null) {
       return print(thumbnailPath);
+    }
+  }
+
+  String getMoodLabel(double moodVal) {
+    if (moodVal >= 3) {
+      return "Great";
+    } else if (moodVal >= 1 && moodVal < 3) {
+      return "Well";
+    } else if (moodVal >= -1 && moodVal < 1) {
+      return "Fine";
+    } else if (moodVal >= -3 && moodVal < -1) {
+      return "Bad";
+    } else if (moodVal < -3) {
+      return "Terrible";
+    } else {
+      return "Bad";
     }
   }
 }

@@ -8,17 +8,12 @@ import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/HomePage/Widgets/VideoPlayer.dart';
 import 'package:video_diary/Features/MoodSelection/Data/Model/MoodSelectModel.dart';
 
-class VideoCard extends StatefulWidget {
+class VideoCard extends StatelessWidget {
   const VideoCard({super.key, required this.moodMap, this.deletTap});
 
   final MoodModel moodMap;
   final void Function(BuildContext)? deletTap;
 
-  @override
-  State<VideoCard> createState() => _VideoCardState();
-}
-
-class _VideoCardState extends State<VideoCard> {
   Widget reasonTile(BuildContext context, IconData icon) {
     return Container(
         decoration: BoxDecoration(
@@ -43,44 +38,27 @@ class _VideoCardState extends State<VideoCard> {
   }
 
   // Uint8List? thumbnail;
-
-  // @override
-  // initState() {
-  //   super.initState();
-  //   genThumbnail();
-  // }
-
-  // Future<void> genThumbnail() async {
-  //   thumbnail = await VideoThumbnail.thumbnailData(
-  //       video: widget.moodMap.path,
-  //       imageFormat: ImageFormat.JPEG,
-  //       maxWidth: 128,
-  //       quality: 50);
-
-  //   setState(() {});
-  // }
-
   @override
   Widget build(BuildContext context) {
-    double moodVal = widget.moodMap.mood;
-    String thumB = widget.moodMap.thumb;
+    double moodVal = moodMap.mood;
+    String thumB = moodMap.thumb;
     String phrase = "";
-    String Videopath = widget.moodMap.path;
+    String Videopath = moodMap.path;
     // String delete;
 
     List<int> reasonList = [
-      widget.moodMap.why[0],
-      widget.moodMap.why[1],
-      widget.moodMap.why[2],
-      widget.moodMap.why[3],
-      widget.moodMap.why[4],
-      widget.moodMap.why[5],
-      widget.moodMap.why[6],
-      widget.moodMap.why[7],
-      widget.moodMap.why[8],
-      widget.moodMap.why[9],
-      widget.moodMap.why[10],
-      widget.moodMap.why[11],
+      moodMap.why[0],
+      moodMap.why[1],
+      moodMap.why[2],
+      moodMap.why[3],
+      moodMap.why[4],
+      moodMap.why[5],
+      moodMap.why[6],
+      moodMap.why[7],
+      moodMap.why[8],
+      moodMap.why[9],
+      moodMap.why[10],
+      moodMap.why[11],
     ];
     var list = [for (var i = 0; i < 12; i += 1) i];
 
@@ -123,7 +101,7 @@ class _VideoCardState extends State<VideoCard> {
           motion: const StretchMotion(),
           children: [
             SlidableAction(
-              onPressed: widget.deletTap,
+              onPressed: deletTap,
               icon: Icons.delete,
               backgroundColor: Colors.red,
               borderRadius: BorderRadius.circular(4),
@@ -181,7 +159,7 @@ class _VideoCardState extends State<VideoCard> {
                           borderRadius: BorderRadius.circular(10)),
                       child: Center(
                         child: Text(
-                            "${DateFormat.yMMMMd().format(DateTime.parse(widget.moodMap.date.toString()))} ",
+                            "${DateFormat.yMMMMd().format(DateTime.parse(moodMap.date.toString()))} ",
                             style: const TextStyle(color: Colors.white)),
                       ),
                     ),
