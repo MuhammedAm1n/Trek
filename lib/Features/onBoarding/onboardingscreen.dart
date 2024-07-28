@@ -18,6 +18,7 @@ class OnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
           child: Padding(
         padding: EdgeInsets.only(top: 30.h, left: 20.w, right: 20.w),
@@ -27,7 +28,7 @@ class OnboardingScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/Log.png',
+                'assets/images/NEW.png',
                 scale: 8,
               ),
 
@@ -39,7 +40,7 @@ class OnboardingScreen extends StatelessWidget {
                 "Capture life's moments, \n relive memories like never before,\n track your goals!",
                 style: TextStyle(
                     fontSize: 20,
-                    color: Colors.white,
+                    color: Colors.black,
                     fontWeight: FontWeight.normal),
               ),
               SizedBox(
@@ -47,11 +48,12 @@ class OnboardingScreen extends StatelessWidget {
               ),
               // Normal Login
               onboardingButton(
+                Coloring: ColorsApp.mainColor,
                 text: 'Log in with Account',
                 onPressed: () {
                   showModalBottomSheet(
                       isScrollControlled: true,
-                      backgroundColor: ColorsApp.darkGrey,
+                      backgroundColor: ColorsApp.backGround,
                       shape: const RoundedRectangleBorder(
                           borderRadius:
                               BorderRadius.vertical(top: Radius.circular(30))),
@@ -90,11 +92,12 @@ class OnboardingScreen extends StatelessWidget {
 
               // Sign Up  or Register
               onboardingButton(
+                Coloring: Color(0xff48908c),
                 text: 'Sign up for free',
                 onPressed: () {
                   showModalBottomSheet(
                       isScrollControlled: true,
-                      backgroundColor: ColorsApp.darkGrey,
+                      backgroundColor: ColorsApp.backGround,
                       shape: const RoundedRectangleBorder(
                           borderRadius:
                               BorderRadius.vertical(top: Radius.circular(30))),

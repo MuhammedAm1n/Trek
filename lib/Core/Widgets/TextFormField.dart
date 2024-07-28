@@ -39,6 +39,7 @@ class AppTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      cursorColor: ColorsApp.mainColor,
       keyboardType: keyboardType ?? TextInputType.text,
       onChanged: onChanged,
       onTap: onTap,
@@ -52,19 +53,19 @@ class AppTextFormField extends StatelessWidget {
             hintText: hintText,
 
             // hint style of hintText
-            hintStyle:
-                hintStyle ?? const TextStyle(fontSize: 14, color: Colors.white),
+            hintStyle: hintStyle ??
+                TextStyle(fontSize: 14, color: ColorsApp.secLightGrey),
             // IIcon in TextFormFIeld
             suffixIcon: suffixIcon,
 
             //Border's of TextFormField
             enabledBorder: enabledBorder ??
                 OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.blueGrey),
+                    borderSide: const BorderSide(color: Colors.black),
                     borderRadius: BorderRadius.circular(16)),
             focusedBorder: FoucusBorder ??
                 OutlineInputBorder(
-                  borderSide: const BorderSide(color: ColorsApp.mainOrange),
+                  borderSide: const BorderSide(color: ColorsApp.mainColor),
                   borderRadius: BorderRadius.circular(16),
                 ),
             errorBorder: OutlineInputBorder(
@@ -77,7 +78,7 @@ class AppTextFormField extends StatelessWidget {
             ),
           ),
       obscureText: IsObscureText ?? false,
-      style: inputTextStyle ?? const TextStyle(color: Colors.white),
+      style: inputTextStyle ?? const TextStyle(color: Colors.black),
       validator: (value) {
         return validator!(value!);
       },

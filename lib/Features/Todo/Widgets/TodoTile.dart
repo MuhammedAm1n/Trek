@@ -7,11 +7,11 @@ class ToDoTile extends StatelessWidget {
   final String habitName;
   final VoidCallback onTap;
 
-  final int? Pallete;
+  final int? pallete;
   int timeSpent;
   final int timeGoal;
   bool habitStarted;
-  bool Finished;
+  bool finished;
   final void Function(BuildContext)? deletTap;
   void Function()? updateTap;
   ToDoTile(
@@ -21,9 +21,9 @@ class ToDoTile extends StatelessWidget {
       required this.timeSpent,
       required this.timeGoal,
       required this.habitStarted,
-      required this.Finished,
+      required this.finished,
       this.deletTap,
-      required this.Pallete,
+      required this.pallete,
       this.updateTap});
 
 //convert seconds into min 61 > 1:02
@@ -66,7 +66,7 @@ class ToDoTile extends StatelessWidget {
         ),
         child: Container(
           decoration: BoxDecoration(
-              color: Color(Pallete!), borderRadius: BorderRadius.circular(12)),
+              color: Color(pallete!), borderRadius: BorderRadius.circular(12)),
           padding: const EdgeInsets.all(20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -112,7 +112,7 @@ class ToDoTile extends StatelessWidget {
                           style: TextStyle(
                               decorationThickness: 3,
                               decoration:
-                                  Finished ? TextDecoration.lineThrough : null,
+                                  finished ? TextDecoration.lineThrough : null,
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 18),

@@ -20,4 +20,8 @@ class MoodRepo {
   deleteMood(int id) {
     db.deleteMood(id);
   }
+
+  updateMood(MoodModel newMood) {
+    db.updateMood(newMood);
+  }
 }

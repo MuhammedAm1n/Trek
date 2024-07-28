@@ -22,24 +22,23 @@ class _AnalysisPageState extends State<AnalysisPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorsApp.backGround,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: ColorsApp.mainOrange,
-        title: Center(
-            child: Text(
-          'Stats',
-          style: TextStyle(
-              color: ColorsApp.Navigationbar,
-              fontSize: 26,
-              fontWeight: FontWeight.w400),
-        )),
+        surfaceTintColor: ColorsApp.backGround,
+        backgroundColor: ColorsApp.backGround,
+        shadowColor: ColorsApp.mediumGrey,
+        elevation: 1,
+        toolbarHeight: 100,
+        centerTitle: true,
+        title: Image.asset(
+          "assets/images/StatsTrans.png",
+          scale: 25,
+        ),
       ),
       body: BlocProvider(
         create: (context) => getIT<MoodCubit>(),
-        child: const Padding(
-          padding: EdgeInsets.all(30.0),
-          child: MyBarGraph(),
-        ),
+        child: const MyBarGraph(),
       ),
     );
   }

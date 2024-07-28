@@ -7,9 +7,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:unicons/unicons.dart';
+import 'package:video_diary/Core/Di/dependency.dart';
+import 'package:video_diary/Core/Widgets/CustomSnackbar.dart';
 import 'package:video_diary/Core/routing/routes.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/MoodSelection/Data/Model/MoodSelectModel.dart';
+import 'package:video_diary/Features/MoodSelection/Logic/cubit/location_cubit.dart';
 import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
@@ -29,6 +33,8 @@ class _MoodSelectState extends State<MoodSelect> {
   DateTime dateTime = DateTime.now().add(const Duration(days: 0));
   ImageSource? img;
 
+  String Location = '';
+
   Widget reasonSelect(
       BuildContext context, String name, IconData icon, int whyIndex) {
     return InkWell(
@@ -39,8 +45,15 @@ class _MoodSelectState extends State<MoodSelect> {
           });
         },
         child: Container(
-            decoration: const BoxDecoration(
-              color: ColorsApp.mainOrange,
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.7),
+                  blurRadius: 2,
+                  offset: Offset(6, 7),
+                )
+              ],
+              color: ColorsApp.mainColor,
             ),
             margin: const EdgeInsets.all(3.0),
             child: Column(
@@ -51,14 +64,14 @@ class _MoodSelectState extends State<MoodSelect> {
                     icon,
                     size: (MediaQuery.of(context).size.width - 60) / 5 - 30,
                     color: _whyList[whyIndex] == 0
-                        ? ColorsApp.darkGrey
-                        : Colors.white,
+                        ? Colors.white
+                        : ColorsApp.mainOrange,
                   ),
                   Text(name,
                       style: TextStyle(
                         color: _whyList[whyIndex] == 0
-                            ? ColorsApp.darkGrey
-                            : Colors.white,
+                            ? Colors.white
+                            : ColorsApp.mainOrange,
                       ))
                 ])));
   }
@@ -68,61 +81,113 @@ class _MoodSelectState extends State<MoodSelect> {
     return BlocListener<MoodCubit, MoodState>(
       listener: (context, state) {
         if (state is InsertMoodSuccess) {
-          context.read<MoodCubit>().emitGetMood();
+          context.read<MoodCubit>().loadMood();
         }
       },
       child: Scaffold(
         body: Container(
-          decoration: const BoxDecoration(color: ColorsApp.darkGrey),
+          decoration: const BoxDecoration(color: ColorsApp.backGround),
           child: CustomScrollView(
             slivers: <Widget>[
               SliverAppBar(
                 expandedHeight: 60.h,
                 automaticallyImplyLeading: false, // Appbar return to back
                 pinned: true,
-                backgroundColor: ColorsApp.Navigationbar,
+                backgroundColor: ColorsApp.backGround,
+                leading: Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: IconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return BlocProvider(
+                            create: (context) => getIT<LocationCubit>(),
+                            child: BlocConsumer<LocationCubit, LocationState>(
+                              listener: (context, state) {
+                                if (state is LocationSucess) {
+                                  Navigator.pop(
+                                      context); // Close the dialog when location is loaded
+
+                                  CustomSnackbar.showSnackbar(
+                                      context, 'Location: ${state.Location}');
+
+                                  Location = state.Location;
+                                } else if (state is LocationFaliuer) {
+                                  CustomSnackbar.showSnackbar(
+                                      context, 'Error: ${state.message}');
+                                }
+                              },
+                              builder: (context, state) {
+                                return AlertDialog(
+                                  actionsAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  icon: const Icon(
+                                    Icons.pin_drop,
+                                    color: ColorsApp.mainColor,
+                                    size: 32,
+                                  ),
+                                  content: state is LocationLoading
+                                      ? const CircularProgressIndicator(
+                                          color: ColorsApp.mainColor,
+                                        )
+                                      : const Text(
+                                          "Catch Location up",
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text(
+                                        'Cancel',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        context
+                                            .read<LocationCubit>()
+                                            .emitGetLocation();
+                                      },
+                                      child: const Text(
+                                        'Got it',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(
+                      UniconsLine.map_marker,
+                      color: Colors.black,
+                      size: 25,
+                    ),
+                  ),
+                ),
 
                 actions: [
-                  const Text(
-                    'Skip Diary Today',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600, color: Colors.white),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10.0),
+                    child: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(
+                          UniconsLine.navigator,
+                          color: Colors.black,
+                          size: 25,
+                        )),
                   ),
-                  IconButton(
-                      onPressed: () {
-                        Navigator.pushNamed(
-                            context, Routes.BottomNavigatorHome);
-                      },
-                      icon: const Icon(
-                        Icons.skip_next_rounded,
-                        color: Colors.white,
-                        weight: 20,
-                      ))
                 ],
 
                 excludeHeaderSemantics: false,
-                flexibleSpace: const FlexibleSpaceBar(
-                  background: Stack(
-                    alignment: Alignment.center,
-                    fit: StackFit.expand,
-                    children: <Widget>[
-                      DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.bottomRight,
-                            end: Alignment.topRight,
-                            colors: <Color>[
-                              ColorsApp.darkGrey,
-                              ColorsApp.mainOrange,
-                              ColorsApp.darkGrey,
-                              ColorsApp.darkGrey,
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ),
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(30, 20, 30, 30),
@@ -132,8 +197,8 @@ class _MoodSelectState extends State<MoodSelect> {
                     'How are you feeling?',
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 24,
-                        color: Colors.white),
+                        fontSize: 20,
+                        color: Colors.black),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 12),
@@ -144,7 +209,7 @@ class _MoodSelectState extends State<MoodSelect> {
                             height: 100),
                         const SizedBox(height: 10),
                         const Text("Super Great",
-                            style: TextStyle(color: Colors.white))
+                            style: TextStyle(color: Colors.black))
                       ],
                     ),
                   if (moodVal >= 1 && moodVal < 3)
@@ -153,7 +218,9 @@ class _MoodSelectState extends State<MoodSelect> {
                         Lottie.asset('assets/emotions/Great.json', height: 100),
                         const SizedBox(height: 10),
                         const Text("Pretty well",
-                            style: TextStyle(color: Colors.white))
+                            style: TextStyle(
+                              color: Colors.black,
+                            ))
                       ],
                     ),
                   if (moodVal >= -1 && moodVal < 1)
@@ -162,7 +229,7 @@ class _MoodSelectState extends State<MoodSelect> {
                         Lottie.asset('assets/emotions/Fine.json', height: 100),
                         const SizedBox(height: 10),
                         const Text("Completely Fine",
-                            style: TextStyle(color: Colors.white))
+                            style: TextStyle(color: Colors.black))
                       ],
                     ),
                   if (moodVal >= -3 && moodVal < -1)
@@ -172,7 +239,7 @@ class _MoodSelectState extends State<MoodSelect> {
                             height: 100),
                         const SizedBox(height: 10),
                         const Text("Somewhat Bad",
-                            style: TextStyle(color: Colors.white))
+                            style: TextStyle(color: Colors.black))
                       ],
                     ),
                   if (moodVal < -3)
@@ -182,12 +249,12 @@ class _MoodSelectState extends State<MoodSelect> {
                             height: 100),
                         const SizedBox(height: 10),
                         const Text("Totally Terrible",
-                            style: TextStyle(color: Colors.white))
+                            style: TextStyle(color: Colors.black))
                       ],
                     ),
                   Slider(
-                    activeColor: Colors.white,
-                    inactiveColor: ColorsApp.mainOrange,
+                    activeColor: ColorsApp.mediumGrey,
+                    inactiveColor: Colors.grey.shade300,
                     min: -5.0,
                     max: 5.0,
                     value: moodVal,
@@ -202,8 +269,8 @@ class _MoodSelectState extends State<MoodSelect> {
                     'Why do you feel this way?',
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 24,
-                        color: Colors.white),
+                        fontSize: 20,
+                        color: Colors.black),
                     textAlign: TextAlign.center,
                   ),
                 ])),
@@ -215,16 +282,16 @@ class _MoodSelectState extends State<MoodSelect> {
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                   children: <Widget>[
-                    reasonSelect(context, "family", OMIcons.home, 0),
+                    reasonSelect(context, "family", UniconsLine.home, 0),
                     reasonSelect(context, "friends", OMIcons.peopleOutline, 1),
                     reasonSelect(context, "work", Icons.business, 2),
                     reasonSelect(context, "hobbies", Icons.gesture, 3),
                     reasonSelect(context, "school", OMIcons.school, 4),
-                    reasonSelect(context, "love", Icons.favorite_border, 5),
+                    reasonSelect(context, "love", UniconsLine.heart, 5),
                     reasonSelect(context, "health", Icons.healing, 6),
                     reasonSelect(context, "music", OMIcons.headset, 7),
                     reasonSelect(context, "food", OMIcons.kitchen, 8),
-                    reasonSelect(context, "news", OMIcons.announcement, 9),
+                    reasonSelect(context, "news", UniconsLine.newspaper, 9),
                     reasonSelect(context, "weather", OMIcons.wbSunny, 10),
                     reasonSelect(context, "money", OMIcons.localAtm, 11),
                   ],
@@ -233,38 +300,51 @@ class _MoodSelectState extends State<MoodSelect> {
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
                 sliver: SliverList(
-                    delegate: SliverChildListDelegate([
-                  Container(
-                    alignment: Alignment.center,
-                    width: 200,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        String videopath =
-                            await _RecordVideo(ImageSource.camera, context);
-                        String thumbnail =
-                            await generateAndSaveThumbnail(videopath);
-                        String moodLabel = getMoodLabel(moodVal);
-                        context.read<MoodCubit>().emitInsertMood(MoodModel(
-                            mood: moodVal,
-                            path: videopath,
-                            date: dateTime,
-                            why: _whyList,
-                            thumb: thumbnail,
-                            label: moodLabel));
+                  delegate: SliverChildListDelegate(
+                    [
+                      Container(
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: 140, // Set the desired width
+                          height: 40, // Set the desired height
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.grey.shade300,
+                                elevation: 5, // Add shadow
+                                shadowColor:
+                                    Colors.grey // Set shadow color if needed
+                                ),
+                            onPressed: () async {
+                              String videopath = await _RecordVideo(
+                                  ImageSource.camera, context);
+                              String thumbnail =
+                                  await generateAndSaveThumbnail(videopath);
+                              String moodLabel = getMoodLabel(moodVal);
+                              context.read<MoodCubit>().insertMood(MoodModel(
+                                  location: Location,
+                                  mood: moodVal,
+                                  path: videopath,
+                                  date: dateTime,
+                                  why: _whyList,
+                                  thumb: thumbnail,
+                                  label: moodLabel));
 
-                        Navigator.pushNamed(
-                            context, Routes.BottomNavigatorHome);
-                      },
-                      child: const Text(
-                        "Record Video",
-                        style: TextStyle(
-                            color: ColorsApp.darkGrey,
-                            fontWeight: FontWeight.w600),
+                              Navigator.pushNamed(
+                                  context, Routes.BottomNavigatorHome);
+                            },
+                            child: const Text(
+                              "Record Video",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ])),
-              )
+                ),
+              ),
             ],
           ),
         ),
@@ -305,8 +385,8 @@ class _MoodSelectState extends State<MoodSelect> {
       video: videoPath,
       thumbnailPath: (await getTemporaryDirectory()).path,
       imageFormat: ImageFormat.JPEG,
-      maxHeight: 128,
-      maxWidth: 80,
+      maxHeight: 420,
+      maxWidth: 380,
       quality: 100,
     );
 

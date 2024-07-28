@@ -1,8 +1,8 @@
 flutter_native_splash:
-  color: "#264653"     
-  image: assets/images/Log.png
+  color: "#48908c"     
+  image: assets/images/Splash.png
   android_gravity: fill
   
   android_12:
-    color: "#264653"
+    color: "#48908c"
     image: assets/images/Splash.png

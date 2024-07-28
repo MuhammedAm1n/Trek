@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/UserPage/Logic/cubit/user_details_cubit.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -20,10 +21,9 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Profile'),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          elevation: 0,
+          backgroundColor: Colors.white,
         ),
+        backgroundColor: Colors.white,
         body: BlocBuilder<UserDetailsCubit, UserDetailsState>(
             builder: (context, snapshot) {
           // loading..
@@ -36,7 +36,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             );
           } else if (snapshot is UserDetailsSucess) {
-            snapshot.response;
             final user = snapshot.response;
 
             return Center(
@@ -44,10 +43,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   //Profile pic
-
                   Container(
                       decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primary,
+                          color: ColorsApp.mainColor,
                           borderRadius: BorderRadius.circular(25)),
                       child: const Padding(
                         padding: EdgeInsets.all(25.0),

@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorsApp.darkGrey,
+      backgroundColor: ColorsApp.mainColor,
       body: Center(
           child: _controller.value.isInitialized
               ? AspectRatio(

@@ -32,18 +32,18 @@ class _ProgressTodoState extends State<ProgressTodo> {
     List<HabitModel> habitItem = context.read<HabitsCubit>().habits;
 
     return Scaffold(
+        backgroundColor: ColorsApp.backGround,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          elevation: 60,
-          backgroundColor: Colors.white70,
-          title: const Center(
-            child: Text(
-              'Tasks',
-              style: TextStyle(
-                  color: ColorsApp.darkGrey,
-                  fontSize: 26,
-                  fontWeight: FontWeight.w400),
-            ),
+          surfaceTintColor: ColorsApp.backGround,
+          backgroundColor: ColorsApp.backGround,
+          shadowColor: ColorsApp.mediumGrey,
+          elevation: 1,
+          toolbarHeight: 100,
+          centerTitle: true,
+          title: Image.asset(
+            "assets/images/Tasks.png",
+            scale: 25,
           ),
         ),
         floatingActionButton: FloatingActionButton(
@@ -53,7 +53,7 @@ class _ProgressTodoState extends State<ProgressTodo> {
                 context: context,
                 builder: (context) {
                   return const AlertDialog(
-                    backgroundColor: ColorsApp.darkGrey,
+                    backgroundColor: ColorsApp.mainColor,
                     title: Center(
                         child: Text(
                       "Add Habit",
@@ -113,7 +113,7 @@ class _ProgressTodoState extends State<ProgressTodo> {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                backgroundColor: ColorsApp.darkGrey,
+                                backgroundColor: ColorsApp.mainColor,
                                 title: const Center(
                                     child: Text(
                                   "Update Habit",
@@ -146,10 +146,10 @@ class _ProgressTodoState extends State<ProgressTodo> {
                       habitStarted: habit.timeSpent / 60 == habit.timeGoal
                           ? !habit.paused
                           : habit.paused,
-                      Finished: habit.timeSpent / 60 == habit.timeGoal
+                      finished: habit.timeSpent / 60 == habit.timeGoal
                           ? !habit.paused
                           : false,
-                      Pallete: habit.color,
+                      pallete: habit.color,
                     );
                   },
                 ),

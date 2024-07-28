@@ -4,13 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:outline_material_icons/outline_material_icons.dart';
+import 'package:unicons/unicons.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/HomePage/Widgets/VideoPlayer.dart';
 import 'package:video_diary/Features/MoodSelection/Data/Model/MoodSelectModel.dart';
 
 class VideoCard extends StatelessWidget {
-  const VideoCard({super.key, required this.moodMap, this.deletTap});
+  const VideoCard(
+      {super.key, required this.moodMap, this.deletTap, this.onUpload});
 
+  final void Function()? onUpload;
   final MoodModel moodMap;
   final void Function(BuildContext)? deletTap;
 
@@ -18,7 +21,7 @@ class VideoCard extends StatelessWidget {
     return Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(width: 2.0, color: ColorsApp.mainOrange),
+          border: Border.all(width: 2.0, color: ColorsApp.mainColor),
           borderRadius: const BorderRadius.all(Radius.circular(5)),
         ),
         width: 42.0,
@@ -88,104 +91,118 @@ class VideoCard extends StatelessWidget {
     } else {
       phrase = "Totally Terrible";
     }
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => Videoplayerz(Path: Videopath)),
-        );
-      },
-      child: Slidable(
-        endActionPane: ActionPane(
-          motion: const StretchMotion(),
+    return Slidable(
+      endActionPane: ActionPane(
+        motion: const StretchMotion(),
+        children: [
+          SlidableAction(
+            onPressed: deletTap,
+            icon: Icons.delete,
+            backgroundColor: Colors.red,
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ],
+      ),
+      child: Container(
+        color: ColorsApp.backGround,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SlidableAction(
-              onPressed: deletTap,
-              icon: Icons.delete,
-              backgroundColor: Colors.red,
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ],
-        ),
-        child: Container(
-          color: ColorsApp.darkGrey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 14.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.file(
-                      File(thumB),
-                      scale: 1.2,
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    // ignore: prefer_const_literals_to_create_immutables
-                    Expanded(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(phrase,
-                                style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold)),
-                            const SizedBox(height: 15),
-                            Wrap(children: [
-                              for (int i in list)
-                                if (reasonList[i] == 1) reasonTiles[i]
-                            ])
-                          ]),
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20.0, left: 13),
-                child: Row(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: ColorsApp.mainOrange,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Center(
-                        child: Text(
-                            "${DateFormat.yMMMMd().format(DateTime.parse(moodMap.date.toString()))} ",
-                            style: const TextStyle(color: Colors.white)),
+            Padding(
+              padding: const EdgeInsets.only(left: 14.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Videoplayerz(Path: Videopath)),
+                      );
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.file(
+                        File(thumB),
+                        height: 128,
+                        width: 80,
                       ),
                     ),
-                    Row(
-                      children: [
-                        for (int i = 0; i < 70; i++)
-                          i.isEven
-                              ? Container(
-                                  width: 3,
-                                  height: 1,
-                                  decoration: BoxDecoration(
-                                      color: ColorsApp.mainOrange,
-                                      borderRadius: BorderRadius.circular(2)),
-                                )
-                              : Container(
-                                  height: 1,
-                                  width: 3,
-                                  color: ColorsApp.mainOrange,
-                                )
-                      ],
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  // ignore: prefer_const_literals_to_create_immutables
+                  Expanded(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(phrase,
+                              style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 15),
+                          Wrap(children: [
+                            for (int i in list)
+                              if (reasonList[i] == 1) reasonTiles[i]
+                          ])
+                        ]),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 15.0),
+                    child: IconButton(
+                        padding: const EdgeInsets.only(top: 40, right: 15),
+                        onPressed: onUpload,
+                        icon: const Icon(
+                          color: Colors.black,
+                          UniconsLine.share,
+                          size: 27,
+                        )),
+                  )
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 14),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                      "${DateFormat.yMMMMd().format(DateTime.parse(moodMap.date.toString()))} ",
+                      style: const TextStyle(color: Colors.grey)),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Row(
+                    children: [
+                      for (int i = 0; i < 70; i++)
+                        i.isEven
+                            ? Container(
+                                width: 3,
+                                height: 0.7,
+                                decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(2)),
+                              )
+                            : Container(
+                                height: 0.7,
+                                width: 3,
+                                color: Colors.black,
+                              )
+                    ],
+                  )
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );

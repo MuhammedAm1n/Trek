@@ -86,7 +86,10 @@ class _UpdateHabitState extends State<UpdateHabit> {
               decoration: const InputDecoration(
                   focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: ColorsApp.mainOrange)),
-                  icon: Icon(Icons.date_range),
+                  icon: Icon(
+                    Icons.date_range,
+                    color: Colors.white,
+                  ),
                   labelText: "Select Time",
                   labelStyle: TextStyle(color: ColorsApp.mainOrange)),
               hintText: 'Time',

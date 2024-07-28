@@ -24,23 +24,23 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Column(
         children: [
           SizedBox(
-            height: 20.h,
+            height: 15.h,
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Welcome Back!',
-                  style: TextStyle(color: ColorsApp.mainOrange, fontSize: 20),
+                  style: TextStyle(color: Colors.black, fontSize: 20),
                 ),
-                Icon(Icons.face, size: 20, color: Colors.white)
+                Icon(Icons.face, size: 20, color: ColorsApp.secLightGrey)
               ],
             ),
           ),
           SizedBox(
-            height: 80.h,
+            height: 40.h,
           ),
           AppTextFormField(
             keyboardType: TextInputType.emailAddress,
@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
               'Forgot Password?',
               style: TextStyle(
                   fontSize: 13,
-                  color: ColorsApp.mainOrange,
+                  color: ColorsApp.mainColor,
                   fontWeight: FontWeight.normal),
             ),
           ),

@@ -5,6 +5,9 @@ import 'package:video_diary/Core/Widgets/BottomNavigator.dart';
 import 'package:video_diary/Core/Widgets/Splashscreen.dart';
 import 'package:video_diary/Core/networking/Authcheck.dart';
 import 'package:video_diary/Core/routing/routes.dart';
+import 'package:video_diary/Features/Favourite/FavouritePage.dart';
+import 'package:video_diary/Features/Snippets/Logic/cubit/reminder_cubit.dart';
+import 'package:video_diary/Features/Snippets/reminderPage.dart';
 import 'package:video_diary/Features/Search/SearchPage.dart';
 import 'package:video_diary/Features/Todo/Todo.dart';
 import 'package:video_diary/Features/HomePage/homeScreen.dart';
@@ -45,7 +48,18 @@ class RoutesManager {
         return MaterialPageRoute(builder: (x) => const AuthCheck());
       case Routes.SearchPage:
         return MaterialPageRoute(builder: (x) => const SearchPage());
-
+      case Routes.ReminderPage:
+        return MaterialPageRoute(
+            builder: (x) => BlocProvider(
+                  create: (context) => getIT<ReminderCubit>(),
+                  child: const SnippetsPage(),
+                ));
+      case Routes.FavoritePage:
+        return MaterialPageRoute(
+            builder: (x) => BlocProvider(
+                  create: (context) => getIT<MoodCubit>(),
+                  child: const FavoritePage(),
+                ));
       case Routes.ProfilePage:
         return MaterialPageRoute(
             builder: (x) => BlocProvider(

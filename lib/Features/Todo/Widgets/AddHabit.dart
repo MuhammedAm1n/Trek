@@ -19,7 +19,6 @@ class AddHabit extends StatefulWidget {
 class _AddHabitState extends State<AddHabit> {
   final TextEditingController _time = TextEditingController();
   final TextEditingController _name = TextEditingController();
-  List colors = [Colors.green, Colors.blue];
 
   @override
   Widget build(BuildContext context) {

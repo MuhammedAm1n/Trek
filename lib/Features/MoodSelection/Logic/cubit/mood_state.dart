@@ -12,10 +12,10 @@ final class GetMoodSuccess extends MoodState {
   GetMoodSuccess({required this.moods});
 }
 
-final class GetMoodFalier extends MoodState {
-  final String messge;
+final class GetMoodFailure extends MoodState {
+  final String message;
 
-  GetMoodFalier({required this.messge});
+  GetMoodFailure({required this.message});
 }
 /////////////////////////////////////////////////////////////
 
@@ -23,10 +23,10 @@ final class DeleteMoodSuccess extends MoodState {}
 
 final class DeleteMoodLoading extends MoodState {}
 
-final class DeleteMoodFailuer extends MoodState {
-  final String messge;
+final class DeleteMoodFailure extends MoodState {
+  final String message;
 
-  DeleteMoodFailuer({required this.messge});
+  DeleteMoodFailure({required this.message});
 }
 ////////////////////////////////////////////////////////////////
 
@@ -34,8 +34,22 @@ final class InsertMoodSuccess extends MoodState {}
 
 final class InsertMoodLoading extends MoodState {}
 
-final class InsertMoodFailuer extends MoodState {
-  final String messge;
+final class InsertMoodFailure extends MoodState {
+  final String message;
 
-  InsertMoodFailuer({required this.messge});
+  InsertMoodFailure({required this.message});
+}
+
+final class UpdateMoodSuccess extends MoodState {
+  final List<MoodModel> moods;
+
+  UpdateMoodSuccess({required this.moods});
+}
+
+final class UpdateMoodLoading extends MoodState {}
+
+final class UpdateMoodFailure extends MoodState {
+  final String message;
+
+  UpdateMoodFailure({required this.message});
 }

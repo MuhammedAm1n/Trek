@@ -2,13 +2,37 @@ class MoodModel {
   String label;
   double mood;
   String path;
+  String location;
   String thumb;
   DateTime date;
   List<int> why;
   int? id;
+  bool favorite;
 // List  that givin it to database to store
   List dbEntry() {
-    return [mood, date.toIso8601String(), path, thumb, label] + why;
+    return [
+          mood,
+          date.toIso8601String(),
+          path,
+          thumb,
+          label,
+          location,
+          favorite
+        ] +
+        why;
+  }
+
+  MoodModel copyWith({bool? favorite}) {
+    return MoodModel(
+        id: id,
+        label: label,
+        location: location,
+        favorite: favorite ?? this.favorite,
+        thumb: thumb,
+        mood: mood,
+        path: path,
+        date: date,
+        why: why);
   }
 
   MoodModel(
@@ -18,17 +42,21 @@ class MoodModel {
       required this.path,
       required this.date,
       required this.why,
-      required this.label});
+      required this.label,
+      required this.location,
+      this.favorite = true});
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
+      'location': location,
       'label': label,
       'path': path,
       'mood': mood,
-      'date': date,
-      'why': why,
-      'id': id,
-      'thumb': thumb
+      'date': date.toIso8601String(),
+      'why': why.join(','), // Assuming why is a list of integers
+      'thumb': thumb,
+      'favorite': favorite ? 1 : 0,
     };
   }
 
@@ -50,6 +78,8 @@ class MoodModel {
     }
 
     return MoodModel(
+      favorite: parsed["favorite"] == 1,
+      location: parsed['location'],
       label: parsed['label'],
       thumb: parsed['thumb'],
       id: parsed['id'],

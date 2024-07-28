@@ -7,7 +7,7 @@ import 'package:video_diary/Features/Todo/Data/Repo/Habitrepo.dart';
 class HabitsCubit extends Cubit<HabitsState> {
   final HabitRepo habitRepo;
   List<HabitModel> habits = [];
-  Color color = const Color(0xff264653);
+  Color color = const Color(0xfffabab7);
   final formKey = GlobalKey<FormState>();
   HabitsCubit(this.habitRepo) : super(HabitsInitial());
 

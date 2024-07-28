@@ -2,7 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
+
+import 'package:share_plus/share_plus.dart';
 import 'package:video_diary/Core/Di/dependency.dart';
+
 import 'package:video_diary/Core/routing/routes.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/HomePage/Widgets/DropDownButton.dart';
@@ -22,20 +25,33 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<String> moodFilter = ["Great", "Well", "Fine", "Bad", "Terrible"];
   List<String> selectedMood = [];
   bool isFilterVisible = false;
+  // final GoogleDriveApi _googleDriveApi = GoogleDriveApi();
   @override
   void initState() {
-    context.read<MoodCubit>().emitGetMood();
     super.initState();
+
+    context.read<MoodCubit>().loadMood();
   }
+
+  // Future<void> _authenticateGoogleDrive() async {
+  //   await _googleDriveApi.authenticate();
+  // }
+
+  // Future<void> _uploadVideo(String filePath) async {
+  //   final fileName = path.basename(filePath);
+  //   await _googleDriveApi.uploadFile(filePath, fileName);
+  //   CustomSnackbar.showSnackbar(context, '$fileName uploaded to Google Drive');
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorsApp.backGround,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, Routes.MoodSelect);
         },
-        backgroundColor: ColorsApp.mainOrange,
+        backgroundColor: ColorsApp.mainColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         child: Icon(
           Icons.add,
@@ -43,122 +59,148 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       appBar: AppBar(
+        surfaceTintColor: ColorsApp.backGround,
+        backgroundColor: ColorsApp.backGround,
+        shadowColor: ColorsApp.mediumGrey,
+        elevation: 1,
+        toolbarHeight: 100,
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: Text(
-          'Entries',
-          style: TextStyle(
-              color: ColorsApp.mainOrange,
-              fontSize: 26,
-              fontWeight: FontWeight.w400),
+        title: Image.asset(
+          "assets/images/NEW.png",
+          scale: 22,
         ),
-        backgroundColor: ColorsApp.Navigationbar,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, Routes.ReminderPage);
+          },
+          child: Icon(
+            Icons.format_quote_sharp,
+            color: ColorsApp.mediumGrey,
+            size: 35,
+          ),
+        ),
         actions: [
-          BlocProvider(
-            create: (context) => getIT<UserDetailsCubit>(),
-            child: DropDown(),
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: BlocProvider(
+              create: (context) => getIT<UserDetailsCubit>(),
+              child: DropDown(),
+            ),
           ),
         ],
       ),
-      body: Container(
-        color: Colors.white12,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TimeBar(),
-            SizedBox(
-              height: 50,
-            ),
-            AnimatedSize(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: Visibility(
-                  visible: isFilterVisible,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: moodFilter
-                          .map((mood) => Padding(
-                                padding: const EdgeInsets.only(right: 10.0),
-                                child: FilterChip(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                                  selectedColor: Colors.white12,
-                                  labelStyle: const TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500),
-                                  backgroundColor: ColorsApp.mainOrange,
-                                  selected: selectedMood.contains(mood),
-                                  label: Text(mood),
-                                  onSelected: (selected) {
-                                    setState(() {
-                                      if (selected) {
-                                        selectedMood.add(mood);
-                                      } else {
-                                        selectedMood.remove(mood);
-                                      }
-                                    });
-                                  },
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: 20,
+          ),
+          TimeBar(),
+          SizedBox(
+            height: 40,
+          ),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10.0),
+              child: Visibility(
+                visible: isFilterVisible,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: moodFilter
+                        .map((mood) => Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: FilterChip(
+                                side: BorderSide(
+                                    color: selectedMood.contains(mood)
+                                        ? ColorsApp.mainColor
+                                        : Colors.black,
+                                    width: 0.4),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                              ))
-                          .toList(),
-                    ),
+                                selectedColor: ColorsApp.mainColor,
+                                labelStyle: const TextStyle(
+                                    fontSize: 13, fontWeight: FontWeight.w500),
+                                backgroundColor: Colors.white,
+                                selected: selectedMood.contains(mood),
+                                label: Text(mood),
+                                onSelected: (selected) {
+                                  setState(() {
+                                    if (selected) {
+                                      selectedMood.add(mood);
+                                    } else {
+                                      selectedMood.remove(mood);
+                                    }
+                                  });
+                                },
+                              ),
+                            ))
+                        .toList(),
                   ),
                 ),
               ),
             ),
-            Expanded(
-              child: Container(
-                  decoration: BoxDecoration(
-                    color: ColorsApp.darkGrey,
-                    borderRadius:
-                        BorderRadius.only(topRight: Radius.circular(70)),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 20,
+          ),
+          Expanded(
+            child: Container(
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.6),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 2),
+                    )
+                  ],
+                  color: ColorsApp.backGround,
+                  borderRadius:
+                      BorderRadius.only(topRight: Radius.circular(70)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 14, right: 40),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          datetime(),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isFilterVisible = !isFilterVisible;
+                              });
+                            },
+                            child: Icon(
+                              Icons.filter_list_rounded,
+                              color: Colors.black,
+                              size: 25,
+                            ),
+                          )
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 14, right: 40),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Datetime(),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  isFilterVisible = !isFilterVisible;
-                                });
-                              },
-                              child: Icon(
-                                Icons.filter_list_rounded,
-                                color: Colors.white,
-                                size: 25,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 25,
-                      ),
-                      listVeiw()
-                    ],
-                  )),
-            )
-          ],
-        ),
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    listVeiw()
+                  ],
+                )),
+          )
+        ],
       ),
     );
   }
 
-  Datetime() {
+  datetime() {
     DateTime now = DateTime.now();
     int hour = now.hour;
 
@@ -170,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: ColorsApp.mainOrange)),
+                  color: Colors.black)),
           SizedBox(
             width: 5,
           ),
@@ -184,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: ColorsApp.mainOrange)),
+                  color: Colors.black)),
           SizedBox(
             width: 5,
           ),
@@ -198,11 +240,15 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: ColorsApp.mainOrange)),
+                  color: Colors.black)),
           SizedBox(
             width: 5,
           ),
-          Lottie.asset('assets/emotions/night.json', height: 30, width: 30)
+          Padding(
+            padding: const EdgeInsets.only(top: 2.0),
+            child: Lottie.asset('assets/emotions/NewMoon.json',
+                height: 30, width: 30),
+          )
         ],
       );
     }
@@ -241,17 +287,29 @@ class _HomeScreenState extends State<HomeScreen> {
               shrinkWrap: true,
               itemBuilder: (context, i) {
                 final reversedList = listVeiwmood.reversed.toList()[i];
-                return VideoCard(
-                    moodMap: reversedList,
-                    deletTap: (p0) {
-                      setState(() {
-                        return context
-                            .read<MoodCubit>()
-                            .emitDeleteMood(reversedList.id!);
-                      });
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: VideoCard(
+                      onUpload: () async {
+                        final result = await Share.shareXFiles(
+                            [XFile(reversedList.path)],
+                            text: 'Great picture');
 
-                      context.read<MoodCubit>().emitGetMood();
-                    });
+                        if (result.status == ShareResultStatus.success) {
+                          print('Thank you for sharing the picture!');
+                        }
+                      },
+                      moodMap: reversedList,
+                      deletTap: (p0) {
+                        setState(() {
+                          return context
+                              .read<MoodCubit>()
+                              .deleteMood(reversedList.id!);
+                        });
+
+                        context.read<MoodCubit>().loadMood();
+                      }),
+                );
               },
             ),
           ]);

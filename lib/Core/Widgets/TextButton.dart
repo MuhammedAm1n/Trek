@@ -11,7 +11,7 @@ class GTextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: ButtonStyle(
-          backgroundColor: const WidgetStatePropertyAll(ColorsApp.mainOrange),
+          backgroundColor: const WidgetStatePropertyAll(ColorsApp.mainColor),
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           minimumSize: WidgetStatePropertyAll(Size(double.infinity, 50.h)),
           shape: WidgetStatePropertyAll(

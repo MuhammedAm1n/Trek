@@ -14,8 +14,9 @@ class DropDown extends StatelessWidget {
     return DropdownButtonHideUnderline(
       child: DropdownButton2(
         customButton: const Icon(
+          color: ColorsApp.mediumGrey,
           Icons.list,
-          size: 40,
+          size: 35,
         ),
         items: [
           ...MenuItems.firstItems.map(
@@ -24,7 +25,11 @@ class DropDown extends StatelessWidget {
               child: MenuItems.buildItem(item),
             ),
           ),
-          const DropdownMenuItem<Divider>(enabled: false, child: Divider()),
+          const DropdownMenuItem<Divider>(
+              enabled: false,
+              child: Divider(
+                color: Colors.white,
+              )),
           ...MenuItems.secondItems.map(
             (item) => DropdownMenuItem<MenuItem>(
               value: item,
@@ -39,9 +44,8 @@ class DropDown extends StatelessWidget {
           width: 130,
           padding: const EdgeInsets.symmetric(vertical: 4),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4),
-            color: ColorsApp.Navigationbar,
-          ),
+              borderRadius: BorderRadius.circular(4),
+              color: ColorsApp.mainColor),
           offset: const Offset(0, 6),
         ),
         menuItemStyleData: MenuItemStyleData(
@@ -68,11 +72,12 @@ class MenuItem {
 }
 
 abstract class MenuItems {
-  static const List<MenuItem> firstItems = [settings];
+  static const List<MenuItem> firstItems = [settings, favorite];
   static const List<MenuItem> secondItems = [logout];
 
   static const settings =
       MenuItem(text: 'User', icon: Icons.account_box_rounded);
+  static const favorite = MenuItem(text: 'Favorite', icon: Icons.favorite);
   static const logout = MenuItem(text: 'Log Out', icon: Icons.logout);
 
   static Widget buildItem(MenuItem item) {
@@ -86,6 +91,7 @@ abstract class MenuItems {
           child: Text(
             item.text,
             style: const TextStyle(
+              fontSize: 13,
               color: Colors.white,
             ),
           ),
@@ -98,7 +104,10 @@ abstract class MenuItems {
     switch (item) {
       case MenuItems.settings:
         Navigator.pushNamed(context, Routes.ProfilePage);
+        break;
 
+      case MenuItems.favorite:
+        Navigator.pushNamed(context, Routes.FavoritePage);
         break;
 
       case MenuItems.logout:

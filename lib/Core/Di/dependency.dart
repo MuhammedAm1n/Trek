@@ -2,12 +2,17 @@ import 'package:get_it/get_it.dart';
 import 'package:video_diary/Core/LocalDatabase/HabitDatabase.dart';
 import 'package:video_diary/Core/LocalDatabase/LocalDB.dart';
 import 'package:video_diary/Core/networking/ApiServices.dart';
+import 'package:video_diary/Core/networking/FetchLocation.dart';
 import 'package:video_diary/Features/Login/Data/Repositry/Repo.dart';
 import 'package:video_diary/Features/Login/Logic/cubit/login_cubit.dart';
 import 'package:video_diary/Features/LoginWithGoogle/Data/Repo/LoginWithGmailRepo.dart';
 import 'package:video_diary/Features/LoginWithGoogle/Logic/cubit/login_with_google_cubit.dart';
+import 'package:video_diary/Features/MoodSelection/Data/Repo/LocationRepo.dart';
 import 'package:video_diary/Features/MoodSelection/Data/Repo/MoodRepo.dart';
+import 'package:video_diary/Features/MoodSelection/Logic/cubit/location_cubit.dart';
 import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
+import 'package:video_diary/Features/Snippets/Data/RemindersRepo.dart';
+import 'package:video_diary/Features/Snippets/Logic/cubit/reminder_cubit.dart';
 import 'package:video_diary/Features/SignUp/Data/Repositry/RegisterRepo.dart';
 import 'package:video_diary/Features/SignUp/Logic/cubit/register_cubit.dart';
 import 'package:video_diary/Features/Todo/Data/Logic/cubit/habit_cubit.dart';
@@ -18,6 +23,7 @@ import 'package:video_diary/Features/UserPage/Logic/cubit/user_details_cubit.dar
 final getIT = GetIt.instance;
 Future<void> setUpGit() async {
   getIT.registerLazySingleton<ApiServices>(() => ApiServices());
+  getIT.registerLazySingleton<FetchLocation>(() => FetchLocation());
   getIT.registerLazySingleton<LocalDb>(() => LocalDb());
   getIT.registerLazySingleton<HabitDatabase>(() => HabitDatabase());
 // User Details
@@ -47,4 +53,15 @@ Future<void> setUpGit() async {
   //Habbits
   getIT.registerLazySingleton<HabitRepo>(() => HabitRepo(database: getIT()));
   getIT.registerFactory<HabitsCubit>(() => HabitsCubit(getIT()));
+
+  //Location
+
+  getIT.registerLazySingleton<LocationRepo>(
+      () => LocationRepo(fetchlocation: getIT()));
+  getIT.registerFactory<LocationCubit>(() => LocationCubit(getIT()));
+
+  // Reminders
+  getIT.registerLazySingleton<Remindersrepo>(
+      () => Remindersrepo(apiServices: getIT()));
+  getIT.registerFactory<ReminderCubit>(() => ReminderCubit(getIT()));
 }

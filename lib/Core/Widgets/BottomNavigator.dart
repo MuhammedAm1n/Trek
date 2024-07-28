@@ -1,4 +1,3 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_diary/Core/Di/dependency.dart';
@@ -49,6 +48,7 @@ class _BottomNavigatorHomeState extends State<BottomNavigatorHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) {
@@ -58,26 +58,61 @@ class _BottomNavigatorHomeState extends State<BottomNavigatorHome> {
         },
         children: page,
       ),
-      bottomNavigationBar: CurvedNavigationBar(
-          index: index,
-          onTap: _onItemTapped,
-          backgroundColor: ColorsApp.darkGrey,
-          color: ColorsApp.Navigationbar,
-          animationDuration: const Duration(milliseconds: 300),
-          items: const [
-            Icon(
-              Icons.home,
-              color: Colors.white,
-            ),
-            Icon(
-              Icons.analytics_sharp,
-              color: Colors.white,
-            ),
-            Icon(
-              Icons.message,
-              color: Colors.white,
-            ),
-          ]),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Container(
+          decoration: const BoxDecoration(
+              border: Border(top: BorderSide(color: ColorsApp.lightGrey))),
+          child: BottomNavigationBar(
+              elevation: 0,
+              selectedItemColor: ColorsApp.mainColor,
+              backgroundColor: Colors.white,
+              currentIndex: index,
+              onTap: _onItemTapped,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.home,
+                    size: 30,
+                  ),
+                  label: "Home",
+                ),
+                BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.analytics_sharp,
+                      size: 30,
+                    ),
+                    label: "Stats"),
+                BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.task_alt_rounded,
+                      size: 30,
+                    ),
+                    label: "Tasks")
+              ]),
+        ),
+      ),
     );
+
+    //  CurvedNavigationBar(
+    //       index: index,
+    //       onTap: _onItemTapped,
+    //       backgroundColor: ColorsApp.backGround,
+    //       color: Colors.black,
+    //       animationDuration: const Duration(milliseconds: 300),
+    //       items: const [
+    //         Icon(
+    //           Icons.home,
+    //           color: Colors.white,
+    //         ),
+    //         Icon(
+    //           Icons.analytics_sharp,
+    //           color: Colors.white,
+    //         ),
+    //         Icon(
+    //           Icons.task_alt_rounded,
+    //           color: Colors.white,
+    //         ),
+    //       ]),
   }
 }

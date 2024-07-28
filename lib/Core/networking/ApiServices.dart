@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:google_sign_in/google_sign_in.dart';
 
 class ApiServices {
   UserCredential? userCredential;
   final User? currentUser = FirebaseAuth.instance.currentUser;
+  final CollectionReference reminders =
+      FirebaseFirestore.instance.collection("Reminders");
 
   // lOGIN WITH email and password
   Future logiN(String email, String password) async {
@@ -128,5 +131,20 @@ class ApiServices {
         throw e.code;
       }
     }
+  }
+
+//Add new post
+  Future<void> AddReminder(String massge) {
+    return reminders.add({"PostMessage": massge, "TimeStamp": Timestamp.now()});
+  }
+
+// get Reminders
+  Stream<QuerySnapshot<Object?>> getRemindersStream() {
+    final reminderStream = FirebaseFirestore.instance
+        .collection("Reminders")
+        .orderBy("TimeStamp", descending: true)
+        .snapshots();
+
+    return reminderStream;
   }
 }

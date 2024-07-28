@@ -13,11 +13,11 @@ class ListVeiwColorsItem extends StatefulWidget {
 class _ListVeiwColorsItemState extends State<ListVeiwColorsItem> {
   int currentIndex = 0;
   List<Color> colors = const [
-    Color(0xffe9c46a),
-    Color.fromARGB(213, 161, 75, 192),
-    Color(0xff2a9d8f),
-    Color(0xfff4a261),
-    Color(0xffe76f51)
+    Color(0xfffabab7),
+    Color(0xfff06d9c),
+    Color(0xff98c7da),
+    Color(0xff407d8b),
+    Color(0xffe9c46a)
   ];
   @override
   Widget build(BuildContext context) {

@@ -18,14 +18,14 @@ class SignupScreen extends StatelessWidget {
           SizedBox(
             height: 15.h,
           ),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                '  Join VDiary Today!',
-                style: TextStyle(color: ColorsApp.mainOrange, fontSize: 20),
+              const Text(
+                '  Join Trek ..',
+                style: TextStyle(color: Colors.black, fontSize: 20),
               ),
-              Icon(Icons.face, size: 20, color: Colors.white),
+              Icon(Icons.face, size: 20, color: ColorsApp.secLightGrey),
             ],
           ),
           SizedBox(
@@ -35,23 +35,20 @@ class SignupScreen extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               '  Create your account',
-              style: TextStyle(color: Colors.white, fontSize: 16),
+              style: TextStyle(color: ColorsApp.mainColor, fontSize: 16),
             ),
           ),
           SizedBox(
             height: 40.h,
           ),
           const EmailAndPasswordReg(),
-          SizedBox(
-            height: 35.h,
-          ),
           GTextButton(
               text: 'Sign up',
               onPressed: () {
                 validateThenDoSignup(context);
               }),
           SizedBox(
-            height: 10.h,
+            height: 15.h,
           ),
           const RegisterBlocListener()
         ],
