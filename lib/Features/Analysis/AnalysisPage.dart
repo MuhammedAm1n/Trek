@@ -33,7 +33,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
         centerTitle: true,
         title: Image.asset(
           "assets/images/StatsTrans.png",
-          scale: 25,
+          scale: 26,
         ),
       ),
       body: BlocProvider(

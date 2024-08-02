@@ -17,41 +17,44 @@ class TimeBar extends StatelessWidget {
     final MoodCubit moodCubit = getIT<MoodCubit>();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Today',
-                style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
-              ),
-              Text(
-                DateFormat.yMMMMd().format(
-                  DateTime.now(),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Today',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
                 ),
-                style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 2.0),
-            child: SearchBarHome(onTap: () {
-              showSearch(
-                context: context,
-                delegate: CustomSearchDelegate(moodCubit: moodCubit),
-              );
-            }),
-          )
-        ],
+                Text(
+                  DateFormat.yMMMMd().format(
+                    DateTime.now(),
+                  ),
+                  style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 3.0, left: 15),
+              child: SearchBarHome(onTap: () {
+                showSearch(
+                  context: context,
+                  delegate: CustomSearchDelegate(moodCubit: moodCubit),
+                );
+              }),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -88,20 +91,17 @@ class CustomSearchDelegate extends SearchDelegate {
   }
 
   @override
-  String get searchFieldLabel => 'Search by dates,places';
+  String get searchFieldLabel => 'Search by dates,places..';
 
   @override
   InputDecorationTheme get searchFieldDecorationTheme {
-    return InputDecorationTheme(
-      hintStyle: const TextStyle(fontSize: 17),
+    return const InputDecorationTheme(
+      hintStyle: TextStyle(fontSize: 17),
       focusColor: ColorsApp.mainColor,
       hoverColor: Colors.white,
       filled: true,
       fillColor: Colors.white, // Change this to your desired color
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10.0),
-        borderSide: BorderSide.none,
-      ),
+      // Set the cursor color
     );
   }
 

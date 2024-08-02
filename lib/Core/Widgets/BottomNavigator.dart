@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_diary/Core/Di/dependency.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/Analysis/AnalysisPage.dart';
+import 'package:video_diary/Features/Favourite/FavouritePage.dart';
 import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
 import 'package:video_diary/Features/Todo/Todo.dart';
 import 'package:video_diary/Features/HomePage/homeScreen.dart';
@@ -25,9 +26,13 @@ class _BottomNavigatorHomeState extends State<BottomNavigatorHome> {
     ),
     BlocProvider(
       create: (context) => getIT<MoodCubit>(),
+      child: const FavoritePage(),
+    ),
+    BlocProvider(
+      create: (context) => getIT<MoodCubit>(),
       child: const AnalysisPage(),
     ),
-    const ProgressTodo(),
+    ProgressTodo(),
   ];
 
   @override
@@ -64,9 +69,11 @@ class _BottomNavigatorHomeState extends State<BottomNavigatorHome> {
           decoration: const BoxDecoration(
               border: Border(top: BorderSide(color: ColorsApp.lightGrey))),
           child: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: Colors.white,
+              unselectedItemColor: ColorsApp.mediumGrey,
               elevation: 0,
               selectedItemColor: ColorsApp.mainColor,
-              backgroundColor: Colors.white,
               currentIndex: index,
               onTap: _onItemTapped,
               items: const [
@@ -79,6 +86,12 @@ class _BottomNavigatorHomeState extends State<BottomNavigatorHome> {
                 ),
                 BottomNavigationBarItem(
                     icon: Icon(
+                      Icons.favorite,
+                      size: 30,
+                    ),
+                    label: "Favorites"),
+                BottomNavigationBarItem(
+                    icon: Icon(
                       Icons.analytics_sharp,
                       size: 30,
                     ),
@@ -88,7 +101,7 @@ class _BottomNavigatorHomeState extends State<BottomNavigatorHome> {
                       Icons.task_alt_rounded,
                       size: 30,
                     ),
-                    label: "Tasks")
+                    label: "Tasks"),
               ]),
         ),
       ),

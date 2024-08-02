@@ -1,30 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:video_diary/Features/Todo/Data/Model/HabitModel.dart';
 
 // ignore: must_be_immutable
 class ToDoTile extends StatelessWidget {
-  final String habitName;
   final VoidCallback onTap;
+  final HabitModel habitTile;
 
-  final int? pallete;
-  int timeSpent;
-  final int timeGoal;
-  bool habitStarted;
-  bool finished;
   final void Function(BuildContext)? deletTap;
   void Function()? updateTap;
   ToDoTile(
       {super.key,
-      required this.habitName,
       required this.onTap,
-      required this.timeSpent,
-      required this.timeGoal,
-      required this.habitStarted,
-      required this.finished,
       this.deletTap,
-      required this.pallete,
-      this.updateTap});
+      this.updateTap,
+      required this.habitTile});
 
 //convert seconds into min 61 > 1:02
   convertingMintoSec(int totalSeconds) {
@@ -45,11 +36,18 @@ class ToDoTile extends StatelessWidget {
 
 // Calculate proggress percentage
   double percentegeDone() {
-    return timeSpent / (timeGoal * 60);
+    return habitTile.timeSpent / (habitTile.timeGoal * 60);
   }
 
   @override
   Widget build(BuildContext context) {
+    bool habitPausedbool = habitTile.timeSpent / 60 == habitTile.timeGoal
+        ? !habitTile.paused
+        : habitTile.paused;
+
+    bool finished = habitTile.timeSpent / 60 == habitTile.timeGoal
+        ? !habitTile.paused
+        : false;
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, right: 20, top: 20),
       child: Slidable(
@@ -66,7 +64,8 @@ class ToDoTile extends StatelessWidget {
         ),
         child: Container(
           decoration: BoxDecoration(
-              color: Color(pallete!), borderRadius: BorderRadius.circular(12)),
+              color: Color(habitTile.color!),
+              borderRadius: BorderRadius.circular(12)),
           padding: const EdgeInsets.all(20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -93,7 +92,7 @@ class ToDoTile extends StatelessWidget {
                                 percentegeDone() < 1 ? percentegeDone() : 1,
                           ),
                           Center(
-                              child: Icon(habitStarted
+                              child: Icon(habitPausedbool
                                   ? Icons.play_arrow
                                   : Icons.pause))
                         ],
@@ -108,7 +107,7 @@ class ToDoTile extends StatelessWidget {
                       children: [
                         //TodoName
                         Text(
-                          habitName,
+                          habitTile.habitName,
                           style: TextStyle(
                               decorationThickness: 3,
                               decoration:
@@ -121,9 +120,9 @@ class ToDoTile extends StatelessWidget {
                           height: 4,
                         ), // progress
                         Text(
-                          convertingMintoSec(timeSpent) +
+                          convertingMintoSec(habitTile.timeSpent) +
                               ' / ' +
-                              timeGoal.toString() +
+                              habitTile.timeGoal.toString() +
                               ": 00",
                           style: const TextStyle(color: Colors.white),
                         ),

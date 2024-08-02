@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
+import 'package:video_diary/Features/Favourite/Widget/FavouriteCard.dart';
 import 'package:video_diary/Features/MoodSelection/Data/Model/MoodSelectModel.dart';
 import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
 
@@ -45,21 +46,21 @@ class _FavoritePageState extends State<FavoritePage> {
       backgroundColor: ColorsApp.backGround,
       shadowColor: ColorsApp.mediumGrey,
       elevation: 1,
-      toolbarHeight: 100,
       centerTitle: true,
+      toolbarHeight: 100,
       title: Image.asset(
-        "assets/images/Tasks.png",
-        scale: 25,
+        "assets/images/Favorite.png",
+        scale: 19,
       ),
     );
   }
 
   Widget _buildFavoriteDiariesGrid(List<MoodModel> moods) {
     final favoriteDiaries =
-        moods.where((mood) => mood.favorite).toList().reversed.toList();
+        moods.where((mood) => !mood.favorite).toList().reversed.toList();
 
     if (favoriteDiaries.isEmpty) {
-      return const Center(child: Text('No favorite diaries yet!'));
+      return Center(child: Image.asset("assets/animations/love.png"));
     }
 
     return GridView.builder(
@@ -67,27 +68,15 @@ class _FavoritePageState extends State<FavoritePage> {
       itemCount: favoriteDiaries.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 3 / 2,
+        childAspectRatio: 2 / 2.4,
       ),
       itemBuilder: (context, index) {
         final diary = favoriteDiaries[index];
-        return Card(
-          child: ListTile(
-            title: Text(diary.label),
-            subtitle: Text(diary.location),
-            trailing: IconButton(
-              icon: Icon(
-                diary.favorite ? Icons.favorite : Icons.favorite_border,
-                color: diary.favorite ? Colors.red : null,
-              ),
-              onPressed: () {
-                context.read<MoodCubit>().toggleFavorite(diary.id!);
-              },
-            ),
-            onTap: () {
-              // Navigate to the detailed view of the diary entry
-            },
-          ),
+        return FavoriteCard(
+          diary: diary,
+          onPressed: () {
+            context.read<MoodCubit>().toggleFavorite(diary.id!);
+          },
         );
       },
     );

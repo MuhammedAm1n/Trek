@@ -2,8 +2,11 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:video_diary/Core/Di/dependency.dart';
+import 'package:video_diary/Core/Widgets/CustomSnackbar.dart';
 import 'package:video_diary/Core/routing/routes.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
+import 'package:video_diary/Features/UploadtoDrive/Logic/cubit/gdrive_cubit.dart';
 import 'package:video_diary/Features/UserPage/Logic/cubit/user_details_cubit.dart';
 
 class DropDown extends StatelessWidget {
@@ -14,7 +17,7 @@ class DropDown extends StatelessWidget {
     return DropdownButtonHideUnderline(
       child: DropdownButton2(
         customButton: const Icon(
-          color: ColorsApp.mediumGrey,
+          color: Colors.black,
           Icons.list,
           size: 35,
         ),
@@ -77,7 +80,7 @@ abstract class MenuItems {
 
   static const settings =
       MenuItem(text: 'User', icon: Icons.account_box_rounded);
-  static const favorite = MenuItem(text: 'Favorite', icon: Icons.favorite);
+  static const favorite = MenuItem(text: 'Backup', icon: Icons.backup);
   static const logout = MenuItem(text: 'Log Out', icon: Icons.logout);
 
   static Widget buildItem(MenuItem item) {
@@ -107,7 +110,63 @@ abstract class MenuItems {
         break;
 
       case MenuItems.favorite:
-        Navigator.pushNamed(context, Routes.FavoritePage);
+        showDialog(
+            context: context,
+            builder: (context) {
+              return BlocProvider(
+                create: (context) => getIT<GdriveCubit>(),
+                child: BlocConsumer<GdriveCubit, GdriveState>(
+                  listener: (context, state) {
+                    if (state is GdriveSucess) {
+                      Navigator.pop(context);
+                      CustomSnackbar.showSnackbar(
+                          context, "Yay! Backup created.");
+                    } else if (state is GdriveFaliuer) {
+                      Navigator.pop(context);
+                      CustomSnackbar.showSnackbar(context, state.message);
+                    }
+                  },
+                  builder: (context, state) {
+                    return AlertDialog(
+                      actionsAlignment: MainAxisAlignment.spaceBetween,
+                      icon: const Icon(
+                        Icons.backup,
+                        color: ColorsApp.mainColor,
+                        size: 32,
+                      ),
+                      content: state is GdriveLoading
+                          ? const LinearProgressIndicator(
+                              color: ColorsApp.mainColor,
+                            )
+                          : const Text(
+                              "Backup to Google Drive",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            context.read<GdriveCubit>().uploadTreks();
+                          },
+                          child: const Text(
+                            'Got it',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              );
+            });
         break;
 
       case MenuItems.logout:

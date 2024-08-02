@@ -7,7 +7,7 @@ import 'package:video_diary/Core/networking/Authcheck.dart';
 import 'package:video_diary/Core/routing/routes.dart';
 import 'package:video_diary/Features/Favourite/FavouritePage.dart';
 import 'package:video_diary/Features/Snippets/Logic/cubit/reminder_cubit.dart';
-import 'package:video_diary/Features/Snippets/reminderPage.dart';
+import 'package:video_diary/Features/Snippets/Snippets.dart';
 import 'package:video_diary/Features/Search/SearchPage.dart';
 import 'package:video_diary/Features/Todo/Todo.dart';
 import 'package:video_diary/Features/HomePage/homeScreen.dart';
@@ -40,7 +40,7 @@ class RoutesManager {
       case Routes.BottomNavigatorHome:
         return MaterialPageRoute(builder: (x) => const BottomNavigatorHome());
       case Routes.ProgressTodo:
-        return MaterialPageRoute(builder: (x) => const ProgressTodo());
+        return MaterialPageRoute(builder: (x) => ProgressTodo());
       case Routes.SplashScreen:
         return MaterialPageRoute(builder: (x) => const SplashScreen());
 

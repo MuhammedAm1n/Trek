@@ -35,20 +35,11 @@ class _MyBarGraphState extends State<MyBarGraph> {
               List.generate(state.moods.length, (i) => state.moods[i].why);
 
           if (moodEntries.isEmpty) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'No Analysis Calculated Yet!',
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1.2,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                  Image.asset("assets/animations/Statistics-bro2.png")
                 ],
               ),
             );
@@ -67,7 +58,7 @@ class _MyBarGraphState extends State<MyBarGraph> {
                       'Mood Count',
                       style: TextStyle(
                         fontSize: 18,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -75,17 +66,17 @@ class _MyBarGraphState extends State<MyBarGraph> {
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
                   child: SizedBox(
-                    height: 335,
-                    width: 335,
+                    height: 298,
+                    width: 297,
                     child: Card(
-                      elevation: 10,
+                      elevation: 7,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(200),
+                        borderRadius: BorderRadius.circular(250),
                       ),
                       color: Colors.white,
                       child: PieChart(PieChartData(
                         sectionsSpace: 5,
-                        centerSpaceRadius: 100,
+                        centerSpaceRadius: 80,
                         sections: _generatePieChartSections(),
                       )),
                     ),
@@ -97,8 +88,10 @@ class _MyBarGraphState extends State<MyBarGraph> {
                     alignment: AlignmentDirectional.topStart,
                     child: Text(
                       'Reason Chart',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),

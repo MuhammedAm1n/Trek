@@ -1,93 +1,160 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:googleapis/drive/v3.dart' as drive;
-import 'package:googleapis_auth/auth_io.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:path/path.dart' as p;
+
+// Custom exceptions
+class HandleException implements Exception {
+  final String message;
+  HandleException(this.message);
+
+  @override
+  String toString() => ' $message';
+}
 
 class GoogleDriveApi {
-  final List<String> _scopes = [drive.DriveApi.driveFileScope];
   drive.DriveApi? _driveApi;
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['https://www.googleapis.com/auth/drive.file'],
+  );
+
+  GoogleSignInAccount? _currentUser;
 
   Future<void> authenticate() async {
-    final clientId = ClientId('<YOUR_CLIENT_ID>', '<YOUR_CLIENT_SECRET>');
-    final client = await clientViaUserConsent(clientId, _scopes, _prompt);
+    try {
+      _currentUser = await _googleSignIn.signIn();
+      if (_currentUser == null) {
+        throw HandleException('Sign-in failed or was canceled');
+      }
 
-    _driveApi = drive.DriveApi(client);
+      final authHeaders = await _currentUser!.authHeaders;
+      final client = http.Client();
+      final authenticatedClient = _AuthenticatedClient(client, authHeaders);
+
+      _driveApi = drive.DriveApi(authenticatedClient);
+    } catch (e) {
+      throw HandleException('Authentication failed: $e');
+    }
   }
 
-  Future<void> uploadFile(String filePath, String fileName) async {
-    if (_driveApi == null) return;
+  Future<String> _getOrCreateFolder(String folderName) async {
+    if (_driveApi == null) {
+      throw HandleException('Drive API not initialized');
+    }
 
-    final driveFile = drive.File()..name = fileName;
+    try {
+      final fileList = await _driveApi!.files.list(
+        q: "name = '$folderName' and mimeType = 'application/vnd.google-apps.folder' and trashed = false",
+      );
+      if (fileList.files != null && fileList.files!.isNotEmpty) {
+        return fileList.files!.first.id!;
+      } else {
+        final folder = drive.File()
+          ..name = folderName
+          ..mimeType = 'application/vnd.google-apps.folder';
+        final folderCreation = await _driveApi!.files.create(folder);
+        return folderCreation.id!;
+      }
+    } catch (e) {
+      throw HandleException('Failed to create or get folder');
+    }
+  }
+
+  Future<void> uploadAllVideos() async {
+    if (_driveApi == null) {
+      await authenticate();
+    }
+
+    final directory = Directory(
+        "/data/user/0/com.example.video_diary/app_flutter/.myAppVideos");
+    final videoFiles = directory
+        .listSync()
+        .where((file) => file.path.endsWith('.mp4'))
+        .toList();
+
+    List<String> existingFiles = [];
+    bool newFilesUploaded = false;
+
+    final folderId =
+        await _getOrCreateFolder('MyAppVideos'); // Specify your folder name
+
+    for (var file in videoFiles) {
+      try {
+        bool fileExists =
+            await _checkIfFileExists(p.basename(file.path), folderId);
+        if (!fileExists) {
+          await uploadFile(file.path, p.basename(file.path), folderId);
+          newFilesUploaded = true;
+        } else {
+          existingFiles.add(file.path);
+        }
+      } catch (e) {
+        throw HandleException('Failed to upload file ${file.path}: $e');
+      }
+    }
+
+    if (!newFilesUploaded && existingFiles.isNotEmpty) {
+      throw HandleException("All videos have already been backed up.");
+    }
+  }
+
+  Future<void> uploadFile(
+    String filePath,
+    String fileName,
+    String folderId,
+  ) async {
+    if (_driveApi == null) {
+      throw HandleException('Drive API not initialized');
+    }
+
+    final driveFile = drive.File()
+      ..name = fileName
+      ..parents = [folderId];
     final file = File(filePath);
     final media = drive.Media(file.openRead(), await file.length());
 
-    await _driveApi!.files.create(
-      driveFile,
-      uploadMedia: media,
-    );
-  }
-
-  void _prompt(String url) async {
-    final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 46021);
-    await launchUrl(Uri.parse(url));
-    print('Please go to the following URL and grant access:');
-    print('  => $url');
-
-    await for (HttpRequest request in server) {
-      final uri = request.uri;
-      if (uri.path == '/') {
-        final code = uri.queryParameters['code'];
-        if (code != null) {
-          request.response
-            ..statusCode = HttpStatus.ok
-            ..headers.contentType = ContentType.html
-            ..write('<html><h1>You can close this window now</h1></html>');
-          await request.response.close();
-          await server.close();
-          _handleCode(code);
-          break;
-        }
-      }
-    }
-  }
-
-  void _handleCode(String code) async {
-    final clientId = ClientId('<YOUR_CLIENT_ID>', '<YOUR_CLIENT_SECRET>');
-    final tokenEndpoint = 'https://oauth2.googleapis.com/token';
-
-    final response = await http.post(
-      Uri.parse(tokenEndpoint),
-      body: {
-        'code': code,
-        'client_id': clientId.identifier,
-        'client_secret': clientId.secret,
-        'redirect_uri': 'http://localhost:46021',
-        'grant_type': 'authorization_code',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final credentials = json.decode(response.body);
-      final accessToken = credentials['access_token'];
-      final refreshToken = credentials['refresh_token'];
-      final expiry =
-          DateTime.now().add(Duration(seconds: credentials['expires_in']));
-
-      final authClient = authenticatedClient(
-        http.Client(),
-        AccessCredentials(
-          AccessToken('Bearer', accessToken, expiry),
-          refreshToken,
-          _scopes,
-        ),
+    try {
+      final uploadedFile = await _driveApi!.files.create(
+        driveFile,
+        uploadMedia: media,
       );
 
-      _driveApi = drive.DriveApi(authClient);
-    } else {
-      print('Failed to exchange code for tokens: ${response.body}');
+      if (uploadedFile.name == null) {
+        throw HandleException('Failed to upload $fileName');
+      }
+    } catch (e) {
+      throw HandleException('Failed to upload file $fileName: $e');
     }
+  }
+
+  Future<bool> _checkIfFileExists(String fileName, String folderId) async {
+    if (_driveApi == null) {
+      throw HandleException('Drive API not initialized');
+    }
+
+    try {
+      final fileList = await _driveApi!.files.list(
+        q: "name = '$fileName' and '$folderId' in parents and trashed = false",
+      );
+      return fileList.files?.isNotEmpty ?? false;
+    } catch (e) {
+      throw HandleException('Error checking if file exists: $e');
+    }
+  }
+}
+
+// Custom HTTP client to add authorization headers
+class _AuthenticatedClient extends http.BaseClient {
+  final http.Client _client;
+  final Map<String, String> _authHeaders;
+
+  _AuthenticatedClient(this._client, this._authHeaders);
+
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) {
+    request.headers.addAll(_authHeaders);
+    return _client.send(request);
   }
 }

@@ -11,10 +11,8 @@ import 'package:video_diary/Features/Todo/Widgets/WidgetsOfAddHabit/VeiwColorsIT
 
 class UpdateHabit extends StatefulWidget {
   final HabitModel habitModel;
-  final int? habitId;
 
-  const UpdateHabit(
-      {super.key, required this.habitId, required this.habitModel});
+  const UpdateHabit({super.key, required this.habitModel});
 
   @override
   State<UpdateHabit> createState() => _UpdateHabitState();

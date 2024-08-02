@@ -14,7 +14,7 @@ class MoodCubit extends Cubit<MoodState> {
     emit(MoodInitial());
   }
 
-  Future<void> loadMood() async {
+  loadMood() async {
     emit(GetMoodLoading());
     try {
       final moods = await moodRepo.GetMood();
@@ -36,13 +36,8 @@ class MoodCubit extends Cubit<MoodState> {
   }
 
   deleteMood(int id) async {
-    emit(DeleteMoodLoading());
-    try {
-      await moodRepo.deleteMood(id);
-      emit(DeleteMoodSuccess());
-    } catch (e) {
-      emit(DeleteMoodFailure(message: e.toString()));
-    }
+    await moodRepo.deleteMood(id);
+    emit(DeleteMoodSuccess());
   }
 
   Future<void> updateMood(MoodModel mood) async {

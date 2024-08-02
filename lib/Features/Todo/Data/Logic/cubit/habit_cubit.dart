@@ -27,16 +27,19 @@ class HabitsCubit extends Cubit<HabitsState> {
     return habits;
   }
 
-  void emitInsertHabit(HabitModel habit) {
-    habit.color = color.value;
-    emit(InsertHabitLoading());
-    try {
-      habitRepo.insertHabit(habit.toMap());
-      emit(InsertHabitSucess());
-    } on Exception catch (e) {
-      emit(InsertHabitFaliuer(messge: e.toString()));
-    }
+ void emitInsertHabit(HabitModel habit) {
+  habit.color = color.value;
+  emit(InsertHabitLoading());
+  try {
+    habitRepo.insertHabit(habit.toMap());
+    // Since the ID is now managed by HabitModel, we ensure the auto-increment logic is applied
+    habit = habit.copyWith(id: habit.id);
+    emit(InsertHabitSucess());
+  } on Exception catch (e) {
+    emit(InsertHabitFaliuer(messge: e.toString()));
   }
+}
+
 
   void emitUpdateHabit(Map<String, dynamic> habit) {
     habitRepo.updateHabit(habit);

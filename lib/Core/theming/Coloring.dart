@@ -9,7 +9,7 @@ class ColorsApp {
   static const Color secMediumGrey = Color(0xff757575);
   static Color secLightGrey = Colors.grey.shade400;
 
-  static Color Navigationbar = const Color.fromARGB(255, 42, 157, 144);
-  static Color TitleName = Color.fromARGB(0, 192, 192, 192);
-  static const Color BottomNavigationBar = Color(0xff48908c);
+  static const naviGationbar = Color(0xff48908c);
+  static const Color titleName = Color.fromARGB(0, 192, 192, 192);
+  static const Color bottomNavigationBar = Color(0xff48908c);
 }

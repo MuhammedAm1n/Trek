@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
 
 class CustomSnackbar {
-  static void showSnackbar(BuildContext context, String message) {
+  static void showSnackbar(
+    BuildContext context,
+    String message,
+  ) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -10,15 +13,15 @@ class CustomSnackbar {
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 16.0),
         ),
-        backgroundColor: ColorsApp.Navigationbar,
-        duration: const Duration(seconds: 2),
+        backgroundColor: ColorsApp.mainColor.withOpacity(0.95),
+        duration: const Duration(seconds: 3),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius: BorderRadius.circular(15.0),
         ),
         behavior: SnackBarBehavior.floating,
         action: SnackBarAction(
           label: 'OK',
-          textColor: ColorsApp.mainColor,
+          textColor: ColorsApp.backGround,
           onPressed: () {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
           },

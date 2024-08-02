@@ -49,11 +49,11 @@ class _MoodSelectState extends State<MoodSelect> {
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.7),
-                  blurRadius: 2,
-                  offset: Offset(6, 7),
+                  blurRadius: 7,
+                  offset: Offset(2, 2),
                 )
               ],
-              color: ColorsApp.mainColor,
+              color: ColorsApp.backGround,
             ),
             margin: const EdgeInsets.all(3.0),
             child: Column(
@@ -64,14 +64,14 @@ class _MoodSelectState extends State<MoodSelect> {
                     icon,
                     size: (MediaQuery.of(context).size.width - 60) / 5 - 30,
                     color: _whyList[whyIndex] == 0
-                        ? Colors.white
-                        : ColorsApp.mainOrange,
+                        ? ColorsApp.secLightGrey
+                        : ColorsApp.mainColor,
                   ),
                   Text(name,
                       style: TextStyle(
                         color: _whyList[whyIndex] == 0
-                            ? Colors.white
-                            : ColorsApp.mainOrange,
+                            ? ColorsApp.mediumGrey
+                            : ColorsApp.mainColor,
                       ))
                 ])));
   }
@@ -95,95 +95,95 @@ class _MoodSelectState extends State<MoodSelect> {
                 pinned: true,
                 backgroundColor: ColorsApp.backGround,
                 leading: Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
+                  padding: const EdgeInsets.only(left: 14.0, top: 7),
                   child: IconButton(
                     onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return BlocProvider(
-                            create: (context) => getIT<LocationCubit>(),
-                            child: BlocConsumer<LocationCubit, LocationState>(
-                              listener: (context, state) {
-                                if (state is LocationSucess) {
-                                  Navigator.pop(
-                                      context); // Close the dialog when location is loaded
-
-                                  CustomSnackbar.showSnackbar(
-                                      context, 'Location: ${state.Location}');
-
-                                  Location = state.Location;
-                                } else if (state is LocationFaliuer) {
-                                  CustomSnackbar.showSnackbar(
-                                      context, 'Error: ${state.message}');
-                                }
-                              },
-                              builder: (context, state) {
-                                return AlertDialog(
-                                  actionsAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  icon: const Icon(
-                                    Icons.pin_drop,
-                                    color: ColorsApp.mainColor,
-                                    size: 32,
-                                  ),
-                                  content: state is LocationLoading
-                                      ? const CircularProgressIndicator(
-                                          color: ColorsApp.mainColor,
-                                        )
-                                      : const Text(
-                                          "Catch Location up",
-                                          style: TextStyle(color: Colors.black),
-                                        ),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text(
-                                        'Cancel',
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        context
-                                            .read<LocationCubit>()
-                                            .emitGetLocation();
-                                      },
-                                      child: const Text(
-                                        'Got it',
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                          );
-                        },
-                      );
+                      Navigator.pop(context);
                     },
-                    icon: const Icon(
-                      UniconsLine.map_marker,
-                      color: Colors.black,
-                      size: 25,
+                    icon: Image.asset(
+                      "assets/images/arrow8.png",
+                      scale: 30,
                     ),
                   ),
                 ),
 
                 actions: [
                   Padding(
-                    padding: const EdgeInsets.only(right: 10.0),
+                    padding: const EdgeInsets.only(right: 14.0, top: 7),
                     child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(
-                          UniconsLine.navigator,
-                          color: Colors.black,
-                          size: 25,
-                        )),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return BlocProvider(
+                              create: (context) => getIT<LocationCubit>(),
+                              child: BlocConsumer<LocationCubit, LocationState>(
+                                listener: (context, state) {
+                                  if (state is LocationSucess) {
+                                    Navigator.pop(
+                                        context); // Close the dialog when location is loaded
+
+                                    CustomSnackbar.showSnackbar(
+                                        context, 'Location: ${state.Location}');
+
+                                    Location = state.Location;
+                                  } else if (state is LocationFaliuer) {
+                                    CustomSnackbar.showSnackbar(
+                                        context, 'Error: ${state.message}');
+                                  }
+                                },
+                                builder: (context, state) {
+                                  return AlertDialog(
+                                    actionsAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    icon: const Icon(
+                                      Icons.pin_drop,
+                                      color: ColorsApp.mainColor,
+                                      size: 32,
+                                    ),
+                                    content: state is LocationLoading
+                                        ? const LinearProgressIndicator(
+                                            color: ColorsApp.mainColor,
+                                          )
+                                        : const Text(
+                                            "Catch Location up",
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text(
+                                          'Cancel',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          context
+                                              .read<LocationCubit>()
+                                              .emitGetLocation();
+                                        },
+                                        child: const Text(
+                                          'Got it',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      icon: Image.asset(
+                        "assets/images/map1.png",
+                        scale: 22,
+                      ),
+                    ),
                   ),
                 ],
 
@@ -309,13 +309,13 @@ class _MoodSelectState extends State<MoodSelect> {
                           height: 40, // Set the desired height
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.grey.shade300,
+                                backgroundColor: ColorsApp.lightGrey,
                                 elevation: 5, // Add shadow
                                 shadowColor:
                                     Colors.grey // Set shadow color if needed
                                 ),
                             onPressed: () async {
-                              String videopath = await _RecordVideo(
+                              String videopath = await _recordVideo(
                                   ImageSource.camera, context);
                               String thumbnail =
                                   await generateAndSaveThumbnail(videopath);
@@ -352,7 +352,7 @@ class _MoodSelectState extends State<MoodSelect> {
     );
   }
 
-  _RecordVideo(ImageSource img, BuildContext context) async {
+  _recordVideo(ImageSource img, BuildContext context) async {
     final XFile? videoFile = await ImagePicker()
         .pickVideo(source: img, maxDuration: const Duration(seconds: 20));
     if (videoFile != null) {

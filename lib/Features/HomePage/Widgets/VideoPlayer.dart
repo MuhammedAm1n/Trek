@@ -48,7 +48,7 @@ class _VideoplayerzState extends State<Videoplayerz> {
         ? Chewie(controller: _chewieController!)
         : Center(
             child: CircularProgressIndicator(
-              color: ColorsApp.Navigationbar,
+              color: ColorsApp.naviGationbar,
             ),
           );
   }

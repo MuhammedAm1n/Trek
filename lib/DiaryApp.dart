@@ -28,6 +28,12 @@ class DiaryApp extends StatelessWidget {
           initialRoute: Routes.AuthCheck,
           navigatorKey: navigatorKey,
           theme: ThemeData(
+              textSelectionTheme: TextSelectionThemeData(
+                cursorColor: ColorsApp.mainColor, // Change cursor color
+                selectionColor:
+                    ColorsApp.mainColor.withOpacity(0.5), // Selection color
+                selectionHandleColor: ColorsApp.mainColor, // Handle color
+              ),
               splashColor: Colors.white, // Ripple color
               highlightColor: ColorsApp.mainColor, // Highlight color
               primaryColor: ColorsApp.mainColor,

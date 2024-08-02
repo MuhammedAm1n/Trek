@@ -28,19 +28,24 @@ class _SnippetsPageState extends State<SnippetsPage> {
         shadowColor: ColorsApp.mediumGrey,
         elevation: 1,
         toolbarHeight: 90,
-        title: Image.asset(
-          "assets/images/Snippets.png",
-          scale: 20,
+        title: Padding(
+          padding: const EdgeInsets.only(top: 4.0),
+          child: Image.asset(
+            "assets/images/Snippets.png",
+            scale: 20,
+          ),
         ),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              UniconsLine.navigator,
-              color: Colors.black,
-              size: 25,
+          Transform.scale(
+            scaleX: -1,
+            child: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Image.asset(
+                "assets/images/arrow3.png",
+                scale: 28,
+              ),
             ),
           )
         ],
@@ -61,7 +66,7 @@ class _SnippetsPageState extends State<SnippetsPage> {
                 }
                 final posts = snapshot.data?.docs ?? [];
                 if (posts.isEmpty) {
-                  return Center(child: Text('No Posts.. Post something!'));
+                  return const Center(child: Text('No Snippet.. Wait for it!'));
                 }
                 return ListView.builder(
                   itemCount: posts.length,
@@ -89,7 +94,7 @@ class _SnippetsPageState extends State<SnippetsPage> {
                             onPressed: () {
                               Share.share(message);
                             },
-                            icon: const Icon(UniconsLine.share)),
+                            icon: Icon(UniconsLine.share)),
                       ),
                     );
                   },

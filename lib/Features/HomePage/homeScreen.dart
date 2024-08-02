@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<String> moodFilter = ["Great", "Well", "Fine", "Bad", "Terrible"];
   List<String> selectedMood = [];
   bool isFilterVisible = false;
-  // final GoogleDriveApi _googleDriveApi = GoogleDriveApi();
+
   @override
   void initState() {
     super.initState();
@@ -33,22 +33,12 @@ class _HomeScreenState extends State<HomeScreen> {
     context.read<MoodCubit>().loadMood();
   }
 
-  // Future<void> _authenticateGoogleDrive() async {
-  //   await _googleDriveApi.authenticate();
-  // }
-
-  // Future<void> _uploadVideo(String filePath) async {
-  //   final fileName = path.basename(filePath);
-  //   await _googleDriveApi.uploadFile(filePath, fileName);
-  //   CustomSnackbar.showSnackbar(context, '$fileName uploaded to Google Drive');
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorsApp.backGround,
+      backgroundColor: Color.fromARGB(101, 245, 245, 245),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           Navigator.pushNamed(context, Routes.MoodSelect);
         },
         backgroundColor: ColorsApp.mainColor,
@@ -70,14 +60,17 @@ class _HomeScreenState extends State<HomeScreen> {
           "assets/images/NEW.png",
           scale: 22,
         ),
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(context, Routes.ReminderPage);
-          },
-          child: Icon(
-            Icons.format_quote_sharp,
-            color: ColorsApp.mediumGrey,
-            size: 35,
+        leading: Padding(
+          padding: const EdgeInsets.only(top: 2.0, left: 2),
+          child: IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, Routes.ReminderPage);
+            },
+            icon: Icon(
+              Icons.format_quote_sharp,
+              color: Colors.black87,
+              size: 28,
+            ),
           ),
         ),
         actions: [
@@ -118,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 side: BorderSide(
                                     color: selectedMood.contains(mood)
                                         ? ColorsApp.mainColor
-                                        : Colors.black,
+                                        : ColorsApp.secLightGrey,
                                     width: 0.4),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
@@ -152,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.6),
-                      spreadRadius: 2,
+                      spreadRadius: 1,
                       blurRadius: 5,
                       offset: Offset(0, 2),
                     )
@@ -262,21 +255,20 @@ class _HomeScreenState extends State<HomeScreen> {
           return selectedMood.isEmpty || selectedMood.contains(mood.label);
         }).toList();
         if (listVeiwmood.isEmpty) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'No Diaries Added Yet!',
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.2,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+          return Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 40.0),
+                    child: Image.asset(
+                      "assets/animations/Home.png",
+                      scale: 5.5,
+                    ),
+                  )
+                ],
+              ),
             ),
           );
         } else {
@@ -302,7 +294,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       moodMap: reversedList,
                       deletTap: (p0) {
                         setState(() {
-                          return context
+                          context
                               .read<MoodCubit>()
                               .deleteMood(reversedList.id!);
                         });
