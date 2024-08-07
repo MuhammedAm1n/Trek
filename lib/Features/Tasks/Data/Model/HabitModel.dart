@@ -1,4 +1,4 @@
-class HabitModel {
+class TaskModel {
   static int _idCounter =
       0; // static variable to keep track of the highest ID used
 
@@ -9,7 +9,7 @@ class HabitModel {
   int timeSpent;
   bool paused;
 
-  HabitModel({
+  TaskModel({
     int? id,
     this.color,
     required this.habitName,
@@ -22,7 +22,7 @@ class HabitModel {
     return ++_idCounter;
   }
 
-  HabitModel copyWith({
+  TaskModel copyWith({
     int? id,
     int? color,
     String? habitName,
@@ -30,7 +30,7 @@ class HabitModel {
     int? timeSpent,
     bool? paused,
   }) {
-    return HabitModel(
+    return TaskModel(
       id: id ?? this.id,
       color: color ?? this.color,
       habitName: habitName ?? this.habitName,
@@ -51,8 +51,8 @@ class HabitModel {
     };
   }
 
-  factory HabitModel.fromMap(Map<String, dynamic> map) {
-    return HabitModel(
+  factory TaskModel.fromMap(Map<String, dynamic> map) {
+    return TaskModel(
       id: map['id'],
       color: map['color'],
       habitName: map['habitName'],

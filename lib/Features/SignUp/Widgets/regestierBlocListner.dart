@@ -16,7 +16,7 @@ class RegisterBlocListener extends StatelessWidget {
             context: context,
             builder: (context) => const Center(
               child: CircularProgressIndicator(
-                color: ColorsApp.mainOrange,
+                color: ColorsApp.mainColor,
               ),
             ),
           );

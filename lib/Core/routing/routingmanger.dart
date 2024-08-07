@@ -6,10 +6,11 @@ import 'package:video_diary/Core/Widgets/Splashscreen.dart';
 import 'package:video_diary/Core/networking/Authcheck.dart';
 import 'package:video_diary/Core/routing/routes.dart';
 import 'package:video_diary/Features/Favourite/FavouritePage.dart';
+import 'package:video_diary/Features/SearchPage/SearchPage.dart';
 import 'package:video_diary/Features/Snippets/Logic/cubit/reminder_cubit.dart';
 import 'package:video_diary/Features/Snippets/Snippets.dart';
-import 'package:video_diary/Features/Search/SearchPage.dart';
-import 'package:video_diary/Features/Todo/Todo.dart';
+
+import 'package:video_diary/Features/Tasks/Task.dart';
 import 'package:video_diary/Features/HomePage/homeScreen.dart';
 import 'package:video_diary/Features/Login/loginScreen.dart';
 import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
@@ -40,14 +41,18 @@ class RoutesManager {
       case Routes.BottomNavigatorHome:
         return MaterialPageRoute(builder: (x) => const BottomNavigatorHome());
       case Routes.ProgressTodo:
-        return MaterialPageRoute(builder: (x) => ProgressTodo());
+        return MaterialPageRoute(builder: (x) => TaskPage());
       case Routes.SplashScreen:
         return MaterialPageRoute(builder: (x) => const SplashScreen());
 
       case Routes.AuthCheck:
         return MaterialPageRoute(builder: (x) => const AuthCheck());
       case Routes.SearchPage:
-        return MaterialPageRoute(builder: (x) => const SearchPage());
+        return MaterialPageRoute(
+            builder: (x) => BlocProvider(
+                  create: (context) => getIT<MoodCubit>(),
+                  child: const SearchPage(),
+                ));
       case Routes.ReminderPage:
         return MaterialPageRoute(
             builder: (x) => BlocProvider(

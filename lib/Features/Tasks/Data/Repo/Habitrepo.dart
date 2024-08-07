@@ -1,16 +1,16 @@
 import 'package:video_diary/Core/LocalDatabase/HabitDatabase.dart';
-import 'package:video_diary/Features/Todo/Data/Model/HabitModel.dart';
+import 'package:video_diary/Features/Tasks/Data/Model/HabitModel.dart';
 
-class HabitRepo {
+class TaskRepo {
   final HabitDatabase database;
 
-  HabitRepo({required this.database});
+  TaskRepo({required this.database});
 
   setinitDb() {
     database.initDb();
   }
 
-  Future<List<HabitModel>> readHabits() async {
+  Future<List<TaskModel>> readHabits() async {
     final habitz = await database.readAllHabits();
     return habitz;
   }

@@ -1,18 +1,24 @@
 import 'dart:async';
+
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
+FlutterBackgroundService? _backgroundService;
 
-void initializeService() async {
+Future<void> initializeService() async {
+  if (_backgroundService != null) return; // Already initialized
+
   final service = FlutterBackgroundService();
 
   await service.configure(
     androidConfiguration: AndroidConfiguration(
       onStart: onStart,
-      isForegroundMode: true,
+      isForegroundMode: false, // Do not show initial notification
       autoStart: true,
+      initialNotificationTitle: '', // Empty title for initial notification
+      initialNotificationContent: '', // Empty content for initial notification
     ),
     iosConfiguration: IosConfiguration(
       onForeground: onStart,
@@ -21,6 +27,7 @@ void initializeService() async {
   );
 
   service.startService();
+  _backgroundService = service;
 }
 
 bool onIosBackground(ServiceInstance service) {
@@ -40,33 +47,53 @@ Future<void> onStart(ServiceInstance service) async {
   // Dictionary to store timer and elapsed time for each taskId
   final Map<String, Timer> timers = {};
   final Map<String, int> elapsedTimes = {};
+  String? currentTaskId;
 
-  convertingMintoSec(int totalSeconds) {
-    String sec = (totalSeconds % 60).toString();
-    String min = (totalSeconds / 60).toStringAsFixed(2);
+  String convertingMintoSec(int totalSeconds) {
+    int sec = totalSeconds % 60;
+    int min =
+        totalSeconds ~/ 60; // Use integer division to get the number of minutes
 
-    // if sec is a 1 digit number , place a 0 infornt of it
-    if (sec.length == 1) {
-      sec = '0$sec';
-    }
-
-    // if min is a 1 digit number
-    if (min[1] == ".") {
-      min = min.substring(0, 1);
-    }
-    return '$min : $sec';
+    // Format seconds to always be two digits
+    String secStr = sec.toString().padLeft(2, '0');
+    return '$min:$secStr';
   }
 
-// Handle start event
+  // Pause all running tasks
+  void pauseAllTasks() {
+    for (var taskId in timers.keys) {
+      final timer = timers[taskId];
+      if (timer != null) {
+        timer.cancel(); // Pause the timer
+        final elapsedTime = elapsedTimes[taskId] ?? 0;
+
+        if (service is AndroidServiceInstance) {
+          service.setForegroundNotificationInfo(
+            title: "Trek Timer",
+            content:
+                "Task $taskId is paused: ${convertingMintoSec(elapsedTime)}",
+          );
+        }
+      }
+    }
+  }
+
+  // Handle start event
   service.on('start').listen((event) async {
     final taskId = event!['taskId']?.toString();
     final habitName = event['habitName']?.toString();
-    final startTimeString = event['startTime'] as String;
-    final startTime = DateTime.tryParse(startTimeString);
+    final startTimeString = event['startTime'] as String?;
+    final startTime =
+        startTimeString != null ? DateTime.tryParse(startTimeString) : null;
     final elapsedTime = event['elapsedTime'] as int? ?? 0;
 
     if (taskId == null || startTime == null) {
       return;
+    }
+
+    // Pause all existing tasks before starting a new one
+    if (currentTaskId != null && currentTaskId != taskId) {
+      pauseAllTasks();
     }
 
     // Start or resume the timer
@@ -77,7 +104,25 @@ Future<void> onStart(ServiceInstance service) async {
         final elapsedSinceStart = currentTime.difference(startTime).inSeconds;
         final totalElapsed = elapsedTime + elapsedSinceStart;
 
-        await (service as AndroidServiceInstance).setForegroundNotificationInfo(
+        await flutterLocalNotificationsPlugin.show(
+          1, // Unique ID for the timer notification
+          'Trek Timer',
+          "Task $habitName is running: ${convertingMintoSec(totalElapsed)}",
+          const NotificationDetails(
+            android: AndroidNotificationDetails(
+                'your_channel_id', 'your_channel_name',
+                channelDescription: 'Timer notification',
+                importance: Importance.low, // Low importance to avoid pop-ups
+                priority: Priority.low, // Low priority to avoid pop-ups
+                showWhen: true,
+                sound: null,
+                icon: "icondrwable"
+                // Mute sound
+                ),
+          ),
+        );
+
+        await (service).setForegroundNotificationInfo(
           title: "Trek Timer",
           content:
               "Task $habitName is running: ${convertingMintoSec(totalElapsed)}",
@@ -90,34 +135,95 @@ Future<void> onStart(ServiceInstance service) async {
     });
 
     timers[taskId] = timer;
+    currentTaskId = taskId; // Update the current task ID
   });
 
-// Handle pause event
+  // Handle pause event
   service.on('pause').listen((event) async {
     final taskId = event!['taskId']?.toString();
     final habitName = event['habitName']?.toString();
-    final startTimeString = event['startTime'] as String;
-    final startTime = DateTime.tryParse(startTimeString);
+    final startTimeString = event['startTime'] as String?;
+    final startTime =
+        startTimeString != null ? DateTime.tryParse(startTimeString) : null;
     final elapsedTime = event['elapsedTime'] as int? ?? 0;
 
-    final currentTime = DateTime.now();
-    final elapsedSinceStart = currentTime.difference(startTime!).inSeconds;
-    final totalElapsed = elapsedTime + elapsedSinceStart;
+    if (taskId != null && startTime != null) {
+      final currentTime = DateTime.now();
+      final elapsedSinceStart = currentTime.difference(startTime).inSeconds;
+      final totalElapsed = elapsedTime + elapsedSinceStart;
 
-    if (taskId != null) {
       final timer = timers[taskId];
       if (timer != null) {
         timer.cancel(); // Pause the timer
         if (service is AndroidServiceInstance) {
-          await (service).setForegroundNotificationInfo(
-            title: "Trek Timer",
-            content:
-                "Task $habitName is paused : ${convertingMintoSec(totalElapsed)}",
+          await flutterLocalNotificationsPlugin.show(
+            1, // Unique ID for the timer notification
+            'Trek Timer',
+            "Task $habitName is paused: ${convertingMintoSec(totalElapsed)}",
+            const NotificationDetails(
+              android: AndroidNotificationDetails(
+                  'your_channel_id', 'your_channel_name',
+                  channelDescription: 'Timer notification',
+                  importance: Importance.low, // Low importance to avoid pop-ups
+                  priority: Priority.low, // Low priority to avoid pop-ups
+                  showWhen: true,
+                  sound: null,
+                  icon: "icondrwable"
+                  // Mute sound
+                  ),
+            ),
           );
         }
       }
     }
   });
+
+  // Handle resume event
+  service.on('resume').listen((event) async {
+    final taskId = event!['taskId']?.toString();
+    final habitName = event['habitName']?.toString();
+    final startTimeString = event['startTime'] as String?;
+    final startTime =
+        startTimeString != null ? DateTime.tryParse(startTimeString) : null;
+    final elapsedTime = event['elapsedTime'] as int? ?? 0;
+
+    if (taskId != null && startTime != null) {
+      // Resume the timer
+      Timer timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+        if (service is AndroidServiceInstance) {
+          // Calculate total elapsed time from startTime and the time already spent
+          final currentTime = DateTime.now();
+          final elapsedSinceStart = currentTime.difference(startTime).inSeconds;
+          final totalElapsed = elapsedTime + elapsedSinceStart;
+
+          await flutterLocalNotificationsPlugin.show(
+            1, // Unique ID for the timer notification
+            'Trek Timer',
+            "Task $habitName is running: ${convertingMintoSec(totalElapsed)}",
+            const NotificationDetails(
+              android: AndroidNotificationDetails(
+                'your_channel_id',
+                'your_channel_name',
+                channelDescription: 'Timer notification',
+                importance: Importance.low, // Low importance to avoid pop-ups
+                priority: Priority.low, // Low priority to avoid pop-ups
+                showWhen: true,
+                icon: "icondrwable",
+                sound: null, // Mute sound
+              ),
+            ),
+          );
+
+          // Update elapsed time
+          elapsedTimes[taskId] = totalElapsed;
+          service.invoke('update', {"taskId": taskId, "seconds": totalElapsed});
+        }
+      });
+
+      timers[taskId] = timer; // Resume or start the timer
+    }
+  });
+
   // Handle delete event
   service.on('delete').listen((event) async {
     final taskId = event!['taskId']?.toString();
@@ -131,15 +237,64 @@ Future<void> onStart(ServiceInstance service) async {
         elapsedTimes.remove(taskId); // Remove the elapsed time entry
 
         if (service is AndroidServiceInstance) {
-          await (service).setForegroundNotificationInfo(
-            title: "Trek Timer",
-            content: "Task $habitName has been deleted",
+          await flutterLocalNotificationsPlugin.show(
+            1, // Unique ID for the timer notification
+            'Trek Timer',
+            "Task $habitName has been deleted",
+            const NotificationDetails(
+              android: AndroidNotificationDetails(
+                'your_channel_id',
+                'your_channel_name',
+                channelDescription: 'Timer notification',
+                importance: Importance.low, // Low importance to avoid pop-ups
+                priority: Priority.low, // Low priority to avoid pop-ups
+                showWhen: true,
+                icon: "icondrwable",
+                sound: null, // Mute sound
+              ),
+            ),
           );
         }
       }
     }
   });
-// Handle finish event
+
+  // Handle delete event
+  service.on('update').listen((event) async {
+    final taskId = event!['taskId']?.toString();
+    final habitName = event['habitName']?.toString();
+
+    if (taskId != null) {
+      final timer = timers[taskId];
+      if (timer != null) {
+        timer.cancel(); // Delete the timer
+        timers.remove(taskId); // Remove the timer from the map
+        elapsedTimes.remove(taskId); // Remove the elapsed time entry
+
+        if (service is AndroidServiceInstance) {
+          await flutterLocalNotificationsPlugin.show(
+            1, // Unique ID for the timer notification
+            'Trek Timer',
+            "Task $habitName is paused",
+            const NotificationDetails(
+              android: AndroidNotificationDetails(
+                'your_channel_id',
+                'your_channel_name',
+                channelDescription: 'Timer notification',
+                importance: Importance.low, // Low importance to avoid pop-ups
+                priority: Priority.low, // Low priority to avoid pop-ups
+                showWhen: true,
+                icon: "icondrwable",
+                sound: null, // Mute sound
+              ),
+            ),
+          );
+        }
+      }
+    }
+  });
+
+  // Handle finish event
   service.on('finish').listen((event) async {
     try {
       // Stop all running timers
@@ -149,19 +304,30 @@ Future<void> onStart(ServiceInstance service) async {
       timers.clear(); // Clear the timer map to avoid future issues
 
       if (service is AndroidServiceInstance) {
-        await (service as AndroidServiceInstance).setForegroundNotificationInfo(
-          title: "Trek Timer",
-          content: "Yay, your task is over!",
+        await flutterLocalNotificationsPlugin.show(
+          1, // Unique ID for the timer notification
+          'Trek Timer',
+          "Yay, your task is over!",
+          const NotificationDetails(
+            android: AndroidNotificationDetails(
+              'your_channel_id',
+              'your_channel_name',
+              icon: "icondrwable",
+              channelDescription: 'Timer notification',
+              importance: Importance.low, // Low importance to avoid pop-ups
+              priority: Priority.low, // Low priority to avoid pop-ups
+              showWhen: true,
+              sound: null, // Mute sound
+            ),
+          ),
         );
       }
 
       // Log the service stop
-      print('Background service has been stopped.');
-    } catch (e) {
-      print('Error stopping the service: $e');
-    }
+    } catch (e) {}
   });
-// Handle stop event
+
+  // Handle stop event
   service.on('stop').listen((event) async {
     try {
       // Stop all running timers
@@ -172,17 +338,17 @@ Future<void> onStart(ServiceInstance service) async {
       elapsedTimes.clear(); // Clear elapsed times
 
       if (service is AndroidServiceInstance) {
-        await (service).setForegroundNotificationInfo(
-          title: "Trek Timer",
-          content: "Service is stopping, all timers cleared",
-        );
         service.stopSelf();
       }
-
-      service.stopSelf();
     } finally {
       // Ensure the background service is stopped
       service.stopSelf();
     }
+  });
+
+  // Hide initial notification after a short delay
+  Future.delayed(const Duration(seconds: 1), () async {
+    await flutterLocalNotificationsPlugin
+        .cancel(0); // Cancel the placeholder notification
   });
 }

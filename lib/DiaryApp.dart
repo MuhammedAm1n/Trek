@@ -3,10 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:video_diary/Core/Di/dependency.dart';
+import 'package:video_diary/Core/Widgets/CustomSnackbar.dart';
 import 'package:video_diary/Core/routing/routes.dart';
 import 'package:video_diary/Core/routing/routingmanger.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
-import 'package:video_diary/Features/Todo/Data/Logic/cubit/habit_cubit.dart';
+import 'package:video_diary/Features/Tasks/Data/Logic/cubit/task_cubit.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
@@ -20,8 +21,9 @@ class DiaryApp extends StatelessWidget {
       designSize: const Size(375, 812),
       minTextAdapt: true,
       child: BlocProvider(
-        create: (context) => getIT<HabitsCubit>(),
+        create: (context) => getIT<TaskCubit>(),
         child: GetMaterialApp(
+          scaffoldMessengerKey: CustomSnackbar.scaffoldMessengerKey,
           debugShowCheckedModeBanner: false,
           title: 'Diary\'s Video',
           onGenerateRoute: routesManager.generateRoute,

@@ -23,8 +23,9 @@ class _VideoplayerzState extends State<Videoplayerz> {
     super.initState();
     _videoPlayerController = VideoPlayerController.file(File(widget.Path));
     _videoPlayerController!.initialize().then((_) {
-      _chewieController =
-          ChewieController(videoPlayerController: _videoPlayerController!);
+      _chewieController = ChewieController(
+        videoPlayerController: _videoPlayerController!,
+      );
       setState(() {});
     });
   }
@@ -46,7 +47,7 @@ class _VideoplayerzState extends State<Videoplayerz> {
   Widget _chewieVideoplyaer() {
     return _chewieController != null && _videoPlayerController != null
         ? Chewie(controller: _chewieController!)
-        : Center(
+        : const Center(
             child: CircularProgressIndicator(
               color: ColorsApp.naviGationbar,
             ),

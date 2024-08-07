@@ -56,7 +56,7 @@ class MoodCubit extends Cubit<MoodState> {
     }
   }
 
-  void toggleFavorite(int diaryId) async {
+   toggleFavorite(int diaryId) async {
     if (state is GetMoodSuccess) {
       final currentState = state as GetMoodSuccess;
       final updatedMoods = currentState.moods.map((mood) {

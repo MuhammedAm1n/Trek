@@ -20,8 +20,8 @@ class onboardingButton extends StatelessWidget {
     return TextButton(
         onPressed: onPressed,
         style: ButtonStyle(
-            elevation: WidgetStatePropertyAll(2),
-            shadowColor: WidgetStatePropertyAll(Colors.grey),
+            elevation: const WidgetStatePropertyAll(2),
+            shadowColor: const WidgetStatePropertyAll(Colors.grey),
             backgroundColor:
                 WidgetStatePropertyAll(Coloring ?? ColorsApp.mainOrange),
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,

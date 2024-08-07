@@ -16,8 +16,8 @@ import 'package:video_diary/Features/Snippets/Data/RemindersRepo.dart';
 import 'package:video_diary/Features/Snippets/Logic/cubit/reminder_cubit.dart';
 import 'package:video_diary/Features/SignUp/Data/Repositry/RegisterRepo.dart';
 import 'package:video_diary/Features/SignUp/Logic/cubit/register_cubit.dart';
-import 'package:video_diary/Features/Todo/Data/Logic/cubit/habit_cubit.dart';
-import 'package:video_diary/Features/Todo/Data/Repo/Habitrepo.dart';
+import 'package:video_diary/Features/Tasks/Data/Logic/cubit/task_cubit.dart';
+import 'package:video_diary/Features/Tasks/Data/Repo/Habitrepo.dart';
 import 'package:video_diary/Features/UploadtoDrive/Data/Repo/GdriveRepo.dart';
 import 'package:video_diary/Features/UploadtoDrive/Logic/cubit/gdrive_cubit.dart';
 import 'package:video_diary/Features/UserPage/Data/Repo/GetUser.dart';
@@ -56,8 +56,8 @@ Future<void> setUpGit() async {
   getIT.registerFactory<MoodCubit>(() => MoodCubit(getIT()));
 
   //Habbits
-  getIT.registerLazySingleton<HabitRepo>(() => HabitRepo(database: getIT()));
-  getIT.registerFactory<HabitsCubit>(() => HabitsCubit(getIT()));
+  getIT.registerLazySingleton<TaskRepo>(() => TaskRepo(database: getIT()));
+  getIT.registerFactory<TaskCubit>(() => TaskCubit(getIT()));
 
   //Location
 

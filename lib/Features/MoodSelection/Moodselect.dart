@@ -33,47 +33,62 @@ class _MoodSelectState extends State<MoodSelect> {
   DateTime dateTime = DateTime.now().add(const Duration(days: 0));
   ImageSource? img;
 
-  String Location = '';
+  String location = '';
 
   Widget reasonSelect(
       BuildContext context, String name, IconData icon, int whyIndex) {
+    bool isSelected = _whyList[whyIndex] == 1;
+
     return InkWell(
-        splashColor: Colors.white,
-        onTap: () {
-          setState(() {
-            _whyList[whyIndex] = _whyList[whyIndex] == 0 ? 1 : 0;
-          });
-        },
-        child: Container(
+      splashColor: Colors.white,
+      onTap: () {
+        setState(() {
+          _whyList[whyIndex] = isSelected ? 0 : 1;
+        });
+      },
+      child: AnimatedScale(
+        scale: isSelected ? 1.1 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        child: AnimatedOpacity(
+          opacity: isSelected ? 1.0 : 0.6,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+          child: Container(
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.7),
                   blurRadius: 7,
-                  offset: Offset(2, 2),
-                )
+                  offset: const Offset(2, 2),
+                ),
               ],
               color: ColorsApp.backGround,
             ),
             margin: const EdgeInsets.all(3.0),
             child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    icon,
-                    size: (MediaQuery.of(context).size.width - 60) / 5 - 30,
-                    color: _whyList[whyIndex] == 0
-                        ? ColorsApp.secLightGrey
-                        : ColorsApp.mainColor,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  icon,
+                  size: (MediaQuery.of(context).size.width - 60) / 5 - 30,
+                  color:
+                      isSelected ? ColorsApp.mainColor : ColorsApp.secLightGrey,
+                ),
+                Text(
+                  name,
+                  style: TextStyle(
+                    color:
+                        isSelected ? ColorsApp.mainColor : ColorsApp.mediumGrey,
                   ),
-                  Text(name,
-                      style: TextStyle(
-                        color: _whyList[whyIndex] == 0
-                            ? ColorsApp.mediumGrey
-                            : ColorsApp.mainColor,
-                      ))
-                ])));
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -126,7 +141,7 @@ class _MoodSelectState extends State<MoodSelect> {
                                     CustomSnackbar.showSnackbar(
                                         context, 'Location: ${state.Location}');
 
-                                    Location = state.Location;
+                                    location = state.Location;
                                   } else if (state is LocationFaliuer) {
                                     CustomSnackbar.showSnackbar(
                                         context, 'Error: ${state.message}');
@@ -321,7 +336,7 @@ class _MoodSelectState extends State<MoodSelect> {
                                   await generateAndSaveThumbnail(videopath);
                               String moodLabel = getMoodLabel(moodVal);
                               context.read<MoodCubit>().insertMood(MoodModel(
-                                  location: Location,
+                                  location: location,
                                   mood: moodVal,
                                   path: videopath,
                                   date: dateTime,
@@ -403,9 +418,7 @@ class _MoodSelectState extends State<MoodSelect> {
       final File thumbnailFile = await File(thumbnailPath).copy(
           '${hiddenDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg');
       return thumbnailFile.path;
-    } else if (thumbnailPath == null) {
-      return print(thumbnailPath);
-    }
+    } else if (thumbnailPath == null) {}
   }
 
   String getMoodLabel(double moodVal) {

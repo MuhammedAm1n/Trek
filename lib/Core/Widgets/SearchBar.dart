@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:video_diary/Core/Di/dependency.dart';
 
 import 'package:video_diary/Core/theming/Coloring.dart';
+import 'package:video_diary/Features/HomePage/Widgets/CustomSearch.dart';
+import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
 
 class SearchBarHome extends StatelessWidget {
-  final void Function()? onTap;
-
   const SearchBarHome({
     super.key,
-    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Get screen width and height
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final moodcubit = getIT<MoodCubit>();
+
     return Container(
-      width: 255,
-      height: 50,
+      width: screenWidth * 0.63, // Use a fraction of the screen width
+      height: screenHeight * 0.060, // Use a fraction of the screen height
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         boxShadow: [
@@ -23,7 +28,7 @@ class SearchBarHome extends StatelessWidget {
             spreadRadius: 0.3,
             blurRadius: 2,
             offset: const Offset(0, 1),
-          )
+          ),
         ],
         borderRadius: BorderRadius.circular(15),
         color: ColorsApp.backGround,
@@ -33,17 +38,27 @@ class SearchBarHome extends StatelessWidget {
           Expanded(
             child: TextField(
               cursorColor: ColorsApp.backGround,
-              cursorOpacityAnimates: true,
               keyboardType: TextInputType.none,
-              onTap: onTap,
+              onTap: () async {
+                // Navigator.pushNamed(context, Routes.SearchPage).then((value) {
+                //   if (value == true) {
+                //     updateParentState("Heloooo");
+                //   }
+                // });
+
+                await showSearch(
+                  context: context,
+                  delegate: CustomSearchDelegate(moodCubit: moodcubit),
+                );
+              },
               decoration: InputDecoration(
                 hintStyle: TextStyle(
                   fontSize: 14,
                   color: ColorsApp.secLightGrey,
                 ),
-                hintText: '     Search for video.',
+                hintText: ' Search for video.', // Remove extra spaces
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10),
               ),
             ),
           ),

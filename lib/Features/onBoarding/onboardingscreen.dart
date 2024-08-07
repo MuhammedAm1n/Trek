@@ -92,7 +92,7 @@ class OnboardingScreen extends StatelessWidget {
 
               // Sign Up  or Register
               onboardingButton(
-                Coloring: Color(0xff48908c),
+                Coloring:const Color(0xff48908c),
                 text: 'Sign up for free',
                 onPressed: () {
                   showModalBottomSheet(

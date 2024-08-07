@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
 
 class CustomSnackbar {
+  static final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
+
   static void showSnackbar(
     BuildContext context,
     String message,
   ) {
-    ScaffoldMessenger.of(context).showSnackBar(
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    
+    scaffoldMessenger.showSnackBar(
       SnackBar(
         content: Text(
           message,
@@ -23,10 +28,13 @@ class CustomSnackbar {
           label: 'OK',
           textColor: ColorsApp.backGround,
           onPressed: () {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            scaffoldMessenger.hideCurrentSnackBar();
           },
         ),
       ),
     );
   }
+
+  // Provide a method to get the GlobalKey
+  static GlobalKey<ScaffoldMessengerState> get scaffoldMessengerKey => _scaffoldMessengerKey;
 }

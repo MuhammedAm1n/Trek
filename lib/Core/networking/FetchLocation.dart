@@ -17,8 +17,10 @@ class FetchLocation {
     List<Placemark> placemarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
     //extract the city name from the first placemark
-    String? city = placemarks[0].subAdministrativeArea;
 
-    return city ?? " ";
+    String? city =
+        "${placemarks[0].administrativeArea!.replaceAll(RegExp(r'\bGovernorate\b', caseSensitive: false), '').trim()}, ${placemarks[0].subAdministrativeArea} ";
+
+    return city;
   }
 }

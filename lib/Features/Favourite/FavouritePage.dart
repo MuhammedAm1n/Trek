@@ -48,9 +48,12 @@ class _FavoritePageState extends State<FavoritePage> {
       elevation: 1,
       centerTitle: true,
       toolbarHeight: 100,
-      title: Image.asset(
-        "assets/images/Favorite.png",
-        scale: 19,
+      title: Padding(
+        padding: const EdgeInsets.only(top: 5.0),
+        child: Image.asset(
+          "assets/images/Favorite.png",
+          scale: 17,
+        ),
       ),
     );
   }
@@ -68,7 +71,7 @@ class _FavoritePageState extends State<FavoritePage> {
       itemCount: favoriteDiaries.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 2 / 2.4,
+        childAspectRatio: 2 / 2.42,
       ),
       itemBuilder: (context, index) {
         final diary = favoriteDiaries[index];

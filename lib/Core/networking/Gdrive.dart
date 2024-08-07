@@ -14,6 +14,15 @@ class HandleException implements Exception {
   String toString() => ' $message';
 }
 
+// Token for cancellation
+class CancelToken {
+  bool isCancelled = false;
+
+  void cancel() {
+    isCancelled = true;
+  }
+}
+
 class GoogleDriveApi {
   drive.DriveApi? _driveApi;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -21,6 +30,7 @@ class GoogleDriveApi {
   );
 
   GoogleSignInAccount? _currentUser;
+  CancelToken _cancelToken = CancelToken(); // Add CancelToken
 
   Future<void> authenticate() async {
     try {
@@ -58,7 +68,7 @@ class GoogleDriveApi {
         return folderCreation.id!;
       }
     } catch (e) {
-      throw HandleException('Failed to create or get folder');
+      throw HandleException('Failed to create or get folder: $e');
     }
   }
 
@@ -74,6 +84,10 @@ class GoogleDriveApi {
         .where((file) => file.path.endsWith('.mp4'))
         .toList();
 
+    if (videoFiles.isEmpty) {
+      throw HandleException("There are no videos to upload");
+    }
+
     List<String> existingFiles = [];
     bool newFilesUploaded = false;
 
@@ -81,6 +95,8 @@ class GoogleDriveApi {
         await _getOrCreateFolder('MyAppVideos'); // Specify your folder name
 
     for (var file in videoFiles) {
+      if (_cancelToken.isCancelled) break; // Check for cancellation
+
       try {
         bool fileExists =
             await _checkIfFileExists(p.basename(file.path), folderId);
@@ -138,10 +154,15 @@ class GoogleDriveApi {
       final fileList = await _driveApi!.files.list(
         q: "name = '$fileName' and '$folderId' in parents and trashed = false",
       );
+
       return fileList.files?.isNotEmpty ?? false;
     } catch (e) {
       throw HandleException('Error checking if file exists: $e');
     }
+  }
+
+  void cancelUpload() {
+    _cancelToken.cancel(); // Method to cancel the upload
   }
 }
 

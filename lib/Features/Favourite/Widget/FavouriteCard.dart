@@ -13,30 +13,35 @@ class FavoriteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Card(
-        color: ColorsApp.lightGrey,
-        elevation: 1,
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(children: [
-          Stack(
-            children: [
-              // Video Thumbnail
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Videoplayerz(Path: diary.path)),
-                  );
-                },
-                child: Container(
-                  height: 170,
+      color: ColorsApp.lightGrey,
+      elevation: 1,
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Videoplayerz(Path: diary.path),
+                ),
+              );
+            },
+            child: Stack(
+              children: [
+                // Video Thumbnail
+                Container(
                   width: double.infinity,
+                  height: screenWidth *
+                      0.42, // Responsive height based on screen width
                   decoration: BoxDecoration(
-                    color: ColorsApp.lightGrey,
+                    color: ColorsApp.secLightGrey,
                     borderRadius:
                         const BorderRadius.vertical(top: Radius.circular(12)),
                     image: DecorationImage(
@@ -46,51 +51,51 @@ class FavoriteCard extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
-              // Play Button Overlay
-              const Positioned.fill(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Icon(
-                    Icons.play_circle_outline,
-                    color: Colors.white,
-                    size: 60,
+                // Play Button Overlay
+                Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.play_circle_outline,
+                      color: Colors.white,
+                      size: screenWidth *
+                          0.15, // Responsive size based on screen width
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          Container(
-            decoration: BoxDecoration(color: ColorsApp.lightGrey),
-            child: SizedBox(
-                height:
-                    45, // Set a fixed height for the container holding the text
-
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        diary.label,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+          SizedBox(
+            height: 50, // Set a fixed height for the container holding the text
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      diary.label,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
-                      GestureDetector(
-                        onTap: onPressed,
-                        child: Icon(
-                          !diary.favorite
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: ColorsApp.mainColor,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                )),
-          )
-        ]));
+                  GestureDetector(
+                    onTap: onPressed,
+                    child: Icon(
+                      !diary.favorite ? Icons.favorite : Icons.favorite_border,
+                      color: ColorsApp.mainColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

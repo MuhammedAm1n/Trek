@@ -75,12 +75,12 @@ class MenuItem {
 }
 
 abstract class MenuItems {
-  static const List<MenuItem> firstItems = [settings, favorite];
+  static const List<MenuItem> firstItems = [settings, backup];
   static const List<MenuItem> secondItems = [logout];
 
   static const settings =
       MenuItem(text: 'User', icon: Icons.account_box_rounded);
-  static const favorite = MenuItem(text: 'Backup', icon: Icons.backup);
+  static const backup = MenuItem(text: 'Backup', icon: Icons.backup);
   static const logout = MenuItem(text: 'Log Out', icon: Icons.logout);
 
   static Widget buildItem(MenuItem item) {
@@ -109,7 +109,7 @@ abstract class MenuItems {
         Navigator.pushNamed(context, Routes.ProfilePage);
         break;
 
-      case MenuItems.favorite:
+      case MenuItems.backup:
         showDialog(
             context: context,
             builder: (context) {
@@ -138,9 +138,13 @@ abstract class MenuItems {
                           ? const LinearProgressIndicator(
                               color: ColorsApp.mainColor,
                             )
-                          : const Text(
-                              "Backup to Google Drive",
-                              style: TextStyle(color: Colors.black),
+                          : const Padding(
+                              padding: EdgeInsets.only(top: 10.0),
+                              child: Text(
+                                textAlign: TextAlign.center,
+                                "Backup to Google Drive",
+                                style: TextStyle(color: Colors.black),
+                              ),
                             ),
                       actions: [
                         TextButton(

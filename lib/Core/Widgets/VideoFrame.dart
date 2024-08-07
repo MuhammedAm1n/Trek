@@ -18,26 +18,28 @@ class VideoGrid extends StatefulWidget {
 class _VideoGridState extends State<VideoGrid> {
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final double cardWidth = screenWidth * 0.45; // Responsive width
+
     String thumB = widget.moodMap.thumb;
     String phrase = widget.moodMap.location;
     String videoPath = widget.moodMap.path;
-    //String Videopath = widget.moodMap.path;
-    String Viddate =
-        " ${widget.moodMap.date.year.toString()} / ${widget.moodMap.date.month.toString()} / ${widget.moodMap.date.day.toString()}";
-    // String delete;
+    String videodate =
+        "${widget.moodMap.date.year.toString()} / ${widget.moodMap.date.month.toString()} / ${widget.moodMap.date.day.toString()}";
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
       decoration: BoxDecoration(
         color: !widget.moodMap.favorite
-            ? ColorsApp.mediumGrey
-            : ColorsApp.mainColor,
+            ? ColorsApp.mainColor
+            : ColorsApp.secLightGrey,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 3,
-            blurRadius: 5,
+            spreadRadius: 1,
+            blurRadius: 3,
             offset: const Offset(0, 3), // changes position of shadow
           ),
         ],
@@ -55,9 +57,9 @@ class _VideoGridState extends State<VideoGrid> {
               );
             },
             child: AspectRatio(
-              aspectRatio: 1,
+              aspectRatio: 1, // Aspect ratio based on card height and width
               child: Container(
-                width: double.infinity,
+                width: cardWidth,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
@@ -75,10 +77,10 @@ class _VideoGridState extends State<VideoGrid> {
               ),
             ),
           ),
-          const SizedBox(height: 5),
           Padding(
-            padding: const EdgeInsets.only(left: 8.0),
+            padding: const EdgeInsets.only(left: 8.0, top: 9),
             child: Text(
+              overflow: TextOverflow.ellipsis,
               phrase,
               style: const TextStyle(
                 fontSize: 15,
@@ -87,14 +89,13 @@ class _VideoGridState extends State<VideoGrid> {
               ),
             ),
           ),
-          const SizedBox(height: 4),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  Viddate,
+                  videodate,
                   style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.normal,
@@ -102,10 +103,12 @@ class _VideoGridState extends State<VideoGrid> {
                   ),
                 ),
                 IconButton(
+                  constraints: BoxConstraints(maxHeight: 40, maxWidth: 40),
                   onPressed: () {
                     setState(() {
                       widget.moodMap.favorite = !widget.moodMap.favorite;
                       context.read<MoodCubit>().updateMood(widget.moodMap);
+                      context.read<MoodCubit>().loadMood();
                     });
                   },
                   icon: AnimatedSwitcher(

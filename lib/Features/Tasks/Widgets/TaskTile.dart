@@ -1,41 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:video_diary/Features/Todo/Data/Model/HabitModel.dart';
+import 'package:video_diary/Features/Tasks/Data/Model/HabitModel.dart';
 
-// ignore: must_be_immutable
-class ToDoTile extends StatelessWidget {
+class TaskTile extends StatelessWidget {
   final VoidCallback onTap;
-  final HabitModel habitTile;
-
+  final TaskModel habitTile;
   final void Function(BuildContext)? deletTap;
-  void Function()? updateTap;
-  ToDoTile(
-      {super.key,
-      required this.onTap,
-      this.deletTap,
-      this.updateTap,
-      required this.habitTile});
+  final VoidCallback? updateTap;
 
-//convert seconds into min 61 > 1:02
-  convertingMintoSec(int totalSeconds) {
-    String sec = (totalSeconds % 60).toString();
-    String min = (totalSeconds / 60).toStringAsFixed(2);
+  const TaskTile({
+    super.key,
+    required this.onTap,
+    this.deletTap,
+    this.updateTap,
+    required this.habitTile,
+  });
 
-    // if sec is a 1 digit number , place a 0 infornt of it
-    if (sec.length == 1) {
-      sec = '0$sec';
-    }
+  // Convert seconds into minutes and seconds
+  String convertingMintoSec(int totalSeconds) {
+    int sec = totalSeconds % 60;
+    int min =
+        totalSeconds ~/ 60; // Use integer division to get the number of minutes
 
-    // if min is a 1 digit number
-    if (min[1] == ".") {
-      min = min.substring(0, 1);
-    }
-    return '$min : $sec';
+    // Format seconds to always be two digits
+    String secStr = sec.toString().padLeft(2, '0');
+    return '$min:$secStr';
   }
 
-// Calculate proggress percentage
+  // Calculate progress percentage
   double percentegeDone() {
+    // Avoid division by zero
+    if (habitTile.timeGoal == 0) return 0;
     return habitTile.timeSpent / (habitTile.timeGoal * 60);
   }
 
@@ -48,6 +44,7 @@ class ToDoTile extends StatelessWidget {
     bool finished = habitTile.timeSpent / 60 == habitTile.timeGoal
         ? !habitTile.paused
         : false;
+
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, right: 20, top: 20),
       child: Slidable(
@@ -55,7 +52,7 @@ class ToDoTile extends StatelessWidget {
           motion: const StretchMotion(),
           children: [
             SlidableAction(
-              onPressed: deletTap,
+              onPressed: (context) => deletTap?.call(context),
               icon: Icons.delete,
               backgroundColor: Colors.red,
               borderRadius: BorderRadius.circular(4),
@@ -70,7 +67,7 @@ class ToDoTile extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Circural Indcitor
+              // Circular Indicator
               Row(
                 children: [
                   GestureDetector(
@@ -82,6 +79,8 @@ class ToDoTile extends StatelessWidget {
                         alignment: AlignmentDirectional.topCenter,
                         children: [
                           CircularPercentIndicator(
+                            backgroundColor:
+                                const Color.fromARGB(255, 228, 225, 225),
                             progressColor: percentegeDone() > 0.5
                                 ? (percentegeDone() > 0.75
                                     ? Colors.green
@@ -99,13 +98,11 @@ class ToDoTile extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    width: 20,
-                  ),
+                  const SizedBox(width: 20),
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        //TodoName
+                        // Task Name
                         Text(
                           habitTile.habitName,
                           style: TextStyle(
@@ -116,21 +113,16 @@ class ToDoTile extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                               fontSize: 18),
                         ),
-                        const SizedBox(
-                          height: 4,
-                        ), // progress
+                        const SizedBox(height: 4),
+                        // Progress
                         Text(
-                          convertingMintoSec(habitTile.timeSpent) +
-                              ' / ' +
-                              habitTile.timeGoal.toString() +
-                              ": 00",
+                          '${convertingMintoSec(habitTile.timeSpent)} / ${habitTile.timeGoal}:00',
                           style: const TextStyle(color: Colors.white),
                         ),
                       ]),
                 ],
               ),
-              GestureDetector(
-                  onTap: updateTap, child: const Icon(Icons.settings))
+              IconButton(onPressed: updateTap, icon: const Icon(Icons.settings))
             ],
           ),
         ),

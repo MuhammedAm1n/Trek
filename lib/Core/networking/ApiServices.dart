@@ -76,7 +76,7 @@ class ApiServices {
       // Create or update user in Firestore
       await _createOrUpdateUser(userCredential, gUser.displayName ?? "");
     } catch (e) {
-      print("Error during Google Sign-In: $e");
+     
       rethrow; // Optionally rethrow the error to handle it further up the call stack
     }
   }

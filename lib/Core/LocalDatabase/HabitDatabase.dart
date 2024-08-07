@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:video_diary/Features/Todo/Data/Model/HabitModel.dart';
+import 'package:video_diary/Features/Tasks/Data/Model/HabitModel.dart';
 
 class HabitDatabase {
   static Database? _db;
@@ -23,7 +23,7 @@ class HabitDatabase {
   _onCreate(Database db, int version) async {
     await db.execute('''
     CREATE TABLE habits(
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id INTEGER ,
       habitName TEXT,
       timeSpent INTEGER,
       color INTEGER,
@@ -41,7 +41,7 @@ class HabitDatabase {
   readAllHabits() async {
     Database? myDatabase = await db;
     final result = await myDatabase!.query('habits');
-    return result.map((e) => HabitModel.fromMap(e)).toList();
+    return result.map((e) => TaskModel.fromMap(e)).toList();
   }
 
   Future<int> updateHabit(Map<String, dynamic> habit) async {

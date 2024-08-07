@@ -4,27 +4,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_diary/Core/Widgets/TextButton.dart';
 import 'package:video_diary/Core/Widgets/TextFormField.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
-import 'package:video_diary/Features/Todo/Data/Logic/cubit/habit_cubit.dart';
-import 'package:video_diary/Features/Todo/Data/Model/HabitModel.dart';
-import 'package:video_diary/Features/Todo/Widgets/WidgetsOfAddHabit/VeiwColorsITem.dart';
+import 'package:video_diary/Features/Tasks/Data/Logic/cubit/task_cubit.dart';
+import 'package:video_diary/Features/Tasks/Data/Model/HabitModel.dart';
+import 'package:video_diary/Features/Tasks/Widgets/WidgetsOfAddHabit/VeiwColorsITem.dart';
 
-class AddHabit extends StatefulWidget {
-  final Function(HabitModel) onHabitAdded;
+class AddTask extends StatefulWidget {
+  final Function(TaskModel) onHabitAdded;
 
-  const AddHabit({super.key, required this.onHabitAdded});
+  const AddTask({super.key, required this.onHabitAdded});
 
   @override
-  State<AddHabit> createState() => _AddHabitState();
+  State<AddTask> createState() => _AddTaskState();
 }
 
-class _AddHabitState extends State<AddHabit> {
+class _AddTaskState extends State<AddTask> {
   final TextEditingController _time = TextEditingController();
   final TextEditingController _name = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: context.read<HabitsCubit>().formKey,
+      key: context.read<TaskCubit>().formKey,
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -65,23 +65,57 @@ class _AddHabitState extends State<AddHabit> {
                   showCupertinoModalPopup(
                       context: context,
                       builder: (_) {
-                        return SizedBox(
-                          height: 250,
-                          width: double.infinity,
-                          child: CupertinoPicker(
-                            backgroundColor: Colors.white,
-                            itemExtent: 60,
-                            scrollController:
-                                FixedExtentScrollController(initialItem: 1),
-                            onSelectedItemChanged: (int value) {
-                              setState(() {
-                                _time.text = value.toString();
-                              });
-                            },
-                            children: List<Widget>.generate(100, (index) {
-                              return Center(child: Text('$index minutes'));
-                            }),
-                          ),
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              color: Colors.white,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10.0),
+                                    child: IconButton(
+                                        onPressed: () {
+                                          _time.clear();
+                                          Navigator.pop(context);
+                                        },
+                                        icon: const Icon(Icons.cancel)),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 10.0),
+                                    child: IconButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        icon: const Icon(Icons.check)),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Stack(children: [
+                              SizedBox(
+                                height: 250,
+                                width: double.infinity,
+                                child: CupertinoPicker(
+                                  backgroundColor: Colors.white,
+                                  itemExtent: 60,
+                                  scrollController: FixedExtentScrollController(
+                                      initialItem: 0),
+                                  onSelectedItemChanged: (int value) {
+                                    setState(() {
+                                      _time.text = value.toString();
+                                    });
+                                  },
+                                  children: List<Widget>.generate(100, (index) {
+                                    return Center(
+                                        child: Text('$index minutes'));
+                                  }),
+                                ),
+                              ),
+                            ]),
+                          ],
                         );
                       });
                 },
@@ -110,16 +144,16 @@ class _AddHabitState extends State<AddHabit> {
                   text: 'Save',
                   onPressed: () {
                     if (context
-                        .read<HabitsCubit>()
+                        .read<TaskCubit>()
                         .formKey
                         .currentState!
                         .validate()) {
-                      final habit = HabitModel(
+                      final habit = TaskModel(
                         habitName: _name.text,
                         timeGoal: int.parse(_time.text),
                       );
                       widget.onHabitAdded(habit);
-                      context.read<HabitsCubit>().emitInsertHabit(habit);
+                      context.read<TaskCubit>().emitInsertTask(habit);
                       Navigator.pop(context);
                     }
                   }),

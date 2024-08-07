@@ -19,6 +19,7 @@ class _MyBarGraphState extends State<MyBarGraph> {
   @override
   void initState() {
     super.initState();
+
     context.read<MoodCubit>().loadMood();
   }
 
@@ -55,7 +56,7 @@ class _MyBarGraphState extends State<MyBarGraph> {
                   child: Align(
                     alignment: AlignmentDirectional.topStart,
                     child: Text(
-                      'Mood Count',
+                      ' Mood Count',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -87,7 +88,7 @@ class _MyBarGraphState extends State<MyBarGraph> {
                   child: Align(
                     alignment: AlignmentDirectional.topStart,
                     child: Text(
-                      'Reason Chart',
+                      ' Reason Chart',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -210,7 +211,7 @@ class _MyBarGraphState extends State<MyBarGraph> {
         title: 'Fine: ${moodCounts['Completely Fine']}',
       ),
       _createPieChartSection(
-        color: const Color(0xff407d8b),
+        color: const Color(0xff48908c),
         value: moodCounts['Somewhat Bad']!.toDouble(),
         title: 'Bad: ${moodCounts['Somewhat Bad']}',
       ),

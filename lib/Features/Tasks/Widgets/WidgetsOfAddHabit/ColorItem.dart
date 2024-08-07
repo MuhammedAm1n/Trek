@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:video_diary/Core/theming/Coloring.dart';
 
 class ColorITem extends StatelessWidget {
   const ColorITem({super.key, required this.isActive, required this.color});
@@ -9,7 +10,7 @@ class ColorITem extends StatelessWidget {
     return isActive
         ? CircleAvatar(
             radius: 16,
-            backgroundColor: Colors.white,
+            backgroundColor: ColorsApp.secLightGrey,
             child: CircleAvatar(
               radius: 14,
               backgroundColor: color,

@@ -37,6 +37,7 @@ dependencies:
   date_picker_timeline: ^1.2.3
   dropdown_button2: ^2.3.9
   feather_icons: ^1.2.0
+  file_manager: ^1.0.2
   firebase_auth: ^5.1.1
   firebase_core: ^3.1.1
   firebase_messaging: ^15.0.1
@@ -48,6 +49,7 @@ dependencies:
   flutter_local_notifications: ^9.0.2
   flutter_screenutil: ^5.9.0
   flutter_slidable: ^3.1.0
+  flutter_svg: ^2.0.10+1
   folder_file_saver: ^2.0.5
   geocoding: ^3.0.0
   geolocator: ^12.0.0
@@ -83,7 +85,7 @@ dev_dependencies:
     sdk: flutter
 flutter_launcher_icons:
   android: "launcher_icon"
-  image_path: assets/images/ic_launcher_round.png
+  image_path: assets/images/TrekIcon1.png
   min_sdk_android: 21
 
 # For information on the generic Dart part of this file, see the
@@ -101,6 +103,7 @@ flutter:
     - assets/emotions/
     - assets/sound/
     - assets/animations/
+    - assets/Svgs/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

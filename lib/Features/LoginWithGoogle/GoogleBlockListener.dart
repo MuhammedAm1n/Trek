@@ -16,7 +16,7 @@ class GoogleBlockListener extends StatelessWidget {
             context: context,
             builder: (context) => const Center(
               child: CircularProgressIndicator(
-                color: ColorsApp.mainOrange,
+                color: ColorsApp.mainColor,
               ),
             ),
           );
@@ -24,7 +24,6 @@ class GoogleBlockListener extends StatelessWidget {
           Navigator.pop(context);
 
           CustomSnackbar.showSnackbar(context, state.error);
-          print(state.error);
         }
       },
       child: const SizedBox.shrink(),

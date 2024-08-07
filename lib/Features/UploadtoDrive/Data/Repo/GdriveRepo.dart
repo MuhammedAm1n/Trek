@@ -8,4 +8,8 @@ class Gdriverepo {
   uploadVideos() async {
     await _googleDriveApi.uploadAllVideos();
   }
+
+  cancelUploading() {
+    _googleDriveApi.cancelUpload();
+  }
 }

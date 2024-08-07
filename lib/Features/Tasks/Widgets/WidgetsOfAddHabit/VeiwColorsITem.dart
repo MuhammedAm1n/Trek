@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:video_diary/Features/Todo/Data/Logic/cubit/habit_cubit.dart';
-import 'package:video_diary/Features/Todo/Widgets/WidgetsOfAddHabit/ColorItem.dart';
+import 'package:video_diary/Features/Tasks/Data/Logic/cubit/task_cubit.dart';
+import 'package:video_diary/Features/Tasks/Widgets/WidgetsOfAddHabit/ColorItem.dart';
 
 class ListVeiwColorsItem extends StatefulWidget {
   const ListVeiwColorsItem({super.key});
@@ -16,7 +16,7 @@ class _ListVeiwColorsItemState extends State<ListVeiwColorsItem> {
     Color(0xfffabab7),
     Color(0xfff06d9c),
     Color(0xff98c7da),
-    Color(0xff407d8b),
+    Color(0xff48908c),
     Color(0xffe9c46a)
   ];
   @override
@@ -33,7 +33,7 @@ class _ListVeiwColorsItemState extends State<ListVeiwColorsItem> {
               child: GestureDetector(
                   onTap: () {
                     currentIndex = index;
-                    BlocProvider.of<HabitsCubit>(context).color =
+                    BlocProvider.of<TaskCubit>(context).color =
                         colors[currentIndex];
                     setState(() {});
                   },

@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:unicons/unicons.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
-
 import 'package:video_diary/Features/Snippets/Logic/cubit/reminder_cubit.dart';
 
 class SnippetsPage extends StatefulWidget {
@@ -16,6 +16,45 @@ class SnippetsPage extends StatefulWidget {
 
 class _SnippetsPageState extends State<SnippetsPage> {
   final TextEditingController typeController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _showIntroDialog();
+  }
+
+  Future<void> _showIntroDialog() async {
+    final prefs = await SharedPreferences.getInstance();
+    final hasSeenDialog = prefs.getBool('hasSeenSnippetsDialog') ?? false;
+
+    if (!hasSeenDialog) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Center(child: Text('Snippets')),
+            content: const Padding(
+              padding: EdgeInsets.only(left: 12.0),
+              child: Text(
+                  "The Snippets page serves up a daily quote to brighten your day and make you smile."),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: ColorsApp.mainColor),
+                ),
+                onPressed: () async {
+                  Navigator.of(context).pop(); // Close the dialog
+                  await prefs.setBool('hasSeenSnippetsDialog', true);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +133,7 @@ class _SnippetsPageState extends State<SnippetsPage> {
                             onPressed: () {
                               Share.share(message);
                             },
-                            icon: Icon(UniconsLine.share)),
+                            icon: const Icon(UniconsLine.share)),
                       ),
                     );
                   },
