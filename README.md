@@ -1,16 +1,13 @@
-# video_diary
+Key Features:
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+📹 Video Diary Capture: Effortlessly record and store video entries for personal reflection and analysis.
+⏲️ Task Management: Manage your goals effectively with a built-in task timer.
+📊 Advanced Analytics: Dive deep into your entries with robust analysis tools.
+🔐 Firebase Integration: Enjoy secure authentication with Google Sign-In and real-time updates.
+💾 Local Storage: Efficiently manage your data using SQFlite.
+🔔 Notifications & Messaging: Stay informed with Firebase Messaging.
+🛠️ Background Services: Keep things running smoothly with background task handling.
+📈 Interactive Charts: Visualize your progress with dynamic FLChart graphs.
+🎛️ State Management: Experience smooth performance with BLoC for state management.
+☁️ Google Drive Backup: Secure your video diaries and data with easy Google Drive backup.
+💬 Snippets: Receive daily motivational quotes to keep you inspired and motivated.
