@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:video_diary/Features/Analysis/BargraphAnother/Bargraph.dart';
 import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
 
 class MyBarGraph extends StatefulWidget {
@@ -13,38 +13,166 @@ class MyBarGraph extends StatefulWidget {
 
 class _MyBarGraphState extends State<MyBarGraph> {
   List moodEntries = [];
-  Future<List<Map<dynamic, dynamic>>>? x;
+  List reasonEntries = [];
+  double maXCountY = 0;
+
   @override
   void initState() {
     super.initState();
-    x = context.read<MoodCubit>().emitGetMood();
+
+    context.read<MoodCubit>().loadMood();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: x,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final reversedList = snapshot.data!.reversed.toList();
-          moodEntries = List.generate(
-              reversedList.length, (i) => reversedList[i]["mood"]);
-          return Center(
-            child: PieChart(PieChartData(
-              sectionsSpace: 5,
-              centerSpaceRadius: 120,
-              sections: _generatePieChartSections(),
-            )),
+    return BlocBuilder<MoodCubit, MoodState>(
+      builder: (context, state) {
+        if (state is GetMoodSuccess) {
+          final reversedList = state.moods.reversed.toList();
+          moodEntries =
+              List.generate(reversedList.length, (i) => reversedList[i].mood);
+
+          reasonEntries =
+              List.generate(state.moods.length, (i) => state.moods[i].why);
+
+          if (moodEntries.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset("assets/animations/Statistics-bro2.png")
+                ],
+              ),
+            );
+          }
+
+          return SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(top: 20.0, left: 10),
+                  child: Align(
+                    alignment: AlignmentDirectional.topStart,
+                    child: Text(
+                      ' Mood Count',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+                  child: SizedBox(
+                    height: 298,
+                    width: 297,
+                    child: Card(
+                      elevation: 7,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(250),
+                      ),
+                      color: Colors.white,
+                      child: PieChart(PieChartData(
+                        sectionsSpace: 5,
+                        centerSpaceRadius: 80,
+                        sections: _generatePieChartSections(),
+                      )),
+                    ),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 10.0, left: 10),
+                  child: Align(
+                    alignment: AlignmentDirectional.topStart,
+                    child: Text(
+                      ' Reason Chart',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 10.0, bottom: 20.0, right: 10, top: 20),
+                  child: SizedBox(
+                      height: 400,
+                      width: 400,
+                      child: LineChartExample(
+                        lineSpots: _genereteReason(),
+                        y: maXCountY,
+                      )),
+                ),
+              ],
+            ),
           );
         } else {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );
   }
 
+  List<FlSpot> _genereteReason() {
+    final Map<String, int> reasonCount = {
+      "family": 0,
+      "friends": 0,
+      "work": 0,
+      "hobbies": 0,
+      "school": 0,
+      "love": 0,
+      "health": 0,
+      "music": 0,
+      "food": 0,
+      "news": 0,
+      "weather": 0,
+      "money": 0,
+    };
+
+    // List of keys corresponding to the reason categories
+    final List<String> keys = [
+      "family",
+      "friends",
+      "work",
+      "hobbies",
+      "school",
+      "love",
+      "health",
+      "music",
+      "food",
+      "news",
+      "weather",
+      "money"
+    ];
+
+    for (var reason in reasonEntries) {
+      for (int i = 0; i < reason.length; i++) {
+        if (reason[i] == 1) {
+          reasonCount[keys[i]] = reasonCount[keys[i]]! + 1;
+        }
+      }
+    }
+    int maxCount = reasonCount.values.reduce((a, b) => a > b ? a : b);
+
+    // Scale the maximum count for chart display
+    final double scaledMaxCount = maxCount.toDouble() * 1.5;
+
+    maXCountY = scaledMaxCount;
+
+    return reasonCount.entries.map((entry) {
+      return FlSpot(
+        reasonCount.keys.toList().indexOf(entry.key).toDouble(),
+        entry.value.toDouble(),
+      );
+    }).toList();
+  }
+
   List<PieChartSectionData> _generatePieChartSections() {
-    Map<String, int> moodCounts = {
+    final Map<String, int> moodCounts = {
       "Super Great": 0,
       "Pretty well": 0,
       "Completely Fine": 0,
@@ -67,46 +195,49 @@ class _MyBarGraphState extends State<MyBarGraph> {
     }
 
     return [
-      PieChartSectionData(
-        color: Colors.green,
+      _createPieChartSection(
+        color: const Color(0xfffabab7),
         value: moodCounts["Super Great"]!.toDouble(),
-        title: '"Great": ${moodCounts["Super Great"]}',
-        radius: 50,
-        titleStyle: const TextStyle(
-            fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+        title: 'Great: ${moodCounts["Super Great"]}',
       ),
-      PieChartSectionData(
-        color: Colors.blue,
+      _createPieChartSection(
+        color: const Color(0xfff06d9c),
         value: moodCounts["Pretty well"]!.toDouble(),
-        title: 'well: ${moodCounts["Pretty well"]}',
-        radius: 50,
-        titleStyle: const TextStyle(
-            fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+        title: 'Well: ${moodCounts["Pretty well"]}',
       ),
-      PieChartSectionData(
-        color: Colors.orange,
+      _createPieChartSection(
+        color: const Color(0xff98c7da),
         value: moodCounts['Completely Fine']!.toDouble(),
         title: 'Fine: ${moodCounts['Completely Fine']}',
-        radius: 50,
-        titleStyle: const TextStyle(
-            fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
       ),
-      PieChartSectionData(
-        color: Colors.red,
+      _createPieChartSection(
+        color: const Color(0xff48908c),
         value: moodCounts['Somewhat Bad']!.toDouble(),
         title: 'Bad: ${moodCounts['Somewhat Bad']}',
-        radius: 50,
-        titleStyle: const TextStyle(
-            fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
       ),
-      PieChartSectionData(
-        color: Colors.yellow,
+      _createPieChartSection(
+        color: const Color(0xffe9c46a),
         value: moodCounts['Totally Terrible']!.toDouble(),
         title: 'Terrible: ${moodCounts['Totally Terrible']}',
-        radius: 50,
-        titleStyle: const TextStyle(
-            fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
       ),
     ];
+  }
+
+  PieChartSectionData _createPieChartSection({
+    required Color color,
+    required double value,
+    required String title,
+  }) {
+    return PieChartSectionData(
+      color: color,
+      value: value,
+      title: title,
+      radius: 65,
+      titleStyle: const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    );
   }
 }

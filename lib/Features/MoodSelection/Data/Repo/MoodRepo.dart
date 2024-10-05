@@ -9,7 +9,7 @@ class MoodRepo {
     db.initDb();
   }
 
-  Future<List<Map>> GetMood() async {
+  Future<List<MoodModel>> GetMood() async {
     return await db.readMood();
   }
 
@@ -19,5 +19,9 @@ class MoodRepo {
 
   deleteMood(int id) {
     db.deleteMood(id);
+  }
+
+  updateMood(MoodModel newMood) {
+    db.updateMood(newMood);
   }
 }

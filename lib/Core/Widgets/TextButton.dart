@@ -11,10 +11,10 @@ class GTextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: ButtonStyle(
-          backgroundColor: const MaterialStatePropertyAll(ColorsApp.mainOrange),
+          backgroundColor: const WidgetStatePropertyAll(ColorsApp.mainColor),
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          minimumSize: MaterialStatePropertyAll(Size(double.infinity, 50.h)),
-          shape: MaterialStatePropertyAll(
+          minimumSize: WidgetStatePropertyAll(Size(double.infinity, 50.h)),
+          shape: WidgetStatePropertyAll(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)))),
       onPressed: onPressed,
       child: Text(

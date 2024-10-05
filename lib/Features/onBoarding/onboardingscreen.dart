@@ -10,6 +10,7 @@ import 'package:video_diary/Features/LoginWithGoogle/Logic/cubit/login_with_goog
 import 'package:video_diary/Features/SignUp/Logic/cubit/register_cubit.dart';
 import 'package:video_diary/Features/SignUp/sinUp_screen.dart';
 import 'package:video_diary/Features/onBoarding/onboardingButton.dart';
+import 'package:video_diary/Features/onBoarding/onboardingGoogleButton.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -17,6 +18,7 @@ class OnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
           child: Padding(
         padding: EdgeInsets.only(top: 30.h, left: 20.w, right: 20.w),
@@ -26,46 +28,46 @@ class OnboardingScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/Loogoo.png',
-                scale: 7,
+                'assets/images/NEW.png',
+                scale: 8,
               ),
-              SizedBox(
-                height: 30.h,
-              ),
-              const Text(
-                'VDiary',
-                style: TextStyle(
-                    fontSize: 40,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
-              ),
+
               SizedBox(
                 height: 40.h,
               ),
               const Text(
-                "Capture life's moments, share your stories, and relive memories like never before.",
+                textAlign: TextAlign.center,
+                "Capture life's moments, \n relive memories like never before,\n track your goals!",
                 style: TextStyle(
                     fontSize: 20,
-                    color: Colors.white,
+                    color: Colors.black,
                     fontWeight: FontWeight.normal),
               ),
               SizedBox(
-                height: 185.h,
+                height: 110.h,
               ),
               // Normal Login
               onboardingButton(
+                Coloring: ColorsApp.mainColor,
                 text: 'Log in with Account',
                 onPressed: () {
                   showModalBottomSheet(
                       isScrollControlled: true,
-                      backgroundColor: ColorsApp.darkGrey,
+                      backgroundColor: ColorsApp.backGround,
                       shape: const RoundedRectangleBorder(
                           borderRadius:
                               BorderRadius.vertical(top: Radius.circular(30))),
                       context: context,
                       builder: (context) => BlocProvider(
                             create: (context) => getIT<LoginCubit>(),
-                            child: const LoginScreen(),
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: 10,
+                                  right: 10,
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom),
+                              child: const LoginScreen(),
+                            ),
                           ));
                 },
               ),
@@ -73,32 +75,43 @@ class OnboardingScreen extends StatelessWidget {
                 height: 8.h,
               ),
               // Login With Google
-              onboardingButton(
+              onboardingGoogleButton(
+                iconData: 'assets/images/Google__G__logo.svg.png',
                 text: 'Log in with Google',
-                textStyle: TextStyle(color: Colors.black),
+                textStyle: const TextStyle(color: Colors.black),
                 Coloring: Colors.white,
                 onPressed: () {
                   context.read<LoginWithGoogleCubit>().emitloginWithGooglel();
                 },
               ),
               const GoogleBlockListener(),
-              // Sign Up  or Register
+
               SizedBox(
                 height: 8.h,
               ),
+
+              // Sign Up  or Register
               onboardingButton(
+                Coloring:const Color(0xff48908c),
                 text: 'Sign up for free',
                 onPressed: () {
                   showModalBottomSheet(
                       isScrollControlled: true,
-                      backgroundColor: ColorsApp.darkGrey,
+                      backgroundColor: ColorsApp.backGround,
                       shape: const RoundedRectangleBorder(
                           borderRadius:
                               BorderRadius.vertical(top: Radius.circular(30))),
                       context: context,
                       builder: (context) => BlocProvider(
                             create: (context) => getIT<RegisterCubit>(),
-                            child: const SignupScreen(),
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  left: 10,
+                                  right: 10,
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom),
+                              child: const SignupScreen(),
+                            ),
                           ));
                 },
               ),

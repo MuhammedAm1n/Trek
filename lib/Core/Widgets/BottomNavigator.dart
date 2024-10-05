@@ -1,16 +1,15 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:video_diary/Core/Di/dependency.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
 import 'package:video_diary/Features/Analysis/AnalysisPage.dart';
-import 'package:video_diary/Features/Todo/Todo.dart';
-import 'package:video_diary/Features/HomePage/homeScreen.dart';
+import 'package:video_diary/Features/Favourite/FavouritePage.dart';
 import 'package:video_diary/Features/MoodSelection/Logic/cubit/mood_cubit.dart';
-
-import '../Di/dependency.dart';
+import 'package:video_diary/Features/Tasks/Task.dart';
+import 'package:video_diary/Features/HomePage/homeScreen.dart';
 
 class BottomNavigatorHome extends StatefulWidget {
-  BottomNavigatorHome({super.key});
+  const BottomNavigatorHome({super.key});
 
   @override
   State<BottomNavigatorHome> createState() => _BottomNavigatorHomeState();
@@ -18,48 +17,115 @@ class BottomNavigatorHome extends StatefulWidget {
 
 class _BottomNavigatorHomeState extends State<BottomNavigatorHome> {
   int index = 0;
+  late PageController _pageController;
+
   final page = [
     BlocProvider(
       create: (context) => getIT<MoodCubit>(),
-      child: HomeScreen(),
+      child: const HomeScreen(),
     ),
     BlocProvider(
       create: (context) => getIT<MoodCubit>(),
-      child: AnalysisPage(),
+      child: const FavoritePage(),
     ),
-    ProgressTodo()
+    BlocProvider(
+      create: (context) => getIT<MoodCubit>(),
+      child: const AnalysisPage(),
+    ),
+    const TaskPage(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      this.index = index;
+      _pageController.jumpToPage(
+        index,
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: index,
+      backgroundColor: Colors.white,
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            this.index = index;
+          });
+        },
         children: page,
       ),
-      bottomNavigationBar: CurvedNavigationBar(
-          index: index,
-          onTap: (index) {
-            setState(() {
-              this.index = index;
-            });
-          },
-          backgroundColor: ColorsApp.darkGrey,
-          color: ColorsApp.Navigationbar,
-          animationDuration: Duration(milliseconds: 300),
-          items: const [
-            Icon(
-              Icons.home,
-              color: Colors.white,
-            ),
-            Icon(
-              Icons.analytics_sharp,
-              color: Colors.white,
-            ),
-            Icon(
-              Icons.message,
-              color: Colors.white,
-            ),
-          ]),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Container(
+          decoration: const BoxDecoration(
+              border: Border(top: BorderSide(color: ColorsApp.lightGrey))),
+          child: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: Colors.white,
+              unselectedItemColor: ColorsApp.mediumGrey,
+              elevation: 0,
+              selectedItemColor: ColorsApp.mainColor,
+              currentIndex: index,
+              onTap: _onItemTapped,
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.home,
+                    size: 30,
+                  ),
+                  label: "Home",
+                ),
+                BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.favorite,
+                      size: 30,
+                    ),
+                    label: "Favorites"),
+                BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.analytics_sharp,
+                      size: 30,
+                    ),
+                    label: "Stats"),
+                BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.task_alt_rounded,
+                      size: 30,
+                    ),
+                    label: "Tasks"),
+              ]),
+        ),
+      ),
     );
+
+    //  CurvedNavigationBar(
+    //       index: index,
+    //       onTap: _onItemTapped,
+    //       backgroundColor: ColorsApp.backGround,
+    //       color: Colors.black,
+    //       animationDuration: const Duration(milliseconds: 300),
+    //       items: const [
+    //         Icon(
+    //           Icons.home,
+    //           color: Colors.white,
+    //         ),
+    //         Icon(
+    //           Icons.analytics_sharp,
+    //           color: Colors.white,
+    //         ),
+    //         Icon(
+    //           Icons.task_alt_rounded,
+    //           color: Colors.white,
+    //         ),
+    //       ]),
   }
 }

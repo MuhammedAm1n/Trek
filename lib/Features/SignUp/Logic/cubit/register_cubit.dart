@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:video_diary/Features/SignUp/Data/Repositry/RegisterRepo.dart';
 
@@ -17,14 +16,9 @@ class RegisterCubit extends Cubit<RegisterState> {
   emitRegister() async {
     emit(RegisterLoading());
     try {
-      final response =
-          await registerRepo.registerRep(email.text, password.text);
+      await registerRepo.registerRep(email.text, password.text);
       registerRepo.createUserRep(userName.text);
-      if (response != null ||
-          response != FirebaseAuthException ||
-          response != Exception) {
-        emit(RegisterSuccess());
-      }
+      emit(RegisterSuccess());
     } catch (e) {
       emit(RegisterError(e.toString()));
     }

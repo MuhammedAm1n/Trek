@@ -11,12 +11,13 @@ class EmailAndPasswordReg extends StatelessWidget {
   Widget build(BuildContext context) {
     return Form(
       key: context.read<RegisterCubit>().formKey,
-      child: Container(
+      child: SizedBox(
         height: 350,
         child: SingleChildScrollView(
           child: Column(
             children: [
               AppTextFormField(
+                keyboardType: TextInputType.name,
                 hintText: 'Username',
                 controller: context.read<RegisterCubit>().userName,
                 validator: (value) {
@@ -29,6 +30,7 @@ class EmailAndPasswordReg extends StatelessWidget {
                 height: 15.h,
               ),
               AppTextFormField(
+                keyboardType: TextInputType.emailAddress,
                 hintText: 'Email',
                 controller: context.read<RegisterCubit>().email,
                 validator: (value) {
@@ -64,7 +66,8 @@ class EmailAndPasswordReg extends StatelessWidget {
                 hintText: 'Confirm Password',
                 controller: context.read<RegisterCubit>().passwordconf,
                 validator: (value) {
-                  if (value != context.read<RegisterCubit>().password.text) {
+                  if (value != context.read<RegisterCubit>().password.text ||
+                      value.isEmpty) {
                     return 'Confirm Password dosen\'t match. Try again!';
                   }
                 },

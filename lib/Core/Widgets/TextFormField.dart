@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_diary/Core/theming/Coloring.dart';
 
@@ -16,7 +15,12 @@ class AppTextFormField extends StatelessWidget {
       this.edgeInsets,
       this.controller,
       this.validator,
-      this.scrollPaddingz});
+      this.scrollPaddingz,
+      this.decoration,
+      this.onTap,
+      this.onChanged,
+      this.keyboardType});
+  final TextInputType? keyboardType;
   final EdgeInsets? edgeInsets;
   final String hintText;
   final TextStyle? hintStyle;
@@ -26,51 +30,60 @@ class AppTextFormField extends StatelessWidget {
   final InputBorder? FoucusBorder;
   final InputBorder? enabledBorder;
   final EdgeInsets? scrollPaddingz;
+  final InputDecoration? decoration;
   final TextEditingController? controller;
+  final void Function()? onTap;
+  final void Function(String)? onChanged;
   final Function(String)? validator;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      decoration: InputDecoration(
-        // padding of TextFormField
-        contentPadding: edgeInsets ??
-            EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
-        isDense: true,
-        // hint text of TextFormFIeld
-        hintText: hintText,
+      cursorColor: ColorsApp.mainColor,
+      keyboardType: keyboardType ?? TextInputType.text,
+      onChanged: onChanged,
+      onTap: onTap,
+      decoration: decoration ??
+          InputDecoration(
+            // padding of TextFormField
+            contentPadding: edgeInsets ??
+                EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
+            isDense: true,
+            // hint text of TextFormFIeld
+            hintText: hintText,
 
-        // hint style of hintText
-        hintStyle: hintStyle ?? TextStyle(fontSize: 14, color: Colors.white),
-        // IIcon in TextFormFIeld
-        suffixIcon: suffixIcon,
+            // hint style of hintText
+            hintStyle: hintStyle ??
+                TextStyle(fontSize: 14, color: ColorsApp.secLightGrey),
+            // IIcon in TextFormFIeld
+            suffixIcon: suffixIcon,
 
-        //Border's of TextFormField
-        enabledBorder: enabledBorder ??
-            OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.blueGrey),
-                borderRadius: BorderRadius.circular(16)),
-        focusedBorder: FoucusBorder ??
-            OutlineInputBorder(
-              borderSide: BorderSide(color: ColorsApp.mainOrange),
+            //Border's of TextFormField
+            enabledBorder: enabledBorder ??
+                OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.black),
+                    borderRadius: BorderRadius.circular(16)),
+            focusedBorder: FoucusBorder ??
+                OutlineInputBorder(
+                  borderSide: const BorderSide(color: ColorsApp.mainColor),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+            errorBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.red),
               borderRadius: BorderRadius.circular(16),
             ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red),
-          borderRadius: BorderRadius.circular(16),
-        ),
-      ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.red),
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
       obscureText: IsObscureText ?? false,
-      style: TextStyle(color: Colors.white),
+      style: inputTextStyle ?? const TextStyle(color: Colors.black),
       validator: (value) {
         return validator!(value!);
       },
       controller: controller,
-      scrollPadding: scrollPaddingz ?? EdgeInsets.only(bottom: 30),
+      scrollPadding: scrollPaddingz ?? const EdgeInsets.only(bottom: 30),
     );
   }
 }
