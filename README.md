@@ -34,3 +34,6 @@ Backup and recover your data easily with Google Drive integration.
 
 💬 Snippets:
 Get daily motivational quotes to keep you inspired and motivated.
+
+https://github.com/user-attachments/assets/6a1e9d81-fd0e-48c7-9be8-d5bc90374add
+
